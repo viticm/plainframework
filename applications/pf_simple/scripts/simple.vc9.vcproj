@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../pf/core/include;../../pf/dependencies/lua/src;../../pf/dependencies/iconv/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE;_PF_SIMPLE"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -62,8 +62,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../lib/lua/lib/ReleaseLib/luascript.lib ../../lib/libiconv/lib/ReleaseLib/libiconv.lib"
-				OutputFile="..\bin\$(ProjectName)d.exe"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../../pf/dependencies/lib/ReleaseLib/luascript.lib ../../../pf/dependencies/lib/ReleaseLib/iconv.lib"
+				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib;LIBCMT"
 				GenerateDebugInformation="true"
@@ -129,8 +129,8 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="../../pf/core/include;../../pf/dependencies/lua/src;../../pf/dependencies/iconv/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE;_PF_SIMPLE"
 				StringPooling="true"
 				ExceptionHandling="2"
 				RuntimeLibrary="0"
@@ -153,8 +153,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../pf/dependencies/lib/ReleaseLib/luascript.lib ../../pf/dependencies/lib/ReleaseLib/iconv.lib"
-				OutputFile="..\bin\$(ProjectName).exe"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../../pf/dependencies/lib/ReleaseLib/luascript.lib ../../../pf/dependencies/lib/ReleaseLib/iconv.lib"
+				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib;LIBCMT"
 				GenerateDebugInformation="true"
@@ -201,7 +201,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\main.cc"
+				RelativePath="..\src\main.cc"
 				>
 			</File>
 			<Filter
@@ -211,34 +211,34 @@
 					Name="base"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\base\io.cc"
+						RelativePath="..\..\..\pf\core\src\base\io.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\base\log.cc"
+						RelativePath="..\..\..\pf\core\src\base\log.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\base\md5.cc"
+						RelativePath="..\..\..\pf\core\src\base\md5.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\base\string.cc"
+						RelativePath="..\..\..\pf\core\src\base\string.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\base\time_manager.cc"
+						RelativePath="..\..\..\pf\core\src\base\time_manager.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\base\util.cc"
+						RelativePath="..\..\..\pf\core\src\base\util.cc"
 						>
 					</File>
 					<Filter
 						Name="hashmap"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\base\hashmap\integer.cc"
+							RelativePath="..\..\..\pf\core\src\base\hashmap\integer.cc"
 							>
 						</File>
 					</Filter>
@@ -247,42 +247,42 @@
 					Name="sys"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\sys\assert.cc"
+						RelativePath="..\..\..\pf\core\src\sys\assert.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\sys\info.cc"
+						RelativePath="..\..\..\pf\core\src\sys\info.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\sys\minidump.cc"
+						RelativePath="..\..\..\pf\core\src\sys\minidump.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\sys\process.cc"
+						RelativePath="..\..\..\pf\core\src\sys\process.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\sys\thread.cc"
+						RelativePath="..\..\..\pf\core\src\sys\thread.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\sys\util.cc"
+						RelativePath="..\..\..\pf\core\src\sys\util.cc"
 						>
 					</File>
 					<Filter
 						Name="memory"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\sys\memory\dynamic_allocator.cc"
+							RelativePath="..\..\..\pf\core\src\sys\memory\dynamic_allocator.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\sys\memory\share.cc"
+							RelativePath="..\..\..\pf\core\src\sys\memory\share.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\sys\memory\static_allocator.cc"
+							RelativePath="..\..\..\pf\core\src\sys\memory\static_allocator.cc"
 							>
 						</File>
 					</Filter>
@@ -291,15 +291,15 @@
 					Name="file"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\file\api.cc"
+						RelativePath="..\..\..\pf\core\src\file\api.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\file\database.cc"
+						RelativePath="..\..\..\pf\core\src\file\database.cc"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\src\file\ini.cc"
+						RelativePath="..\..\..\pf\core\src\file\ini.cc"
 						>
 					</File>
 				</Filter>
@@ -307,18 +307,18 @@
 					Name="net"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\net\manager.cc"
+						RelativePath="..\..\..\pf\core\src\net\manager.cc"
 						>
 					</File>
 					<Filter
 						Name="packet"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\net\packet\base.cc"
+							RelativePath="..\..\..\pf\core\src\net\packet\base.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\packet\factorymanager.cc"
+							RelativePath="..\..\..\pf\core\src\net\packet\factorymanager.cc"
 							>
 						</File>
 					</Filter>
@@ -326,31 +326,31 @@
 						Name="socket"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\api.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\api.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\base.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\base.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\encode.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\encode.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\inputstream.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\inputstream.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\outputstream.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\outputstream.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\server.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\server.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\socket\stream.cc"
+							RelativePath="..\..\..\pf\core\src\net\socket\stream.cc"
 							>
 						</File>
 					</Filter>
@@ -358,34 +358,34 @@
 						Name="connection"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\net\connection\base.cc"
+							RelativePath="..\..\..\pf\core\src\net\connection\base.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\connection\pool.cc"
+							RelativePath="..\..\..\pf\core\src\net\connection\pool.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\net\connection\server.cc"
+							RelativePath="..\..\..\pf\core\src\net\connection\server.cc"
 							>
 						</File>
 						<Filter
 							Name="manager"
 							>
 							<File
-								RelativePath="..\..\pf\core\src\net\connection\manager\base.cc"
+								RelativePath="..\..\..\pf\core\src\net\connection\manager\base.cc"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\src\net\connection\manager\epoll.cc"
+								RelativePath="..\..\..\pf\core\src\net\connection\manager\epoll.cc"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\src\net\connection\manager\iocp.cc"
+								RelativePath="..\..\..\pf\core\src\net\connection\manager\iocp.cc"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\src\net\connection\manager\select.cc"
+								RelativePath="..\..\..\pf\core\src\net\connection\manager\select.cc"
 								>
 							</File>
 						</Filter>
@@ -395,26 +395,26 @@
 					Name="engine"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\engine\kernel.cc"
+						RelativePath="..\..\..\pf\core\src\engine\kernel.cc"
 						>
 					</File>
 					<Filter
 						Name="thread"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\engine\thread\db.cc"
+							RelativePath="..\..\..\pf\core\src\engine\thread\db.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\engine\thread\net.cc"
+							RelativePath="..\..\..\pf\core\src\engine\thread\net.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\engine\thread\performance.cc"
+							RelativePath="..\..\..\pf\core\src\engine\thread\performance.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\engine\thread\script.cc"
+							RelativePath="..\..\..\pf\core\src\engine\thread\script.cc"
 							>
 						</File>
 					</Filter>
@@ -423,18 +423,18 @@
 					Name="db"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\db\manager.cc"
+						RelativePath="..\..\..\pf\core\src\db\manager.cc"
 						>
 					</File>
 					<Filter
 						Name="odbc"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\db\odbc\interface.cc"
+							RelativePath="..\..\..\pf\core\src\db\odbc\interface.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\db\odbc\system.cc"
+							RelativePath="..\..\..\pf\core\src\db\odbc\system.cc"
 							>
 						</File>
 					</Filter>
@@ -446,11 +446,11 @@
 						Name="cache"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\script\cache\base.cc"
+							RelativePath="..\..\..\pf\core\src\script\cache\base.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\cache\manager.cc"
+							RelativePath="..\..\..\pf\core\src\script\cache\manager.cc"
 							>
 						</File>
 					</Filter>
@@ -458,27 +458,27 @@
 						Name="lua"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\filebridge.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\filebridge.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\interface.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\interface.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\lunar.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\lunar.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\stack.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\stack.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\system.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\system.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\script\lua\vm.cc"
+							RelativePath="..\..\..\pf\core\src\script\lua\vm.cc"
 							>
 						</File>
 					</Filter>
@@ -487,7 +487,7 @@
 					Name="performance"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\performance\eyes.cc"
+						RelativePath="..\..\..\pf\core\src\performance\eyes.cc"
 						>
 					</File>
 				</Filter>
@@ -498,11 +498,11 @@
 						Name="compressor"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\util\compressor\mini.cc"
+							RelativePath="..\..\..\pf\core\src\util\compressor\mini.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\util\compressor\minilzo.c"
+							RelativePath="..\..\..\pf\core\src\util\compressor\minilzo.c"
 							>
 						</File>
 					</Filter>
@@ -511,18 +511,18 @@
 					Name="application"
 					>
 					<File
-						RelativePath="..\..\pf\core\src\application\setting.cc"
+						RelativePath="..\..\..\pf\core\src\application\setting.cc"
 						>
 					</File>
 					<Filter
 						Name="extend"
 						>
 						<File
-							RelativePath="..\..\pf\core\src\application\extend\log.cc"
+							RelativePath="..\..\..\pf\core\src\application\extend\log.cc"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\src\application\extend\net_packet_factorymanager.cc"
+							RelativePath="..\..\..\pf\core\src\application\extend\net_packet_factorymanager.cc"
 							>
 						</File>
 					</Filter>
@@ -541,58 +541,58 @@
 					Name="base"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\base64.hpp"
+						RelativePath="..\..\..\pf\core\include\pf\base\base64.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\io.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\io.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\log.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\log.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\md5.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\md5.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\singleton.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\singleton.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\string.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\string.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\time_manager.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\time_manager.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\type.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\type.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\base\util.h"
+						RelativePath="..\..\..\pf\core\include\pf\base\util.h"
 						>
 					</File>
 					<Filter
 						Name="hashmap"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\base\hashmap\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\base\hashmap\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\base\hashmap\integer.h"
+							RelativePath="..\..\..\pf\core\include\pf\base\hashmap\integer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\base\hashmap\template.h"
+							RelativePath="..\..\..\pf\core\include\pf\base\hashmap\template.h"
 							>
 						</File>
 					</Filter>
@@ -601,26 +601,26 @@
 					Name="db"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\db\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\db\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\db\manager.h"
+						RelativePath="..\..\..\pf\core\include\pf\db\manager.h"
 						>
 					</File>
 					<Filter
 						Name="odbc"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\db\odbc\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\db\odbc\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\db\odbc\interface.h"
+							RelativePath="..\..\..\pf\core\include\pf\db\odbc\interface.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\db\odbc\system.h"
+							RelativePath="..\..\..\pf\core\include\pf\db\odbc\system.h"
 							>
 						</File>
 					</Filter>
@@ -629,19 +629,19 @@
 					Name="file"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\file\api.h"
+						RelativePath="..\..\..\pf\core\include\pf\file\api.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\file\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\file\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\file\database.h"
+						RelativePath="..\..\..\pf\core\include\pf\file\database.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\file\ini.h"
+						RelativePath="..\..\..\pf\core\include\pf\file\ini.h"
 						>
 					</File>
 				</Filter>
@@ -649,50 +649,50 @@
 					Name="net"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\net\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\net\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\net\manager.h"
+						RelativePath="..\..\..\pf\core\include\pf\net\manager.h"
 						>
 					</File>
 					<Filter
 						Name="socket"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\api.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\api.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\base.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\base.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\encode.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\encode.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\extend.inl"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\extend.inl"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\inputstream.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\inputstream.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\outputstream.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\outputstream.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\server.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\server.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\socket\stream.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\socket\stream.h"
 							>
 						</File>
 					</Filter>
@@ -700,19 +700,19 @@
 						Name="packet"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\packet\base.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\packet\base.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\packet\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\packet\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\packet\factory.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\packet\factory.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\packet\factorymanager.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\packet\factorymanager.h"
 							>
 						</File>
 					</Filter>
@@ -720,42 +720,42 @@
 						Name="connection"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\connection\base.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\connection\base.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\connection\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\connection\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\connection\pool.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\connection\pool.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\net\connection\server.h"
+							RelativePath="..\..\..\pf\core\include\pf\net\connection\server.h"
 							>
 						</File>
 						<Filter
 							Name="manager"
 							>
 							<File
-								RelativePath="..\..\pf\core\include\pf\net\connection\manager\base.h"
+								RelativePath="..\..\..\pf\core\include\pf\net\connection\manager\base.h"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\include\pf\net\connection\manager\config.h"
+								RelativePath="..\..\..\pf\core\include\pf\net\connection\manager\config.h"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\include\pf\net\connection\manager\epoll.h"
+								RelativePath="..\..\..\pf\core\include\pf\net\connection\manager\epoll.h"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\include\pf\net\connection\manager\iocp.h"
+								RelativePath="..\..\..\pf\core\include\pf\net\connection\manager\iocp.h"
 								>
 							</File>
 							<File
-								RelativePath="..\..\pf\core\include\pf\net\connection\manager\select.h"
+								RelativePath="..\..\..\pf\core\include\pf\net\connection\manager\select.h"
 								>
 							</File>
 						</Filter>
@@ -765,22 +765,22 @@
 					Name="script"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\script\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\script\config.h"
 						>
 					</File>
 					<Filter
 						Name="cache"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\cache\base.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\cache\base.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\cache\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\cache\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\cache\manager.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\cache\manager.h"
 							>
 						</File>
 					</Filter>
@@ -788,31 +788,31 @@
 						Name="lua"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\filebridge.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\filebridge.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\interface.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\interface.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\lunar.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\lunar.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\stack.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\stack.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\system.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\system.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\script\lua\vm.h"
+							RelativePath="..\..\..\pf\core\include\pf\script\lua\vm.h"
 							>
 						</File>
 					</Filter>
@@ -821,34 +821,34 @@
 					Name="engine"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\engine\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\engine\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\engine\kernel.h"
+						RelativePath="..\..\..\pf\core\include\pf\engine\kernel.h"
 						>
 					</File>
 					<Filter
 						Name="thread"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\engine\thread\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\engine\thread\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\engine\thread\db.h"
+							RelativePath="..\..\..\pf\core\include\pf\engine\thread\db.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\engine\thread\net.h"
+							RelativePath="..\..\..\pf\core\include\pf\engine\thread\net.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\engine\thread\performance.h"
+							RelativePath="..\..\..\pf\core\include\pf\engine\thread\performance.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\engine\thread\script.h"
+							RelativePath="..\..\..\pf\core\include\pf\engine\thread\script.h"
 							>
 						</File>
 					</Filter>
@@ -857,50 +857,50 @@
 					Name="sys"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\assert.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\assert.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\info.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\info.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\minidump.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\minidump.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\process.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\process.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\thread.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\thread.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\sys\util.h"
+						RelativePath="..\..\..\pf\core\include\pf\sys\util.h"
 						>
 					</File>
 					<Filter
 						Name="memory"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\sys\memory\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\sys\memory\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\sys\memory\dynamic_allocator.h"
+							RelativePath="..\..\..\pf\core\include\pf\sys\memory\dynamic_allocator.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\sys\memory\share.h"
+							RelativePath="..\..\..\pf\core\include\pf\sys\memory\share.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\sys\memory\static_allocator.h"
+							RelativePath="..\..\..\pf\core\include\pf\sys\memory\static_allocator.h"
 							>
 						</File>
 					</Filter>
@@ -909,11 +909,11 @@
 					Name="performance"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\performance\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\performance\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\performance\eyes.h"
+						RelativePath="..\..\..\pf\core\include\pf\performance\eyes.h"
 						>
 					</File>
 				</Filter>
@@ -921,30 +921,30 @@
 					Name="util"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\util\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\util\config.h"
 						>
 					</File>
 					<Filter
 						Name="compressor"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\util\compressor\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\util\compressor\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\util\compressor\lzoconf.h"
+							RelativePath="..\..\..\pf\core\include\pf\util\compressor\lzoconf.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\util\compressor\lzodefs.h"
+							RelativePath="..\..\..\pf\core\include\pf\util\compressor\lzodefs.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\util\compressor\mini.h"
+							RelativePath="..\..\..\pf\core\include\pf\util\compressor\mini.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\util\compressor\minilzo.h"
+							RelativePath="..\..\..\pf\core\include\pf\util\compressor\minilzo.h"
 							>
 						</File>
 					</Filter>
@@ -953,83 +953,83 @@
 					Name="application"
 					>
 					<File
-						RelativePath="..\..\pf\core\include\pf\application\config.h"
+						RelativePath="..\..\..\pf\core\include\pf\application\config.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\pf\core\include\pf\application\setting.h"
+						RelativePath="..\..\..\pf\core\include\pf\application\setting.h"
 						>
 					</File>
 					<Filter
 						Name="define"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\define\all.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\define\all.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\define\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\define\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\define\file.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\define\file.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\define\log.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\define\log.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\define\macros.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\define\macros.h"
 							>
 						</File>
 						<Filter
 							Name="net"
 							>
 							<File
-								RelativePath="..\..\pf\core\include\pf\application\define\net\config.h"
+								RelativePath="..\..\..\pf\core\include\pf\application\define\net\config.h"
 								>
 							</File>
 							<Filter
 								Name="packet"
 								>
 								<File
-									RelativePath="..\..\pf\core\include\pf\application\define\net\packet\config.h"
+									RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\config.h"
 									>
 								</File>
 								<Filter
 									Name="id"
 									>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\all.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\all.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\clientlogin.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\clientlogin.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\clientserver.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\clientserver.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\config.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\config.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\gatewaylogin.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\gatewaylogin.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\logincenter.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\logincenter.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\servercenter.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\servercenter.h"
 										>
 									</File>
 									<File
-										RelativePath="..\..\pf\core\include\pf\application\define\net\packet\id\serverserver.h"
+										RelativePath="..\..\..\pf\core\include\pf\application\define\net\packet\id\serverserver.h"
 										>
 									</File>
 								</Filter>
@@ -1040,19 +1040,19 @@
 						Name="extend"
 						>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\extend\config.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\extend\config.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\extend\define.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\extend\define.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\extend\log.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\extend\log.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\pf\core\include\pf\application\extend\net_packet_factorymanager.h"
+							RelativePath="..\..\..\pf\core\include\pf\application\extend\net_packet_factorymanager.h"
 							>
 						</File>
 					</Filter>

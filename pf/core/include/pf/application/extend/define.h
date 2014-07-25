@@ -15,7 +15,7 @@
 #define PF_APPLICATION_EXTEND_DEFINE_H_
 
 //applications defined puts in here
-#if defined(_PF_TEST) /* { */
+#if defined(_PF_SIMPLE) /* { */
 #define APPLICATION_NAME "pf_simple"
 #define APPLICATION_LOGFILE kDebugLogFile 
 #elif defined(_VGATEWAY) /* }{ */

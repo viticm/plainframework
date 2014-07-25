@@ -1,4 +1,6 @@
 #include "pf/engine/kernel.h"
+#include "main.h"
+
 pf_engine::Kernel g_engine_kernel;
 int32_t main(int32_t argc, char * argv[]) {
 #if __WINDOWS__
