@@ -1828,7 +1828,7 @@ extern "C" {
 #endif
 
 #undef LZO_HAVE_CONFIG_H
-#include "common/util/compressor/minilzo.h"
+#include "pf/util/compressor/minilzo.h"
 
 #if !defined(MINILZO_VERSION) || (MINILZO_VERSION != 0x2030)
 #  error "version mismatch in miniLZO source files"

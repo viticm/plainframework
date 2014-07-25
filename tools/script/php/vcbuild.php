@@ -83,7 +83,8 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 
 //project visual studio script file dirs
 $g_scriptdirs = array(
-  "gateway gateway/scripts",
+  "gateway applications/gateway/scripts",
+  "pf_simple pf/scripts",
 
 ); //not use EOF, if you want it work not just use output
 

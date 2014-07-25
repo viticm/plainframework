@@ -57,12 +57,12 @@
 //    C4       E3       BA
 //
 
-#ifndef PS_COMMON_BASE64_HPP_
-#define PS_COMMON_BASE64_HPP_
+#ifndef PF_BASE64_HPP_
+#define PF_BASE64_HPP_
 
-#include "common/base/config.h" 
+#include "pf/base/config.h" 
 
-namespace ps_common_base {
+namespace pf_base {
 
 //编码后的长度一般比原文多占1/3的存储空间，请保证base64code有足够的空间
 int base64encode(char * base64code, const char * src, int src_len = 0);
@@ -219,6 +219,6 @@ int base64decode(char * buf, const char * base64code, int src_len) {
   return len;
 } 
 
-} //namespace ps_common_base
+} //namespace pf_base
 
-#endif //PS_COMMON_BASE64_HPP_
+#endif //PF_BASE64_HPP_
