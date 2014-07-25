@@ -2,7 +2,7 @@
 #include "pf/base/util.h"
 #include "pf/net/connection/manager/epoll.h"
 
-#if __LINUX__ && defined(_PS_NET_EPOLL)
+#if __LINUX__ && defined(_PF_NET_EPOLL)
 
 namespace pf_net {
 

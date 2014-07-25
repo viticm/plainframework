@@ -12,10 +12,10 @@
 
 currentdir=`pwd`
 project_rootpath=${currentdir}/../../../../
-gateway_path=${project_rootpath}gateway
-center_path=${project_rootpath}center
-login_path=${project_rootpath}login
-server_path=${project_rootpath}server
+gateway_path=${project_rootpath}applications/gateway
+center_path=${project_rootpath}applications/center
+login_path=${project_rootpath}applications/login
+server_path=${project_rootpath}applications/server
 
 compile_gateway="not compile"
 compile_center="not compile"

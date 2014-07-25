@@ -34,7 +34,7 @@ class Database {
 
    typedef std::vector<field_type_enum> field_type;
    
-   //字段数据，即excel的一个单元格
+   // 字段数据，即excel的一个单元格
    // 读取的顺序根据从左到右，自上而下的顺序读取，即以行读取
    // 注："[]" 表示excel一个单元格，下面的例子为三列数据 
    // 表格的结构体的数据类型为int32_t、const char *、float三种
@@ -92,8 +92,8 @@ class Database {
    field_type type_;
    int32_t record_number_;
    int32_t field_number_;
-   data_buffer data_buffer_;
-   char* string_buffer_;
+   data_buffer data_buffer_; //所有表格数据容器
+   char *string_buffer_; //表格中所有字符串组成的数组，重复的字符串使用一个地址
    int32_t string_buffer_size_;
    field_hashmap hash_index_;
    int32_t index_column_;

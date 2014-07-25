@@ -47,7 +47,7 @@ void Eyes::printinfo() {
     DEBUGPRINTF("-------------------------------------------"
                 "performance"
                 "-------------------------------------------");
-    //DEBUGPRINTF("- FPS: %.1f", FPS_);
+    //DEBUGPRINTF("- FPS: %.1f", FPF_);
     DEBUGPRINTF("- load average: %.2f, %.2f, %.2f", 
                 loadaverage.oneminutes, 
                 loadaverage.fiveminutes, 
@@ -105,7 +105,7 @@ void Eyes::tick_forFPS() {
     if (difftime != currenttime) looptime += difftime;
     last_ticktime = currenttime;
     if (looptime > kCalculateFPS) {
-      FPS_ = static_cast<float>((loopcount * 1000) / looptime);
+      FPF_ = static_cast<float>((loopcount * 1000) / looptime);
       looptime = loopcount = 0;
     }
     ++loopcount;
@@ -173,5 +173,5 @@ void Eyes::set_connectioncount(uint32_t count) {
 }
 
 void Eyes::set_fps(float value) {
-  FPS_ = value;
+  FPF_ = value;
 }

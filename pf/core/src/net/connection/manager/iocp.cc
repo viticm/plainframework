@@ -1,6 +1,6 @@
 #include "pf/net/connection/manager/iocp.h"
 
-#if __WINDOWS__ && defined(_PS_NET_IOCP)
+#if __WINDOWS__ && defined(_PF_NET_IOCP)
 namespace pf_net {
 
 namespace connection {

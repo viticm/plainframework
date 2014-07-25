@@ -11,8 +11,8 @@
 #ifndef PF_NET_CONNECTION_MANAGER_SELECT_H_
 #define PF_NET_CONNECTION_MANAGER_SELECT_H_
 
-#if !(__LINUX__ && defined(_PS_NET_EPOLL)) && \
-  !(__WINDOWS__ && defined(_PS_NET_IOCP))
+#if !(__LINUX__ && defined(_PF_NET_EPOLL)) && \
+  !(__WINDOWS__ && defined(_PF_NET_IOCP))
 #include "pf/net/connection/manager/config.h"
 #include "pf/net/connection/manager/base.h"
 

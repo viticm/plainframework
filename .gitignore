@@ -235,6 +235,8 @@ tags
 ## Run Bin
 #############
 */bin/gateway
+./pf/dependencies/iconv/lib/*
+./pf/dependencies/lua/lib/*
 
 #######################
 ## build libs

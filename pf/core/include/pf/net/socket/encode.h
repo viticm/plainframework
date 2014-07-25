@@ -8,8 +8,8 @@
  * @date 2014/06/20 19:11
  * @uses simple socket stream buffer encode and decode functions
  */
-#ifndef PS_NET_SOCKET_ENCODE_H_
-#define PS_NET_SOCKET_ENCODE_H_
+#ifndef PF_NET_SOCKET_ENCODE_H_
+#define PF_NET_SOCKET_ENCODE_H_
 
 #include "pf/net/socket/config.h"
 
@@ -28,4 +28,4 @@ bool skip(encodeparam_t& encodeparam, int32_t length);
 
 }; //namespace pf_net
 
-#endif //PS_NET_SOCKET_ENCODE_H_
+#endif //PF_NET_SOCKET_ENCODE_H_

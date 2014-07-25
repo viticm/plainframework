@@ -80,7 +80,7 @@ const Database::field_data* Database::search_position(int32_t line,
                line,
                column,
                position);
-#ifdef _PS_THROW_EXCEPTION_AS_STD_STRING
+#ifdef _PF_THROW_EXCEPTION_AS_STD_STRING
       throw std::string(temp);
 #else
       AssertEx(false, temp);
@@ -157,7 +157,7 @@ void Database::create_index(int32_t column, const char* filename) {
                  filename, 
                  i + 1, 
                  _field_data->int_value);
-#ifdef _PS_THROW_EXCEPTION_AS_STD_STRING
+#ifdef _PF_THROW_EXCEPTION_AS_STD_STRING
         throw std::string(temp);
 #else
         AssertEx(false, temp);

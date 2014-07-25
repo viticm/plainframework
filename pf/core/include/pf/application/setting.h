@@ -19,7 +19,7 @@
 
 namespace pf_application {
   
-#ifdef _PS_SERVER
+#ifdef _VSERVER
 //--struct start
 //武侠世界设计的并不好，我相信天龙已经改正了这些问题(我这里将各个设置分开，并非直接塞在一个结构体内)
 typedef struct {
@@ -510,7 +510,7 @@ struct server_info_t {
   ~server_info_t();
 };
 
-#ifdef _PS_SERVER
+#ifdef _VSERVER
 //scene
 struct scene_data_t {
   int16_t thread_index; //驱动线程的索引
@@ -561,7 +561,7 @@ class GatewayInfo {
  public:
    char ip_[IP_SIZE];
    uint16_t port_;
-#ifdef _PS_GATEWAY
+#ifdef _VGATEWAY
    char listenip_[IP_SIZE];
    uint16_t listenport_;
    uint16_t net_connectionmax_;
@@ -599,7 +599,7 @@ class Setting : public pf_base::Singleton<Setting> {
  public:
    Setting();
    ~Setting();
-#ifdef _PS_SERVER
+#ifdef _VSERVER
    config_info_t config_info_;
 #endif
    GatewayInfo gateway_info_;
@@ -608,7 +608,7 @@ class Setting : public pf_base::Singleton<Setting> {
    machine_info_t machine_info_;
    server_info_t server_info_;
    share_memory_info_t share_memory_info_;
-#ifdef _PS_SERVER
+#ifdef _VSERVER
    scene_info_t scene_info_;
 #endif
 

@@ -8,8 +8,8 @@
  * @date 2014/06/23 14:10
  * @uses net connection pool class
  */
-#ifndef PS_NET_CONNECTION_POOL_H_
-#define PS_NET_CONNECTION_POOL_H_
+#ifndef PF_NET_CONNECTION_POOL_H_
+#define PF_NET_CONNECTION_POOL_H_
 
 #include "pf/net/connection/config.h"
 #include "pf/sys/thread.h"

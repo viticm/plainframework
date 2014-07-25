@@ -15,9 +15,9 @@
 #include "pf/base/singleton.h"
 #include "pf/sys/thread.h"
 #include "pf/net/connection/pool.h"
-#if __LINUX__ && defined(_PS_NET_EPOLL) /* { */
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
 #include "pf/net/connection/manager/epoll.h"
-#elif __WINDOWS__ && defined(_PS_NET_IOCP) /* }{ */
+#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
 #include "pf/net/connection/manager/iocp.h"
 #else /* }{ */
 #include "pf/net/connection/manager/select.h"
@@ -27,9 +27,9 @@
 
 namespace pf_net {
 
-#if __LINUX__ && defined(_PS_NET_EPOLL) /* { */
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
 class Manager : public connection::manager::Epoll {
-#elif __WINDOWS__ && defined(_PS_NET_IOCP) /* }{ */
+#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
 class Manager : public connection::manager::Iocp {
 #else /* }{ */
 class Manager : public connection::manager::Select {

@@ -363,7 +363,7 @@
 #elif defined(__VMS)
 #  define LZO_OS_VMS            1
 #  define LZO_INFO_OS           "vms"
-#elif ((defined(__mips__) && defined(__R5900__)) || defined(__MIPS_PSX2__))
+#elif ((defined(__mips__) && defined(__R5900__)) || defined(__MIPF_PSX2__))
 #  define LZO_OS_CONSOLE        1
 #  define LZO_OS_CONSOLE_PS2    1
 #  define LZO_INFO_OS           "console"
@@ -731,7 +731,7 @@
 #elif defined(__IAR_SYSTEMS_ICC__) && defined(__ICC8051__)
 #  define LZO_ARCH_MCS51            1
 #  define LZO_INFO_ARCH             "mcs51"
-#elif defined(__mips__) || defined(__mips) || defined(_MIPS_ARCH) || defined(_M_MRX000)
+#elif defined(__mips__) || defined(__mips) || defined(_MIPF_ARCH) || defined(_M_MRX000)
 #  define LZO_ARCH_MIPS             1
 #  define LZO_INFO_ARCH             "mips"
 #elif (UINT_MAX == LZO_0xffffL) && defined(__MSP430__)
@@ -1170,7 +1170,7 @@ extern "C" {
 #  else
 #    define LZO_SIZEOF_VOID_P       2
 #  endif
-#elif (LZO_SIZEOF_LONG == 8) && ((defined(__mips__) && defined(__R5900__)) || defined(__MIPS_PSX2__))
+#elif (LZO_SIZEOF_LONG == 8) && ((defined(__mips__) && defined(__R5900__)) || defined(__MIPF_PSX2__))
 #  define __LZO_WORDSIZE            8
 #  define LZO_SIZEOF_VOID_P         4
 #elif defined(__LLP64__) || defined(__LLP64) || defined(_LLP64) || defined(_WIN64)

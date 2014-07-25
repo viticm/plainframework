@@ -11,7 +11,7 @@
 #ifndef PF_NET_CONNECTION_MANAGER_IOCP_H_
 #define PF_NET_CONNECTION_MANAGER_IOCP_H_
 
-#if __WINDOWS__ && defined(_PS_NET_IOCP)
+#if __WINDOWS__ && defined(_PF_NET_IOCP)
 #include "pf/net/connection/manager/config.h"
 #include "pf/net/connection/manager/base.h"
 #error iocp connection manager not completed!

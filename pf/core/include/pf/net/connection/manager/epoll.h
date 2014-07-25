@@ -11,7 +11,7 @@
 #ifndef PF_NET_CONNECTION_MANAGER_EPOLL_H_
 #define PF_NET_CONNECTION_MANAGER_EPOLL_H_
 
-#if __LINUX__ && defined(_PS_NET_EPOLL)
+#if __LINUX__ && defined(_PF_NET_EPOLL)
 #include "pf/net/connection/manager/config.h"
 #include "pf/net/connection/manager/base.h"
 #include "pf/net/socket/extend.inl"

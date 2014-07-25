@@ -18,7 +18,7 @@ function update_CMakeLists(cmakefile, vcprog, include_path)
   wf:close()
 end
 
-local gateway_cmakelists = "../../../../gateway/src/CMakeLists.txt"
-local gateway_vcproj = "../../../../gateway/scripts/gateway.vc9.vcproj"
+local gateway_cmakelists = "../../../../applications/gateway/src/CMakeLists.txt"
+local gateway_vcproj = "../../../../applications/gateway/scripts/gateway.vc9.vcproj"
 
 update_CMakeLists(gateway_cmakelists, gateway_vcproj)

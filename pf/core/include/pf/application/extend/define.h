@@ -14,17 +14,17 @@
 #ifndef PF_APPLICATION_EXTEND_DEFINE_H_
 #define PF_APPLICATION_EXTEND_DEFINE_H_
 
-#if defined(_PS_GATEWAY) /* { */
+#if defined(_VGATEWAY) /* { */
 //applications defined puts in here
 #define APPLICATION_NAME "gateway"
 #define APPLICATION_LOGFILE kGatewayLogFile
-#elif defined(_PS_LOGIN)
+#elif defined(_VLOGIN) /* }{ */
 #define APPLICATION_NAME "login"
 #define APPLICATION_LOGFILE kLoginLogFile
-#elif defined(_PS_CENTER)
+#elif defined(_VCENTER) /* }{ */
 #define APPLICATION_NAME "center"
 #define APPLICATION_LOGFILE kCenterLogFile
-#elif defined(_PS_SERVER)
+#elif defined(_VSERVER) /* }{ */
 #define APPLICATION_NAME "server"
 #define APPLICATION_LOGFILE kServerLogFile
 #else /* }{ */

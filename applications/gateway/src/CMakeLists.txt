@@ -1,29 +1,27 @@
 SET(TF_CURRENT_BINARY_PATH_BIN "../../bin")
 ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
-ADD_DEFINITIONS(-D_PS_GATEWAY)
-ADD_DEFINITIONS(-D_PS_NET_GATEWAY)
+ADD_DEFINITIONS(-D_VGATEWAY)
 
 IF(CMAKE_SYSTEM MATCHES Linux)
   ADD_DEFINITIONS(-D_REENTRANT)
   ADD_DEFINITIONS(-DDONT_TD_VOID)
-  ADD_DEFINITIONS(-D_PS_NET_EPOLL)
+  ADD_DEFINITIONS(-D_PF_NET_EPOLL)
 ELSE(CMAKE_SYSTEM MATCHES Linux)
 ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 LINK_DIRECTORIES(
   "./" #run dir
-  "../../lib/lua/lib" #linux
-  "../../lib/libiconv/lib" #win32
+  "../../../pf/dependencies/lib" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})
 
 
-INCLUDE_DIRECTORIES("../../common/include",
+INCLUDE_DIRECTORIES("../../../pf/core/include",
                     "../include",
-                    "../../lib/lua/src/",
-                    "../../lib/libiconv/include",
+                    "../../../pf/dependencies/iconv/include",
+                    "../../../pf/dependencies/lua/src",
                     "/usr/local/unixODBC/include")
 
 ##update_begin
@@ -32,130 +30,130 @@ INCLUDE_DIRECTORIES("../../common/include",
 
 
 SET (SOURCEFILES_COMMON_BASE_HASHMAP_LIST
-	../../common/src/common/base/hashmap/integer.cc
+	../../../pf/core/src/base/hashmap/integer.cc
 )
 
 SET (SOURCEFILES_COMMON_BASE_LIST
-	../../common/src/common/base/io.cc
-	../../common/src/common/base/log.cc
-	../../common/src/common/base/md5.cc
-	../../common/src/common/base/string.cc
-	../../common/src/common/base/time_manager.cc
-	../../common/src/common/base/util.cc
+	../../../pf/core/src/base/io.cc
+	../../../pf/core/src/base/log.cc
+	../../../pf/core/src/base/md5.cc
+	../../../pf/core/src/base/string.cc
+	../../../pf/core/src/base/time_manager.cc
+	../../../pf/core/src/base/util.cc
 )
 
 SET (SOURCEFILES_COMMON_SYS_MEMORY_LIST
-	../../common/src/common/sys/memory/dynamic_allocator.cc
-	../../common/src/common/sys/memory/share.cc
-	../../common/src/common/sys/memory/static_allocator.cc
+	../../../pf/core/src/sys/memory/dynamic_allocator.cc
+	../../../pf/core/src/sys/memory/share.cc
+	../../../pf/core/src/sys/memory/static_allocator.cc
 )
 
 SET (SOURCEFILES_COMMON_SYS_LIST
-	../../common/src/common/sys/assert.cc
-	../../common/src/common/sys/info.cc
-	../../common/src/common/sys/minidump.cc
-	../../common/src/common/sys/process.cc
-	../../common/src/common/sys/thread.cc
-	../../common/src/common/sys/util.cc
+	../../../pf/core/src/sys/assert.cc
+	../../../pf/core/src/sys/info.cc
+	../../../pf/core/src/sys/minidump.cc
+	../../../pf/core/src/sys/process.cc
+	../../../pf/core/src/sys/thread.cc
+	../../../pf/core/src/sys/util.cc
 )
 
 SET (SOURCEFILES_COMMON_FILE_LIST
-	../../common/src/common/file/api.cc
-	../../common/src/common/file/database.cc
-	../../common/src/common/file/ini.cc
+	../../../pf/core/src/file/api.cc
+	../../../pf/core/src/file/database.cc
+	../../../pf/core/src/file/ini.cc
 )
 
 SET (SOURCEFILES_COMMON_NET_PACKET_LIST
-	../../common/src/common/net/packet/base.cc
-	../../common/src/common/net/packet/factorymanager.cc
+	../../../pf/core/src/net/packet/base.cc
+	../../../pf/core/src/net/packet/factorymanager.cc
 )
 
 SET (SOURCEFILES_COMMON_NET_SOCKET_LIST
-	../../common/src/common/net/socket/api.cc
-	../../common/src/common/net/socket/base.cc
-	../../common/src/common/net/socket/encode.cc
-	../../common/src/common/net/socket/inputstream.cc
-	../../common/src/common/net/socket/outputstream.cc
-	../../common/src/common/net/socket/server.cc
-	../../common/src/common/net/socket/stream.cc
+	../../../pf/core/src/net/socket/api.cc
+	../../../pf/core/src/net/socket/base.cc
+	../../../pf/core/src/net/socket/encode.cc
+	../../../pf/core/src/net/socket/inputstream.cc
+	../../../pf/core/src/net/socket/outputstream.cc
+	../../../pf/core/src/net/socket/server.cc
+	../../../pf/core/src/net/socket/stream.cc
 )
 
 SET (SOURCEFILES_COMMON_NET_CONNECTION_MANAGER_LIST
-	../../common/src/common/net/connection/manager/base.cc
-	../../common/src/common/net/connection/manager/epoll.cc
-	../../common/src/common/net/connection/manager/iocp.cc
-	../../common/src/common/net/connection/manager/select.cc
+	../../../pf/core/src/net/connection/manager/base.cc
+	../../../pf/core/src/net/connection/manager/epoll.cc
+	../../../pf/core/src/net/connection/manager/iocp.cc
+	../../../pf/core/src/net/connection/manager/select.cc
 )
 
 SET (SOURCEFILES_COMMON_NET_CONNECTION_LIST
-	../../common/src/common/net/connection/base.cc
-	../../common/src/common/net/connection/pool.cc
-	../../common/src/common/net/connection/server.cc
+	../../../pf/core/src/net/connection/base.cc
+	../../../pf/core/src/net/connection/pool.cc
+	../../../pf/core/src/net/connection/server.cc
 )
 
 SET (SOURCEFILES_COMMON_NET_LIST
-	../../common/src/common/net/manager.cc
+	../../../pf/core/src/net/manager.cc
 )
 
 SET (SOURCEFILES_COMMON_ENGINE_THREAD_LIST
-	../../common/src/common/engine/thread/db.cc
-	../../common/src/common/engine/thread/net.cc
-	../../common/src/common/engine/thread/performance.cc
-	../../common/src/common/engine/thread/script.cc
+	../../../pf/core/src/engine/thread/db.cc
+	../../../pf/core/src/engine/thread/net.cc
+	../../../pf/core/src/engine/thread/performance.cc
+	../../../pf/core/src/engine/thread/script.cc
 )
 
 SET (SOURCEFILES_COMMON_ENGINE_LIST
-	../../common/src/common/engine/kernel.cc
+	../../../pf/core/src/engine/kernel.cc
 )
 
 SET (SOURCEFILES_COMMON_DB_ODBC_LIST
-	../../common/src/common/db/odbc/interface.cc
-	../../common/src/common/db/odbc/system.cc
+	../../../pf/core/src/db/odbc/interface.cc
+	../../../pf/core/src/db/odbc/system.cc
 )
 
 SET (SOURCEFILES_COMMON_DB_LIST
-	../../common/src/common/db/manager.cc
+	../../../pf/core/src/db/manager.cc
 )
 
 SET (SOURCEFILES_COMMON_SCRIPT_CACHE_LIST
-	../../common/src/common/script/cache/base.cc
-	../../common/src/common/script/cache/manager.cc
+	../../../pf/core/src/script/cache/base.cc
+	../../../pf/core/src/script/cache/manager.cc
 )
 
 SET (SOURCEFILES_COMMON_SCRIPT_LUA_LIST
-	../../common/src/common/script/lua/filebridge.cc
-	../../common/src/common/script/lua/interface.cc
-	../../common/src/common/script/lua/lunar.cc
-	../../common/src/common/script/lua/stack.cc
-	../../common/src/common/script/lua/system.cc
-	../../common/src/common/script/lua/vm.cc
+	../../../pf/core/src/script/lua/filebridge.cc
+	../../../pf/core/src/script/lua/interface.cc
+	../../../pf/core/src/script/lua/lunar.cc
+	../../../pf/core/src/script/lua/stack.cc
+	../../../pf/core/src/script/lua/system.cc
+	../../../pf/core/src/script/lua/vm.cc
 )
 
 SET (SOURCEFILES_COMMON_SCRIPT_LIST
 )
 
 SET (SOURCEFILES_COMMON_PERFORMANCE_LIST
-	../../common/src/common/performance/eyes.cc
+	../../../pf/core/src/performance/eyes.cc
 )
 
 SET (SOURCEFILES_COMMON_UTIL_COMPRESSOR_LIST
-	../../common/src/common/util/compressor/mini.cc
-	../../common/src/common/util/compressor/minilzo.c
+	../../../pf/core/src/util/compressor/mini.cc
+	../../../pf/core/src/util/compressor/minilzo.c
 )
 
 SET (SOURCEFILES_COMMON_UTIL_LIST
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_NET_PACKET_GATEWAY_TOLOGIN_LIST
-	../../common/src/common/application/net/packet/gateway_tologin/resultauth.cc
+	../../../pf/core/src/application/net/packet/gateway_tologin/resultauth.cc
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_NET_PACKET_LOGIN_TOGATEWAY_LIST
-	../../common/src/common/application/net/packet/login_togateway/askauth.cc
+	../../../pf/core/src/application/net/packet/login_togateway/askauth.cc
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_NET_PACKET_SERVERSERVER_LIST
-	../../common/src/common/application/net/packet/serverserver/connect.cc
+	../../../pf/core/src/application/net/packet/serverserver/connect.cc
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_NET_PACKET_LIST
@@ -165,12 +163,12 @@ SET (SOURCEFILES_COMMON_APPLICATION_NET_LIST
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_EXTEND_LIST
-	../../common/src/common/application/extend/log.cc
-	../../common/src/common/application/extend/net_packet_factorymanager.cc
+	../../../pf/core/src/application/extend/log.cc
+	../../../pf/core/src/application/extend/net_packet_factorymanager.cc
 )
 
 SET (SOURCEFILES_COMMON_APPLICATION_LIST
-	../../common/src/common/application/setting.cc
+	../../../pf/core/src/application/setting.cc
 )
 
 SET (SOURCEFILES_COMMON_LIST
@@ -211,208 +209,208 @@ SET (SOURCEFILES_LIST
 )
 
 SET (HEADERFILES_COMMON_BASE_HASHMAP_LIST
-	../../common/include/common/base/hashmap/config.h
-	../../common/include/common/base/hashmap/integer.h
-	../../common/include/common/base/hashmap/template.h
+	../../../pf/core/include/pf/base/hashmap/config.h
+	../../../pf/core/include/pf/base/hashmap/integer.h
+	../../../pf/core/include/pf/base/hashmap/template.h
 )
 
 SET (HEADERFILES_COMMON_BASE_LIST
-	../../common/include/common/base/base64.hpp
-	../../common/include/common/base/config.h
-	../../common/include/common/base/io.h
-	../../common/include/common/base/log.h
-	../../common/include/common/base/md5.h
-	../../common/include/common/base/singleton.h
-	../../common/include/common/base/string.h
-	../../common/include/common/base/time_manager.h
-	../../common/include/common/base/type.h
-	../../common/include/common/base/util.h
+	../../../pf/core/include/pf/base/base64.hpp
+	../../../pf/core/include/pf/base/config.h
+	../../../pf/core/include/pf/base/io.h
+	../../../pf/core/include/pf/base/log.h
+	../../../pf/core/include/pf/base/md5.h
+	../../../pf/core/include/pf/base/singleton.h
+	../../../pf/core/include/pf/base/string.h
+	../../../pf/core/include/pf/base/time_manager.h
+	../../../pf/core/include/pf/base/type.h
+	../../../pf/core/include/pf/base/util.h
 )
 
 SET (HEADERFILES_COMMON_DB_ODBC_LIST
-	../../common/include/common/db/odbc/config.h
-	../../common/include/common/db/odbc/interface.h
-	../../common/include/common/db/odbc/system.h
+	../../../pf/core/include/pf/db/odbc/config.h
+	../../../pf/core/include/pf/db/odbc/interface.h
+	../../../pf/core/include/pf/db/odbc/system.h
 )
 
 SET (HEADERFILES_COMMON_DB_LIST
-	../../common/include/common/db/config.h
-	../../common/include/common/db/manager.h
+	../../../pf/core/include/pf/db/config.h
+	../../../pf/core/include/pf/db/manager.h
 )
 
 SET (HEADERFILES_COMMON_FILE_LIST
-	../../common/include/common/file/api.h
-	../../common/include/common/file/config.h
-	../../common/include/common/file/database.h
-	../../common/include/common/file/ini.h
+	../../../pf/core/include/pf/file/api.h
+	../../../pf/core/include/pf/file/config.h
+	../../../pf/core/include/pf/file/database.h
+	../../../pf/core/include/pf/file/ini.h
 )
 
 SET (HEADERFILES_COMMON_NET_SOCKET_LIST
-	../../common/include/common/net/socket/api.h
-	../../common/include/common/net/socket/base.h
-	../../common/include/common/net/socket/config.h
-	../../common/include/common/net/socket/encode.h
-	../../common/include/common/net/socket/extend.inl
-	../../common/include/common/net/socket/inputstream.h
-	../../common/include/common/net/socket/outputstream.h
-	../../common/include/common/net/socket/server.h
-	../../common/include/common/net/socket/stream.h
+	../../../pf/core/include/pf/net/socket/api.h
+	../../../pf/core/include/pf/net/socket/base.h
+	../../../pf/core/include/pf/net/socket/config.h
+	../../../pf/core/include/pf/net/socket/encode.h
+	../../../pf/core/include/pf/net/socket/extend.inl
+	../../../pf/core/include/pf/net/socket/inputstream.h
+	../../../pf/core/include/pf/net/socket/outputstream.h
+	../../../pf/core/include/pf/net/socket/server.h
+	../../../pf/core/include/pf/net/socket/stream.h
 )
 
 SET (HEADERFILES_COMMON_NET_PACKET_LIST
-	../../common/include/common/net/packet/base.h
-	../../common/include/common/net/packet/config.h
-	../../common/include/common/net/packet/factory.h
-	../../common/include/common/net/packet/factorymanager.h
+	../../../pf/core/include/pf/net/packet/base.h
+	../../../pf/core/include/pf/net/packet/config.h
+	../../../pf/core/include/pf/net/packet/factory.h
+	../../../pf/core/include/pf/net/packet/factorymanager.h
 )
 
 SET (HEADERFILES_COMMON_NET_CONNECTION_MANAGER_LIST
-	../../common/include/common/net/connection/manager/base.h
-	../../common/include/common/net/connection/manager/config.h
-	../../common/include/common/net/connection/manager/epoll.h
-	../../common/include/common/net/connection/manager/iocp.h
-	../../common/include/common/net/connection/manager/select.h
+	../../../pf/core/include/pf/net/connection/manager/base.h
+	../../../pf/core/include/pf/net/connection/manager/config.h
+	../../../pf/core/include/pf/net/connection/manager/epoll.h
+	../../../pf/core/include/pf/net/connection/manager/iocp.h
+	../../../pf/core/include/pf/net/connection/manager/select.h
 )
 
 SET (HEADERFILES_COMMON_NET_CONNECTION_LIST
-	../../common/include/common/net/connection/base.h
-	../../common/include/common/net/connection/config.h
-	../../common/include/common/net/connection/pool.h
-	../../common/include/common/net/connection/server.h
+	../../../pf/core/include/pf/net/connection/base.h
+	../../../pf/core/include/pf/net/connection/config.h
+	../../../pf/core/include/pf/net/connection/pool.h
+	../../../pf/core/include/pf/net/connection/server.h
 )
 
 SET (HEADERFILES_COMMON_NET_LIST
-	../../common/include/common/net/config.h
-	../../common/include/common/net/manager.h
+	../../../pf/core/include/pf/net/config.h
+	../../../pf/core/include/pf/net/manager.h
 )
 
 SET (HEADERFILES_COMMON_SCRIPT_CACHE_LIST
-	../../common/include/common/script/cache/base.h
-	../../common/include/common/script/cache/config.h
-	../../common/include/common/script/cache/manager.h
+	../../../pf/core/include/pf/script/cache/base.h
+	../../../pf/core/include/pf/script/cache/config.h
+	../../../pf/core/include/pf/script/cache/manager.h
 )
 
 SET (HEADERFILES_COMMON_SCRIPT_LUA_LIST
-	../../common/include/common/script/lua/config.h
-	../../common/include/common/script/lua/filebridge.h
-	../../common/include/common/script/lua/interface.h
-	../../common/include/common/script/lua/lunar.h
-	../../common/include/common/script/lua/stack.h
-	../../common/include/common/script/lua/system.h
-	../../common/include/common/script/lua/vm.h
+	../../../pf/core/include/pf/script/lua/config.h
+	../../../pf/core/include/pf/script/lua/filebridge.h
+	../../../pf/core/include/pf/script/lua/interface.h
+	../../../pf/core/include/pf/script/lua/lunar.h
+	../../../pf/core/include/pf/script/lua/stack.h
+	../../../pf/core/include/pf/script/lua/system.h
+	../../../pf/core/include/pf/script/lua/vm.h
 )
 
 SET (HEADERFILES_COMMON_SCRIPT_LIST
-	../../common/include/common/script/config.h
+	../../../pf/core/include/pf/script/config.h
 )
 
 SET (HEADERFILES_COMMON_ENGINE_THREAD_LIST
-	../../common/include/common/engine/thread/config.h
-	../../common/include/common/engine/thread/db.h
-	../../common/include/common/engine/thread/net.h
-	../../common/include/common/engine/thread/performance.h
-	../../common/include/common/engine/thread/script.h
+	../../../pf/core/include/pf/engine/thread/config.h
+	../../../pf/core/include/pf/engine/thread/db.h
+	../../../pf/core/include/pf/engine/thread/net.h
+	../../../pf/core/include/pf/engine/thread/performance.h
+	../../../pf/core/include/pf/engine/thread/script.h
 )
 
 SET (HEADERFILES_COMMON_ENGINE_LIST
-	../../common/include/common/engine/config.h
-	../../common/include/common/engine/kernel.h
+	../../../pf/core/include/pf/engine/config.h
+	../../../pf/core/include/pf/engine/kernel.h
 )
 
 SET (HEADERFILES_COMMON_SYS_MEMORY_LIST
-	../../common/include/common/sys/memory/config.h
-	../../common/include/common/sys/memory/dynamic_allocator.h
-	../../common/include/common/sys/memory/share.h
-	../../common/include/common/sys/memory/static_allocator.h
+	../../../pf/core/include/pf/sys/memory/config.h
+	../../../pf/core/include/pf/sys/memory/dynamic_allocator.h
+	../../../pf/core/include/pf/sys/memory/share.h
+	../../../pf/core/include/pf/sys/memory/static_allocator.h
 )
 
 SET (HEADERFILES_COMMON_SYS_LIST
-	../../common/include/common/sys/assert.h
-	../../common/include/common/sys/config.h
-	../../common/include/common/sys/info.h
-	../../common/include/common/sys/minidump.h
-	../../common/include/common/sys/process.h
-	../../common/include/common/sys/thread.h
-	../../common/include/common/sys/util.h
+	../../../pf/core/include/pf/sys/assert.h
+	../../../pf/core/include/pf/sys/config.h
+	../../../pf/core/include/pf/sys/info.h
+	../../../pf/core/include/pf/sys/minidump.h
+	../../../pf/core/include/pf/sys/process.h
+	../../../pf/core/include/pf/sys/thread.h
+	../../../pf/core/include/pf/sys/util.h
 )
 
 SET (HEADERFILES_COMMON_PERFORMANCE_LIST
-	../../common/include/common/performance/config.h
-	../../common/include/common/performance/eyes.h
+	../../../pf/core/include/pf/performance/config.h
+	../../../pf/core/include/pf/performance/eyes.h
 )
 
 SET (HEADERFILES_COMMON_UTIL_COMPRESSOR_LIST
-	../../common/include/common/util/compressor/config.h
-	../../common/include/common/util/compressor/lzoconf.h
-	../../common/include/common/util/compressor/lzodefs.h
-	../../common/include/common/util/compressor/mini.h
-	../../common/include/common/util/compressor/minilzo.h
+	../../../pf/core/include/pf/util/compressor/config.h
+	../../../pf/core/include/pf/util/compressor/lzoconf.h
+	../../../pf/core/include/pf/util/compressor/lzodefs.h
+	../../../pf/core/include/pf/util/compressor/mini.h
+	../../../pf/core/include/pf/util/compressor/minilzo.h
 )
 
 SET (HEADERFILES_COMMON_UTIL_LIST
-	../../common/include/common/util/config.h
+	../../../pf/core/include/pf/util/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_DEFINE_NET_PACKET_ID_LIST
-	../../common/include/common/application/define/net/packet/id/all.h
-	../../common/include/common/application/define/net/packet/id/clientlogin.h
-	../../common/include/common/application/define/net/packet/id/clientserver.h
-	../../common/include/common/application/define/net/packet/id/config.h
-	../../common/include/common/application/define/net/packet/id/gatewaylogin.h
-	../../common/include/common/application/define/net/packet/id/logincenter.h
-	../../common/include/common/application/define/net/packet/id/servercenter.h
-	../../common/include/common/application/define/net/packet/id/serverserver.h
+	../../../pf/core/include/pf/application/define/net/packet/id/all.h
+	../../../pf/core/include/pf/application/define/net/packet/id/clientlogin.h
+	../../../pf/core/include/pf/application/define/net/packet/id/clientserver.h
+	../../../pf/core/include/pf/application/define/net/packet/id/config.h
+	../../../pf/core/include/pf/application/define/net/packet/id/gatewaylogin.h
+	../../../pf/core/include/pf/application/define/net/packet/id/logincenter.h
+	../../../pf/core/include/pf/application/define/net/packet/id/servercenter.h
+	../../../pf/core/include/pf/application/define/net/packet/id/serverserver.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_DEFINE_NET_PACKET_LIST
-	../../common/include/common/application/define/net/packet/config.h
+	../../../pf/core/include/pf/application/define/net/packet/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_DEFINE_NET_LIST
-	../../common/include/common/application/define/net/config.h
+	../../../pf/core/include/pf/application/define/net/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_DEFINE_LIST
-	../../common/include/common/application/define/all.h
-	../../common/include/common/application/define/config.h
-	../../common/include/common/application/define/file.h
-	../../common/include/common/application/define/log.h
-	../../common/include/common/application/define/macros.h
+	../../../pf/core/include/pf/application/define/all.h
+	../../../pf/core/include/pf/application/define/config.h
+	../../../pf/core/include/pf/application/define/file.h
+	../../../pf/core/include/pf/application/define/log.h
+	../../../pf/core/include/pf/application/define/macros.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_NET_PACKET_LOGIN_TOGATEWAY_LIST
-	../../common/include/common/application/net/packet/login_togateway/askauth.h
-	../../common/include/common/application/net/packet/login_togateway/config.h
+	../../../pf/core/include/pf/application/net/packet/login_togateway/askauth.h
+	../../../pf/core/include/pf/application/net/packet/login_togateway/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_NET_PACKET_SERVERSERVER_LIST
-	../../common/include/common/application/net/packet/serverserver/config.h
-	../../common/include/common/application/net/packet/serverserver/connect.h
+	../../../pf/core/include/pf/application/net/packet/serverserver/config.h
+	../../../pf/core/include/pf/application/net/packet/serverserver/connect.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_NET_PACKET_GATEWAY_TOLOGIN_LIST
-	../../common/include/common/application/net/packet/gateway_tologin/config.h
-	../../common/include/common/application/net/packet/gateway_tologin/resultauth.h
+	../../../pf/core/include/pf/application/net/packet/gateway_tologin/config.h
+	../../../pf/core/include/pf/application/net/packet/gateway_tologin/resultauth.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_NET_PACKET_LIST
-	../../common/include/common/application/net/packet/config.h
+	../../../pf/core/include/pf/application/net/packet/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_NET_LIST
-	../../common/include/common/application/net/config.h
+	../../../pf/core/include/pf/application/net/config.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_EXTEND_LIST
-	../../common/include/common/application/extend/config.h
-	../../common/include/common/application/extend/define.h
-	../../common/include/common/application/extend/log.h
-	../../common/include/common/application/extend/net_packet_factorymanager.h
+	../../../pf/core/include/pf/application/extend/config.h
+	../../../pf/core/include/pf/application/extend/define.h
+	../../../pf/core/include/pf/application/extend/log.h
+	../../../pf/core/include/pf/application/extend/net_packet_factorymanager.h
 )
 
 SET (HEADERFILES_COMMON_APPLICATION_LIST
-	../../common/include/common/application/config.h
-	../../common/include/common/application/setting.h
+	../../../pf/core/include/pf/application/config.h
+	../../../pf/core/include/pf/application/setting.h
 )
 
 SET (HEADERFILES_COMMON_LIST
@@ -621,7 +619,7 @@ else()
 endif(USE_32BITS)
 
 if (WIN32)
-TARGET_LINK_LIBRARIES(gateway ws2_32.lib odbc32.lib odbccp32.lib luascript.lib libiconv.lib)
+TARGET_LINK_LIBRARIES(gateway ws2_32.lib odbc32.lib odbccp32.lib luascript.lib iconv.lib)
 else()
 TARGET_LINK_LIBRARIES(gateway pthread odbc iconv luascript)
   if(USE_32BITS)

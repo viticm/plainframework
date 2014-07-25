@@ -9,6 +9,11 @@ do
   sed -i 's;common/;pf/;g' $filename
   sed -i 's;PLAIN SERVER Engine;PLAIN FRAMEWORK;g' $filename
   sed -i 's;plainserver;plainframework;g' $filename
+  sed -i 's;PS_;PF_;g' $filename
   sed -i 's;ps_common_;pf_;g' $filename
   sed -i 's;plianserver;plainframework;g' $filename
+  sed -i 's;_PF_GATEWAY;_VGATEWAY;g' $filename
+  sed -i 's;_PF_LOGIN;_VLOGIN;g' $filename
+  sed -i 's;_PF_CENTER;_VCENTER;g' $filename
+  sed -i 's;_PF_SERVER;_VSERVER;g' $filename
 done

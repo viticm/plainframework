@@ -239,12 +239,12 @@ bool Base::sendpacket(packet::Base* packet) {
     if (isdisconnect()) return true;
     if (socket_outputstream_ != NULL) {
       packet->setindex(++packetindex_);
-#if defined(_PS_SERVER)
+#if defined(_VSERVER)
       uint32_t before_writesize = socket_outputstream_->reallength();
 #endif
       result = socket_outputstream_->writepacket(packet);
       Assert(result);
-#if defined(_PS_SERVER)
+#if defined(_VSERVER)
       uint32_t after_writesize = socket_outputstream_->reallength();
       if (packet->getsize() != after_writesize - before_writesize - 6) {
         FAST_ERRORLOG(APPLICATION_LOGFILE,

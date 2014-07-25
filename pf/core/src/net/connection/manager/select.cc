@@ -2,8 +2,8 @@
 #include "pf/base/util.h"
 #include "pf/net/connection/manager/select.h"
 
-#if !(__LINUX__ && defined(_PS_NET_EPOLL)) && \
-  !(__WINDOWS__ && defined(_PS_NET_IOCP))
+#if !(__LINUX__ && defined(_PF_NET_EPOLL)) && \
+  !(__WINDOWS__ && defined(_PF_NET_IOCP))
 
 #if __WINDOWS__
 #pragma warning(disable : 4127) //why use it? for FD_* functions

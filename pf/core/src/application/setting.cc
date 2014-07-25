@@ -15,7 +15,7 @@ namespace pf_application {
 
 //--struct start
 
-#ifdef _PS_SERVER
+#ifdef _VSERVER
 config_info_t::config_info_t() {
   __ENTER_FUNCTION
     global.drop_param = 2.0;
@@ -364,7 +364,7 @@ server_info_t::~server_info_t() {
   //do nothing
 }
 
-#ifdef _PS_SERVER
+#ifdef _VSERVER
 scene_data_t::scene_data_t() {
   __ENTER_FUNCTION
     thread_index = INDEX_INVALID;
@@ -442,7 +442,7 @@ GatewayInfo::GatewayInfo() {
     used_ = false;
     memset(ip_, '\0', sizeof(ip_));
     port_ = 0;
-#ifdef _PS_GATEWAY
+#ifdef _VGATEWAY
     memset(listenip_, 0, sizeof(listenip_));
     listenport_ = 0;
     net_connectionmax_ = NET_CONNECTION_MAX;
@@ -578,7 +578,7 @@ void Setting::load_config_info() {
 }
 
 void Setting::load_config_info_only() { //this params just read once
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     pf_file::Ini config_info_ini(CONFIG_INFO_FILE);
     config_info_.zone.size = 
@@ -609,7 +609,7 @@ void Setting::load_config_info_only() { //this params just read once
 }
 
 void Setting::load_config_info_reload() { //this params can reload again
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     pf_file::Ini config_info_ini(CONFIG_INFO_FILE);
     uint32_t i;
@@ -1048,7 +1048,7 @@ void Setting::load_login_info() {
 }
 
 void Setting::load_login_info_only() {
-#ifdef _PS_LOGIN
+#ifdef _VLOGIN
   __ENTER_FUNCTION
     pf_file::Ini login_info_ini(LOGIN_INFO_FILE);
     login_info_.id = login_info_ini.read_int16("System", "ID");
@@ -1099,7 +1099,7 @@ void Setting::load_login_info_only() {
 }
 
 void Setting::load_login_info_reload() {
-#ifdef _PS_LOGIN
+#ifdef _VLOGIN
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1116,7 +1116,7 @@ void Setting::load_world_info() {
 }
 
 void Setting::load_world_info_only() {
-#ifndef _PS_GATEWAY
+#ifndef _VGATEWAY
   __ENTER_FUNCTION
     pf_file::Ini world_info_ini(WORLD_INFO_FILE);
     world_info_.id = world_info_ini.read_int16("System", "ID");
@@ -1145,7 +1145,7 @@ void Setting::load_world_info_only() {
 }
 
 void Setting::load_world_info_reload() {
-#ifndef _PS_GATEWAY
+#ifndef _VGATEWAY
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1176,7 +1176,7 @@ void Setting::load_gateway_info_only() {
     gateway_info_.clean_up();
     gateway_info_.init(number);
     //db info by viticm
-#ifdef _PS_GATEWAY
+#ifdef _VGATEWAY
     gateway_info_ini.readstring("System", 
                                 "DBIP", 
                                 gateway_info_.db_ip_, 
@@ -1262,7 +1262,7 @@ void Setting::load_gateway_info_only() {
 }
 
 void Setting::load_gateway_info_reload() {
-#if defined(_PS_GATEWAY)
+#if defined(_VGATEWAY)
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1279,7 +1279,7 @@ void Setting::load_share_memory_info() {
 }
 
 void Setting::load_share_memory_info_only() {
-#if defined(_PS_SHAREMEMORY)
+#if defined(_PF_SHAREMEMORY)
   __ENTER_FUNCTION
     pf_file::Ini share_memory_info_ini(SHARE_MEMORY_INFO_FILE);
     share_memory_info_.obj_count = 
@@ -1336,7 +1336,7 @@ void Setting::load_share_memory_info_only() {
 }
 
 void Setting::load_share_memory_info_reload() {
-#if defined(_PS_SHAREMEMORY)
+#if defined(_PF_SHAREMEMORY)
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1353,7 +1353,7 @@ void Setting::load_machine_info() {
 }
 
 void Setting::load_machine_info_only() {
-#if defined(_PS_SERVER)
+#if defined(_VSERVER)
   __ENTER_FUNCTION
     pf_file::Ini machine_info_ini(MACHINE_INFO_FILE);
     machine_info_.count = 
@@ -1377,7 +1377,7 @@ void Setting::load_machine_info_only() {
 }
 
 void Setting::load_machine_info_reload() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1394,7 +1394,7 @@ void Setting::load_server_info() {
 }
 
 void Setting::load_server_info_only() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     pf_file::Ini server_info_ini(SERVER_INFO_FILE);
     server_info_.count = server_info_ini.read_uint16("System", "ServerNumber");
@@ -1454,7 +1454,7 @@ void Setting::load_server_info_only() {
 }
 
 void Setting::load_server_info_reload() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1471,7 +1471,7 @@ void Setting::load_scene_info() {
 }
 
 void Setting::load_scene_info_only() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     pf_file::Ini scene_info_ini(SCENE_INFO_FILE);
     scene_info_.count = scene_info_ini.read_uint16("System", "SceneNumber");
@@ -1523,7 +1523,7 @@ void Setting::load_scene_info_only() {
 }
 
 void Setting::load_scene_info_reload() {
-#if _PS_SERVER
+#if _VSERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1540,19 +1540,19 @@ void Setting::load_copy_scene_info() {
 }
 
 void Setting::load_copy_scene_info_only() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   //do nothing
 #endif
 }
 
 void Setting::load_copy_scene_info_reload() {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   //do nothing
 #endif
 }
 
 int16_t Setting::get_server_id_by_scene_id(int16_t id) const {
-#ifdef _PS_SERVER
+#ifdef _VSERVER
   __ENTER_FUNCTION
     Assert(id >= 0);
     Assert(id < scene_info_.count);
