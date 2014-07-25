@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="gateway"
 	ProjectGUID="{D78A9474-FC59-4C87-B957-022EFD4BEC92}"
-	RootNamespace="billing"
+	RootNamespace="gateway"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>

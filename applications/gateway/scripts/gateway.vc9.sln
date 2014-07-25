@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "billing", "gateway_vc9.vcproj", "{D78A9474-FC59-4C87-B957-022EFD4BEC92}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gateway", "gateway.vc9.vcproj", "{D78A9474-FC59-4C87-B957-022EFD4BEC92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
