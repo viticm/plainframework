@@ -14,8 +14,11 @@
 #ifndef PF_APPLICATION_EXTEND_DEFINE_H_
 #define PF_APPLICATION_EXTEND_DEFINE_H_
 
-#if defined(_VGATEWAY) /* { */
 //applications defined puts in here
+#if defined(_PF_TEST) /* { */
+#define APPLICATION_NAME "pf_simple"
+#define APPLICATION_LOGFILE kDebugLogFile 
+#elif defined(_VGATEWAY) /* }{ */
 #define APPLICATION_NAME "gateway"
 #define APPLICATION_LOGFILE kGatewayLogFile
 #elif defined(_VLOGIN) /* }{ */
