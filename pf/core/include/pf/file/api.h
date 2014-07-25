@@ -29,16 +29,16 @@ namespace pf_file {
 
 namespace api {
 
-int32_t openex(const char* filename, int32_t flag);
-int32_t openmode_ex(const char* filename, int32_t flag, int32_t mode);
+int32_t openex(const char *filename, int32_t flag);
+int32_t openmode_ex(const char *filename, int32_t flag, int32_t mode);
 void closeex(int32_t fd);
-uint32_t readex(int32_t fd, void* buffer, uint32_t length);
-uint32_t writeex(int32_t fd, const void* buffer, uint32_t length);
+uint32_t readex(int32_t fd, void *buffer, uint32_t length);
+uint32_t writeex(int32_t fd, const void *buffer, uint32_t length);
 int32_t fcntlex(int32_t fd, int32_t cmd);
 int32_t fcntlarg_ex(int32_t fd, int32_t cmd, int32_t arg);
 bool get_nonblocking_ex(int32_t socketid);
 void set_nonblocking_ex(int32_t socketid, bool on);
-void ioctlex(int32_t fd, int32_t request, void* argp);
+void ioctlex(int32_t fd, int32_t request, void *argp);
 uint32_t availableex(int32_t fd);
 int32_t dupex(int32_t fd);
 int64_t lseekex(int32_t fd, uint64_t offset, int32_t whence);

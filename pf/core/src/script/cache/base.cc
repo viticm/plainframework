@@ -38,7 +38,7 @@ int32_t Base::getid() const {
   return id_;
 }
 
-const char* Base::get_filename() const {
+const char *Base::get_filename() const {
   return filename_;
 }
 

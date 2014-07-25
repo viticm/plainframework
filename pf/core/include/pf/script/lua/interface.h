@@ -64,7 +64,7 @@ class Interface {
                               int32_t index,
                               const char *function_name);
    static int32_t getscript_stepid(lua_State *L);
-   static void mark_scriptname(lua_State *L, const char* scriptname);
+   static void mark_scriptname(lua_State *L, const char *scriptname);
    static void check_scriptvalid(void *file, 
                                  int32_t scriptid, 
                                  const char *function_name);

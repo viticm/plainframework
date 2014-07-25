@@ -39,7 +39,7 @@ template <typename T> class Lunar {
      lua_pop(L, 1);
    }
 
-   static void Register(lua_State *L, const char* baseName = NULL) {
+   static void Register(lua_State *L, const char *baseName = NULL) {
      lua_pushstring(L, T::className);
      lua_gettable(L, LUA_GLOBALSINDEX);
      if (lua_isnil(L, -1)) {
@@ -494,7 +494,7 @@ inline void gettable_bumber_byindex(lua_State *L,
                                     T& number);
 void gettable_string(lua_State *L, 
                      int32_t table_index, 
-                     const char* key, 
+                     const char *key, 
                      char *string, 
                      int32_t length);
 void gettable_string_byindex(lua_State *L, 
@@ -504,7 +504,7 @@ void gettable_string_byindex(lua_State *L,
                              int32_t length);
 int32_t gettable(lua_State *L, int32_t table_index, const char *key);
 int32_t gettable(lua_State *L, int32_t table_index, int index);
-int32_t dofile(lua_State *L, const char* filename);
+int32_t dofile(lua_State *L, const char *filename);
 int32_t dofile(lua_State *L);
 
 

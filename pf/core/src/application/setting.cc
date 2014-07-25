@@ -412,7 +412,7 @@ internal_ip_of_proxy_t::~internal_ip_of_proxy_t() {
   //do nothing
 }
 
-isp_enum internal_ip_of_proxy_t::ip_from(const char* ip) {
+isp_enum internal_ip_of_proxy_t::ip_from(const char *ip) {
   __ENTER_FUNCTION
     uint32_t i;
     for (i = 0; kProxyForOneNetworkMax > i; ++i) {
@@ -1405,7 +1405,7 @@ void Setting::load_server_info_only() {
       char section[256];
       memset(section, '\0', sizeof(section));
       snprintf(section, sizeof(section) - 1, "Server%d", i);
-      const char* kSection = static_cast<const char*>(section);
+      const char *kSection = static_cast<const char*>(section);
       server_info_.data[i].id = 
         server_info_ini.read_int16(kSection, "ServerID");
       server_info_.data[i].machine_id = 
@@ -1482,7 +1482,7 @@ void Setting::load_scene_info_only() {
       char section[256];
       memset(section, '\0', sizeof(section));
       snprintf(section, sizeof(section) - 1, "Scene%d", i);
-      const char* kSection = static_cast<const char*>(section);
+      const char *kSection = static_cast<const char*>(section);
       scene_info_.data[i].id = static_cast<int16_t>(i);
       scene_info_.data[i].thread_index = 
         scene_info_ini.read_int16(kSection, "ThreadIndex");

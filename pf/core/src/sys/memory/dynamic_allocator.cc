@@ -17,7 +17,7 @@ DynamicAllocator::~DynamicAllocator() {
   __LEAVE_FUNCTION
 }
 
-void* DynamicAllocator::malloc(int64_t length) {
+void *DynamicAllocator::malloc(int64_t length) {
   __ENTER_FUNCTION
     if (length_ == length) return pointer_;
     if (pointer_) free();
@@ -34,7 +34,7 @@ void* DynamicAllocator::malloc(int64_t length) {
 
 void DynamicAllocator::free() {
   __ENTER_FUNCTION
-    char* pointer = reinterpret_cast<char*>(pointer_);
+    char *pointer = reinterpret_cast<char*>(pointer_);
     SAFE_DELETE_ARRAY(pointer);
     length_ = 0;
   __LEAVE_FUNCTION

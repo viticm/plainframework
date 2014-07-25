@@ -20,10 +20,10 @@ namespace util {
 
 char value_toascii(char in);
 char ascii_tovalue(char in);
-bool binary_tostring(const char* in, uint32_t in_length, char* out);
-bool string_tobinary(const char* in, 
+bool binary_tostring(const char *in, uint32_t in_length, char *out);
+bool string_tobinary(const char *in, 
                      uint32_t in_length, 
-                     char* out, 
+                     char *out, 
                      uint32_t out_limit, 
                      uint32_t &out_length);
 void sleep(uint32_t million_seconds);
@@ -34,11 +34,11 @@ void sleep(uint32_t million_seconds);
  *       不过规则是返回最至少大于0.01单位的字符串
  */ 
 void get_sizestr(uint64_t size, 
-                 char* buffer, 
+                 char *buffer, 
                  uint32_t length, 
                  int8_t type = -1);
 
-void path_tounix(char* buffer, uint16_t length);
+void path_tounix(char *buffer, uint16_t length);
 
 //获取当前执行文件名
 void get_module_filename(char *buffer, size_t size);

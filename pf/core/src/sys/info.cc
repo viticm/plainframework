@@ -13,7 +13,7 @@ namespace pf_sys {
 namespace info {
 
 #if __WINDOWS__
-static uint64_t file_time_2_utc(const FILETIME* ftime) {
+static uint64_t file_time_2_utc(const FILETIME *ftime) {
   LARGE_INTEGER li;
   Assert(ftime);
   li.LowPart = ftime->dwLowDateTime;
@@ -22,7 +22,7 @@ static uint64_t file_time_2_utc(const FILETIME* ftime) {
 }
 #endif
 
-bool get_sys_info(sys_info_t& sys_info) {
+bool get_sys_info(sys_info_t &sys_info) {
   __ENTER_FUNCTION
 #if __LINUX__
     struct sysinfo info;
@@ -60,7 +60,7 @@ bool get_sys_info(sys_info_t& sys_info) {
     return false;
 }
 
-bool get_mem_info(memory_info_t& mem_info) {
+bool get_mem_info(memory_info_t &mem_info) {
   __ENTER_FUNCTION
 #if __LINUX__
     FILE* fp = fopen("/proc/meminfo", "r");
@@ -124,8 +124,7 @@ bool get_mem_info(memory_info_t& mem_info) {
     return false;
 }
 
-bool get_cpu_info(cpu_info_t& cpu_info)
-{
+bool get_cpu_info(cpu_info_t &cpu_info) {
   __ENTER_FUNCTION
     using namespace pf_base;
 #if __LINUX__
@@ -167,7 +166,7 @@ bool get_cpu_info(cpu_info_t& cpu_info)
     if (fp1) {
       CloseHelper ch1(fp1);
       while (fgets(line, sizeof(line) - 1, fp1)) {
-        const char* kCpuModelName = "model name      : %s";
+        const char *kCpuModelName = "model name      : %s";
         int ret = sscanf(line, kCpuModelName, &cpu_info.cpu_name);
         if (ret > 0) {
           std::string full_model_name = line;
@@ -261,7 +260,7 @@ int get_cpu_info_array(std::vector<cpu_info_t>& cpu_info_array) {
       if (fp) {
         CloseHelper<FILE*>(fp);
         while (fgets(line, sizeof(line) - 1, fp)) {
-          const char* kCpuModelName = "model name      : %s";
+          const char *kCpuModelName = "model name      : %s";
           int ret = sscanf(line, kCpuModelName, &cpu_info.cpu_name);
           if (ret > 0) {
             std::string full_model_name = line;
@@ -302,7 +301,7 @@ int get_cpu_info_array(std::vector<cpu_info_t>& cpu_info_array) {
 }
 **/
 
-bool get_kernel_version(kernel_version_t& kernel_version) {
+bool get_kernel_version(kernel_version_t &kernel_version) {
   __ENTER_FUNCTION
     using namespace pf_base;
 #if __LINUX__
@@ -310,7 +309,7 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
     if (NULL == fp) return false;
     CloseHelper ch(fp);
     char line[LINE_MAX];
-    char* linep = fgets(line, sizeof(line)-1, fp);
+    char *linep = fgets(line, sizeof(line)-1, fp);
 
     if (NULL == linep) return false;
 
@@ -325,15 +324,15 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
                      f1, 
                      sizeof(kernel_version.system_name));
 
-    char* bar = strchr(version, '-');
+    char *bar = strchr(version, '-');
     if (bar != NULL) *bar = '\0';
 
-    char* dot1 = strchr(version, '.');
+    char *dot1 = strchr(version, '.');
     if (NULL == dot1) return false;
     *dot1++ = '\0';
     if (!string::toint16(version, kernel_version.major)) return false;
 
-    char* dot2 = strchr(dot1, '.');
+    char *dot2 = strchr(dot1, '.');
     if (NULL == dot2) return false;
     *dot2++ = '\0';
     if (!string::toint16(dot1, kernel_version.minor)) return false;
@@ -424,8 +423,7 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
                    os_vision.szCSDVersion,
                    os_vision.dwBuildNumber & 0xFFFF);
           version_str = temp;
-        }
-        else { 
+        } else { 
           char temp[FILENAME_MAX] = {0};
           snprintf(temp,
                    sizeof(temp) - 1,
@@ -436,8 +434,7 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
           version_str = temp;
         }
         break;
-      }
-      case VER_PLATFORM_WIN32_WINDOWS: {
+      } case VER_PLATFORM_WIN32_WINDOWS: {
 
         if (4 == os_vision.dwMajorVersion && 0 == os_vision.dwMinorVersion) {
           version_str = "Microsoft Windows 95 ";
@@ -456,8 +453,7 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
           version_str = "Microsoft Windows Me ";
         } 
         break;
-      }
-      case VER_PLATFORM_WIN32s: {
+      } case VER_PLATFORM_WIN32s: {
         version_str = "Microsoft Win32s ";
         break;
       }
@@ -478,7 +474,7 @@ bool get_kernel_version(kernel_version_t& kernel_version) {
     return false;
 }
 
-bool get_process_info(process_info_t& process_info) {
+bool get_process_info(process_info_t &process_info) {
   USE_PARAMEX(process_info);
   /**
   __ENTER_FUNCTION
@@ -491,7 +487,7 @@ bool get_process_info(process_info_t& process_info) {
 
     char line[LINE_MAX];
     int filed_number = 38;
-      char* linep = fgets(line, sizeof(line)-1, fp);
+      char *linep = fgets(line, sizeof(line)-1, fp);
 
     if (NULL == linep) return false;
     
@@ -547,7 +543,7 @@ bool get_process_info(process_info_t& process_info) {
     return true;
 }
 
-bool get_process_page_info(process_page_info_t& process_page_info) {
+bool get_process_page_info(process_page_info_t &process_page_info) {
   __ENTER_FUNCTION
 #if __LINUX__
     char filename[FILENAME_MAX];
@@ -559,7 +555,7 @@ bool get_process_page_info(process_page_info_t& process_page_info) {
 
     char line[LINE_MAX];
     int filed_number = 6;
-    char* linep = fgets(line, sizeof(line)-1, fp);
+    char *linep = fgets(line, sizeof(line)-1, fp);
 
     if (NULL == linep) return false;
 
@@ -581,7 +577,7 @@ bool get_process_page_info(process_page_info_t& process_page_info) {
 
 // getrusage
 
-bool get_process_times(process_time_t& process_time) {
+bool get_process_times(process_time_t &process_time) {
   __ENTER_FUNCTION
 #if __LINUX__
     struct tms buf;
@@ -601,8 +597,8 @@ bool get_process_times(process_time_t& process_time) {
     return false;
 }
 
-bool do_get_net_info_array(const char* interface_name, 
-                           std::vector<net_info_t>& net_info_array) {
+bool do_get_net_info_array(const char *interface_name, 
+                           std::vector<net_info_t> &net_info_array) {
   __ENTER_FUNCTION
 #if __LINUX__
     net_info_array.clear();
@@ -618,12 +614,12 @@ bool do_get_net_info_array(const char* interface_name,
     if (NULL == fgets(line, sizeof(line)-1, fp)) return false;
 
     while (fgets(line, sizeof(line)-1, fp)) {
-      char* line_p = line;
+      char *line_p = line;
       // 去掉前导空格
       while ((' ' == *line_p) || ('\t' == *line_p))
         ++line_p;
       
-      char* colon = strchr(line_p, ':');
+      char *colon = strchr(line_p, ':');
       if (NULL == colon) break;
       *colon = '\t';
 
@@ -632,8 +628,8 @@ bool do_get_net_info_array(const char* interface_name,
         continue;
       
       net_info_t net_info;
-      if (sscanf(line_p
-              ,"%s"
+      if (sscanf(line_p,
+              "%s"
                "%lu%lu%lu%lu%lu"
                "%lu%lu%lu%lu%lu"
                "%lu%lu%lu%lu%lu"
@@ -670,7 +666,7 @@ bool do_get_net_info_array(const char* interface_name,
     return false;
 }
 
-bool get_net_info(const char* interface_name, net_info_t& net_info) {
+bool get_net_info(const char *interface_name, net_info_t &net_info) {
   __ENTER_FUNCTION
 #if __LINUX__
     std::vector<net_info_t> net_info_array;
@@ -688,7 +684,7 @@ bool get_net_info(const char* interface_name, net_info_t& net_info) {
     return false;
 }
 
-bool get_net_info_array(std::vector<net_info_t>& net_info_array) {
+bool get_net_info_array(std::vector<net_info_t> &net_info_array) {
   __ENTER_FUNCTION
 #if __LINUX__
     return do_get_net_info_array(NULL, net_info_array);
@@ -700,13 +696,13 @@ bool get_net_info_array(std::vector<net_info_t>& net_info_array) {
     return false;
 }
 
-bool get_ip(char* &ip, const char* interface_name) {
+bool get_ip(char *&ip, const char *interface_name) {
   __ENTER_FUNCTION
     using namespace pf_base;
     bool result = false;
 #if __LINUX__
     char line[LINE_MAX] = {0};
-    const char* kNetworkScriptFileNameStr 
+    const char *kNetworkScriptFileNameStr 
       = "/etc/sysconfig/network-scripts/ifcfg-%s";
     char network_script_file_name[FILENAME_MAX] = {0};
     snprintf(network_script_file_name, 
@@ -717,7 +713,7 @@ bool get_ip(char* &ip, const char* interface_name) {
     if (fp) {
       CloseHelper ch(fp);
       while (fgets(line, sizeof(line) - 1, fp)) {
-        const char* kIpAddr = "IPADDR=%s";
+        const char *kIpAddr = "IPADDR=%s";
         int ret = sscanf(line, kIpAddr, &ip);
         if (ret > 0) {
           std::string full_ipaddr = line;
@@ -747,7 +743,7 @@ bool get_ip(char* &ip, const char* interface_name) {
     return false;
 }
 
-bool get_loadaverage(loadaverage_t& loadaverage) {
+bool get_loadaverage(loadaverage_t &loadaverage) {
   __ENTER_FUNCTION
 #if __LINUX__
     char line[LINE_MAX] = {0};

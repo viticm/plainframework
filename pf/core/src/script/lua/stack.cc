@@ -48,7 +48,7 @@ void Stack::reset() {
   __LEAVE_FUNCTION
 }
 
-bool Stack::stepenter(const char* functionname, int32_t scriptid) {
+bool Stack::stepenter(const char *functionname, int32_t scriptid) {
   __ENTER_FUNCTION
     using namespace pf_base;
     if (currentstep_ >= SCRIPT_LUA_STACK_STEP_MAX) {

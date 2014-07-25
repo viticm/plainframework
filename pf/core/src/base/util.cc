@@ -161,7 +161,7 @@ char ascii_tovalue(char in) {
     return '?';
 }
 
-bool binary_tostring(const char* in, uint32_t in_length, char* out) {
+bool binary_tostring(const char *in, uint32_t in_length, char *out) {
   __ENTER_FUNCTION
     if (0 == in_length) return false;
     uint32_t out_index = 0;
@@ -177,9 +177,9 @@ bool binary_tostring(const char* in, uint32_t in_length, char* out) {
     return false;
 }
 
-bool string_tobinary(const char* in, 
+bool string_tobinary(const char *in, 
                      uint32_t in_length, 
-                     char* out, 
+                     char *out, 
                      uint32_t out_limit, 
                      uint32_t &out_length) {
   __ENTER_FUNCTION
@@ -209,7 +209,7 @@ void sleep(uint32_t million_seconds) {
   __LEAVE_FUNCTION
 }
 
-void get_sizestr(uint64_t size, char* buffer, uint32_t length, int8_t type) {
+void get_sizestr(uint64_t size, char *buffer, uint32_t length, int8_t type) {
   __ENTER_FUNCTION
     int8_t realtype = 0;
     if (0 == type) {
@@ -261,7 +261,7 @@ void get_sizestr(uint64_t size, char* buffer, uint32_t length, int8_t type) {
   __LEAVE_FUNCTION
 }
 
-void path_tounix(char* buffer, uint16_t length) {
+void path_tounix(char *buffer, uint16_t length) {
   __ENTER_FUNCTION
     for (uint16_t i = 0; i < length; ++i) {
       if ('\\' == buffer[i]) buffer[i] = '/';

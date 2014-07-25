@@ -6,15 +6,15 @@ namespace pf_net {
 
 namespace socket {
 
-uint32_t InputStream::read(char* buffer, uint32_t length) {
+uint32_t InputStream::read(char *buffer, uint32_t length) {
   __ENTER_FUNCTION
     uint32_t result = length; //normal state
-    char* stream_buffer = streamdata_.buffer;
+    char *stream_buffer = streamdata_.buffer;
     uint32_t bufferlength = streamdata_.bufferlength;
     uint32_t headlength = streamdata_.headlength;
     uint32_t taillength = streamdata_.taillength;
     if (0 == length || length > reallength()) return 0;
-    unsigned char* tempbuffer = new unsigned char[length];
+    unsigned char *tempbuffer = new unsigned char[length];
     if (0 == tempbuffer) return 0;
     if (headlength < taillength) {
       memcpy(tempbuffer, &stream_buffer[headlength], length);
@@ -59,7 +59,7 @@ bool InputStream::readpacket(packet::Base* packet) {
     return false;
 }
 
-bool InputStream::peek(char* buffer, uint32_t length) {
+bool InputStream::peek(char *buffer, uint32_t length) {
   __ENTER_FUNCTION
     if (0 == length || length > reallength()) {
       return false;
@@ -67,7 +67,7 @@ bool InputStream::peek(char* buffer, uint32_t length) {
     uint32_t bufferlength = streamdata_.bufferlength;
     uint32_t headlength = streamdata_.headlength;
     uint32_t taillength = streamdata_.taillength;
-    char* stream_buffer = streamdata_.buffer;
+    char *stream_buffer = streamdata_.buffer;
     if (headlength < taillength) {
       memcpy(buffer, &(stream_buffer[headlength]), length);
     }
@@ -115,7 +115,7 @@ int32_t InputStream::fill() {
     uint32_t bufferlength_max = streamdata_.bufferlength_max;
     uint32_t headlength = streamdata_.headlength;
     uint32_t taillength = streamdata_.taillength;
-    char* stream_buffer = streamdata_.buffer;
+    char *stream_buffer = streamdata_.buffer;
     // head tail length=10
     // 0123456789
     // abcd......

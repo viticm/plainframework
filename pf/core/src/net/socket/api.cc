@@ -447,7 +447,7 @@ int32_t acceptex(int32_t socketid,
 bool getsockopt_exb(int32_t socketid, 
                     int32_t level, 
                     int32_t optname, 
-                    void* optval, 
+                    void *optval, 
                     uint32_t* optlength) {
   
 #if __LINUX__
@@ -518,7 +518,7 @@ bool getsockopt_exb(int32_t socketid,
 uint32_t getsockopt_exu(int32_t socketid, 
                         int32_t level, 
                         int32_t optname, 
-                        void* optval, 
+                        void *optval, 
                         uint32_t* optlength) {
 uint32_t result = 0;
 #if __LINUX__
@@ -598,7 +598,7 @@ uint32_t result = 0;
 bool setsockopt_ex(int32_t socketid, 
                    int32_t level, 
                    int32_t optname, 
-                   const void* optval, 
+                   const void *optval, 
                    uint32_t optlength) {
   bool result = true;
 #if __LINUX__
@@ -674,7 +674,7 @@ bool setsockopt_ex(int32_t socketid,
 }
 
 int32_t sendex(int32_t socketid, 
-               const void* buffer, 
+               const void *buffer, 
                uint32_t length, 
                uint32_t flag) {
   int32_t result = 0;
@@ -797,7 +797,7 @@ int32_t sendex(int32_t socketid,
 
 
 int32_t sendtoex(int32_t socketid, 
-                 const void* buffer, 
+                 const void *buffer, 
                  int32_t length, 
                  uint32_t flag, 
                  const struct sockaddr* to, 
@@ -835,7 +835,7 @@ int32_t sendtoex(int32_t socketid,
 }
 
 int32_t recvex(int32_t socketid, 
-               void* buffer, 
+               void *buffer, 
                uint32_t length, 
                uint32_t flag) {
 
@@ -946,7 +946,7 @@ int32_t recvex(int32_t socketid,
 }
 
 int32_t recvfrom_ex(int32_t socketid, 
-                    void* buffer, 
+                    void *buffer, 
                     int32_t length, 
                     uint32_t flag, 
                     struct sockaddr* from, 

@@ -24,13 +24,13 @@ class DynamicAllocator {
    ~DynamicAllocator();
 
  public:
-   void* malloc(int64_t length);
+   void *malloc(int64_t length);
    void free();
-   void* getpointer();
+   void *getpointer();
    int64_t getlength();
  
  private:
-   void* pointer_;
+   void *pointer_;
    int64_t length_;
 
 }; 

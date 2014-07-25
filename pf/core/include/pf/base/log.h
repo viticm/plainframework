@@ -19,7 +19,7 @@
 
 namespace pf_base {
 
-extern const char* kBaseLogSaveDir; //如果不要外部使用，就别使用宏
+extern const char *kBaseLogSaveDir; //如果不要外部使用，就别使用宏
 
 extern bool g_command_logprint; //global if print log to io
 extern bool g_command_logactive; //global if write log to file
@@ -35,25 +35,25 @@ class Log : public Singleton<Log> {
  public:
    Log();
    ~Log();
-   static Log* getsingleton_pointer();
-   static Log& getsingleton();
+   static Log *getsingleton_pointer();
+   static Log &getsingleton();
 
  public:
-   static void disk_log(const char* file_name_prefix, const char* format, ...);
+   static void disk_log(const char *file_name_prefix, const char *format, ...);
    bool init(int32_t cache_size = kDefaultLogCacheSize);
    void flush_log(uint8_t logid);
    int32_t get_logsize(uint8_t logid);
-   void get_log_filename(uint8_t logid, char* filename);
-   static void get_log_filename(const char* filename_prefix, char* filename);
+   void get_log_filename(uint8_t logid, char *filename);
+   static void get_log_filename(const char *filename_prefix, char *filename);
    void flush_alllog();
-   static void get_serial(char* serial, int16_t worldid, int16_t serverid);
-   static void remove_log(const char* filename);
-   static void get_log_timestr(char* time_str, int32_t length);
+   static void get_serial(char *serial, int16_t worldid, int16_t serverid);
+   static void remove_log(const char *filename);
+   static void get_log_timestr(char *time_str, int32_t length);
 
  public:
    //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志
    template <uint8_t type>
-   void fast_savelog(uint8_t logid, const char* format, ...) {
+   void fast_savelog(uint8_t logid, const char *format, ...) {
      __ENTER_FUNCTION
        if (logid < 0 || logid >= kFinalLogFileCount) return;
        char buffer[4096] = {0};
@@ -114,8 +114,8 @@ class Log : public Singleton<Log> {
 
    //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志
    template <uint8_t type>
-   static void slow_savelog(const char* filename_prefix, 
-                            const char* format, ...) {
+   static void slow_savelog(const char *filename_prefix, 
+                            const char *format, ...) {
        __ENTER_FUNCTION
        g_log_lock.lock();
        char buffer[4096] = {0};
@@ -167,7 +167,7 @@ class Log : public Singleton<Log> {
    }
 
  private:
-   char* log_cache_[kLogFileCount];
+   char *log_cache_[kLogFileCount];
    int32_t log_position_[kLogFileCount];
    pf_sys::ThreadLock log_lock_[kLogFileCount];
    int32_t cache_size_;

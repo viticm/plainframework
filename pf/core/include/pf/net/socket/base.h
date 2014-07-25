@@ -21,7 +21,7 @@ class Base {
  
  public:
    Base();
-   Base(const char* host, uint16_t port);
+   Base(const char *host, uint16_t port);
    virtual ~Base();
 
  public:
@@ -33,10 +33,10 @@ class Base {
    bool create();
    void close();
    bool connect(); //use self host_ and port_
-   bool connect(const char* host, uint16_t port);
-   bool reconnect(const char* host, uint16_t port);
-   int32_t send(const void* buffer, uint32_t length, uint32_t flag = 0);
-   int32_t receive(void* buffer, uint32_t length, uint32_t flag = 0);
+   bool connect(const char *host, uint16_t port);
+   bool reconnect(const char *host, uint16_t port);
+   int32_t send(const void *buffer, uint32_t length, uint32_t flag = 0);
+   int32_t receive(void *buffer, uint32_t length, uint32_t flag = 0);
    uint32_t available() const;
    int32_t accept(uint16_t port, const char *host = NULL);
    int32_t fastaccept();
@@ -44,10 +44,10 @@ class Base {
    bool bind(uint16_t port, const char *ip = NULL);
    bool listen(uint32_t backlog);
    static int32_t select(int32_t maxfdp, 
-                         fd_set* readset, 
-                         fd_set* writeset, 
-                         fd_set* exceptset,
-                         timeval* timeout);
+                         fd_set *readset, 
+                         fd_set *writeset, 
+                         fd_set *exceptset,
+                         timeval *timeout);
 
  public: //socket check and set functions
    uint32_t getlinger() const;
@@ -55,7 +55,7 @@ class Base {
    bool is_reuseaddr() const;
    bool set_reuseaddr(bool on = true);
    uint32_t getlast_errorcode() const;
-   void getlast_errormessage(char* buffer, uint16_t length) const;
+   void getlast_errormessage(char *buffer, uint16_t length) const;
    bool iserror() const; //socket if has error
    bool is_nonblocking() const;
    bool set_nonblocking(bool on = true);

@@ -7,10 +7,10 @@ namespace pf_base {
 
 bool g_command_logprint = true;
 bool g_command_logactive = true;
-const char* kBaseLogSaveDir = "./log";
+const char *kBaseLogSaveDir = "./log";
 pf_sys::ThreadLock g_log_lock;
 
-const char* g_log_filename[] = {
+const char *g_log_filename[] = {
   "./log/debug", //kDebugLogFile
   "./log/error", //kErrorLogFile
   "./log/net", //kNetLogFile
@@ -19,13 +19,13 @@ const char* g_log_filename[] = {
 };
 
 bool g_log_in_one_file = false;
-template<> Log* Singleton<Log>::singleton_ = NULL;
+template<> Log *Singleton<Log>::singleton_ = NULL;
 
-Log* Log::getsingleton_pointer() {
+Log *Log::getsingleton_pointer() {
   return singleton_;
 }
 
-Log& Log::getsingleton() {
+Log &Log::getsingleton() {
   Assert(singleton_);
   return *singleton_;
 }
@@ -52,7 +52,7 @@ Log::~Log() {
   __LEAVE_FUNCTION
 }
 
-void Log::get_log_timestr(char* time_str, int32_t length) {
+void Log::get_log_timestr(char *time_str, int32_t length) {
   __ENTER_FUNCTION
     if (g_time_manager) {
         g_time_manager->reset_time();
@@ -71,7 +71,7 @@ void Log::get_log_timestr(char* time_str, int32_t length) {
   __LEAVE_FUNCTION
 }
 
-void Log::disk_log(const char* file_nameprefix, const char* format, ...) {
+void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
   __ENTER_FUNCTION
     if (g_command_logactive != true) return;
     if (NULL == file_nameprefix || 0 == file_nameprefix[0]) return;
@@ -179,7 +179,7 @@ void Log::get_log_filename(uint8_t logid, char *save) {
   __LEAVE_FUNCTION
 }
 
-void Log::get_log_filename(const char* file_nameprefix, char* file_name) { 
+void Log::get_log_filename(const char *file_nameprefix, char *file_name) { 
 //remember the file_nameprefix is model name
   __ENTER_FUNCTION
      if (g_time_manager) {
@@ -233,7 +233,7 @@ void Log::flush_alllog() {
   __LEAVE_FUNCTION
 }
 
-void Log::remove_log(const char* file_name) {
+void Log::remove_log(const char *file_name) {
   __ENTER_FUNCTION
     g_log_lock.lock();
     FILE* fp;
@@ -243,7 +243,7 @@ void Log::remove_log(const char* file_name) {
   __LEAVE_FUNCTION
 }
 
-void Log::get_serial(char* serial, int16_t world_id, int16_t server_id) {
+void Log::get_serial(char *serial, int16_t world_id, int16_t server_id) {
   __ENTER_FUNCTION
     USE_PARAM(world_id);
     USE_PARAM(server_id);

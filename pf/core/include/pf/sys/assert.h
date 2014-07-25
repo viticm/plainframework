@@ -20,25 +20,25 @@ extern int g_need_manager_do_pos_init;//控制参数，是否需要初始化管�
 
 namespace pf_sys {
 
-void __assert__(const char* file, 
+void __assert__(const char *file, 
                 unsigned int line, 
-                const char* func, 
-                const char* expr);
-void __assertex__(const char* file, 
+                const char *func, 
+                const char *expr);
+void __assertex__(const char *file, 
                   unsigned int line, 
-                  const char* func, 
-                  const char* expr, 
-                  const char* msg);
-void __assertspecial__(const char* file, 
+                  const char *func, 
+                  const char *expr, 
+                  const char *msg);
+void __assertspecial__(const char *file, 
                        unsigned int line, 
-                       const char* func, 
-                       const char* expr, 
-                       const char* msg);
-void __messagebox__(const char* msg);
-void __protocol_assert__(const char* file, 
+                       const char *func, 
+                       const char *expr, 
+                       const char *msg);
+void __messagebox__(const char *msg);
+void __protocol_assert__(const char *file, 
                          unsigned int line, 
-                         const char* func, 
-                         const char* expr);
+                         const char *func, 
+                         const char *expr);
 
 //--------------------------------------------------------------------------------
 // if nIndex was in [nFrom, nTo], this function will return TRUE. that means legal.

@@ -43,11 +43,11 @@ class Database {
    union field_data {
      float float_value;
      int32_t int_value;
-     const char* string_value; //can't change excel value in memory
+     const char *string_value; //can't change excel value in memory
      field_data() {/** do nothing **/}
      field_data(float value) {float_value = value;}
      field_data(int32_t value) {int_value = value;}
-     field_data(const char* value) {string_value = value;}
+     field_data(const char *value) {string_value = value;}
    };
 
    typedef std::vector<field_data> data_buffer;
@@ -57,10 +57,10 @@ class Database {
    virtual ~Database();
 
  public:
-   bool open_from_txt(const char* filename);
-   bool open_from_memory(const char* memory, 
-                         const char* end, 
-                         const char* filename = NULL);
+   bool open_from_txt(const char *filename);
+   bool open_from_memory(const char *memory, 
+                         const char *end, 
+                         const char *filename = NULL);
    virtual const field_data* search_index_equal(int32_t index) const;
    virtual const field_data* search_position(int32_t line, 
                                              int32_t column) const;
@@ -70,18 +70,18 @@ class Database {
    uint32_t get_id() const; //获得ID
    int32_t get_field_number() const;
    int32_t get_record_number() const;
-   void create_index(int32_t column = 0, const char* filename = 0);
+   void create_index(int32_t column = 0, const char *filename = 0);
 
  public:
-   static int32_t convert_string_tovector(const char* source,
+   static int32_t convert_string_tovector(const char *source,
                                           std::vector<std::string> &result,
-                                          const char* key,
+                                          const char *key,
                                           bool one_key,
                                           bool ignore_empty);
-   static const char* get_line_from_memory(char* str, 
+   static const char *get_line_from_memory(char *str, 
                                            int32_t size, 
-                                           const char* memory,
-                                           const char* end);
+                                           const char *memory,
+                                           const char *end);
    static bool field_equal(field_type_enum type, 
                            const field_data &a, 
                            const field_data &b);
@@ -99,12 +99,12 @@ class Database {
    int32_t index_column_;
 
  protected:
-   bool open_from_memory_text(const char* memory, 
-                              const char* end, 
-                              const char* filename = NULL);
-   bool open_from_memory_binary(const char* memory, 
-                                const char* end, 
-                                const char* filename = NULL);
+   bool open_from_memory_text(const char *memory, 
+                              const char *end, 
+                              const char *filename = NULL);
+   bool open_from_memory_binary(const char *memory, 
+                                const char *end, 
+                                const char *filename = NULL);
 
 };
 

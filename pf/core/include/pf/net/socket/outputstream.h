@@ -30,7 +30,7 @@ class OutputStream : public Stream {
    ~OutputStream() {};
 
  public:
-   uint32_t write(const char* buffer, uint32_t length);
+   uint32_t write(const char *buffer, uint32_t length);
    bool writepacket(const packet::Base* packet);
    int32_t flush();
  

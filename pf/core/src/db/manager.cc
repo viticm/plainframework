@@ -121,7 +121,7 @@ bool Manager::check_db_connect() {
     return false;
 }
 
-float Manager::get_float(int32_t column_index, int32_t& error_code) {
+float Manager::get_float(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     float result = 0.0f;
     switch (connector_type_) {
@@ -137,7 +137,7 @@ float Manager::get_float(int32_t column_index, int32_t& error_code) {
     return 0.0f;
 }
 
-int64_t Manager::get_int64(int32_t column_index, int32_t& error_code) {
+int64_t Manager::get_int64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     int64_t result = -1;
     switch (connector_type_) {
@@ -153,7 +153,7 @@ int64_t Manager::get_int64(int32_t column_index, int32_t& error_code) {
     return -1;
 }
 
-uint64_t Manager::get_uint64(int32_t column_index, int32_t& error_code) {
+uint64_t Manager::get_uint64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     uint64_t result = 0;
     switch (connector_type_) {
@@ -169,7 +169,7 @@ uint64_t Manager::get_uint64(int32_t column_index, int32_t& error_code) {
     return 0;
 }
 
-int32_t Manager::get_int32(int32_t column_index, int32_t& error_code) {
+int32_t Manager::get_int32(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     int32_t result = -1;
     switch (connector_type_) {
@@ -185,7 +185,7 @@ int32_t Manager::get_int32(int32_t column_index, int32_t& error_code) {
     return -1;
 }
 
-uint32_t Manager::get_uint32(int32_t column_index, int32_t& error_code) {
+uint32_t Manager::get_uint32(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     uint32_t result = 0;
     switch (connector_type_) {
@@ -201,7 +201,7 @@ uint32_t Manager::get_uint32(int32_t column_index, int32_t& error_code) {
     return 0;
 }
    
-int16_t Manager::get_int16(int32_t column_index, int32_t& error_code) {
+int16_t Manager::get_int16(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     int16_t result = -1;
     switch (connector_type_) {
@@ -217,7 +217,7 @@ int16_t Manager::get_int16(int32_t column_index, int32_t& error_code) {
     return -1;
 }
 
-uint16_t Manager::get_uint16(int32_t column_index, int32_t& error_code) {
+uint16_t Manager::get_uint16(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     uint16_t result = 0;
     switch (connector_type_) {
@@ -233,7 +233,7 @@ uint16_t Manager::get_uint16(int32_t column_index, int32_t& error_code) {
     return 0;
 }
    
-int8_t Manager::get_int8(int32_t column_index, int32_t& error_code) {
+int8_t Manager::get_int8(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     int8_t result = -1;
     switch (connector_type_) {
@@ -249,7 +249,7 @@ int8_t Manager::get_int8(int32_t column_index, int32_t& error_code) {
     return -1;
 }
 
-uint8_t Manager::get_uint8(int32_t column_index, int32_t& error_code) {
+uint8_t Manager::get_uint8(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     uint8_t result = 0;
     switch (connector_type_) {
@@ -268,7 +268,7 @@ uint8_t Manager::get_uint8(int32_t column_index, int32_t& error_code) {
 int32_t Manager::get_string(int32_t column_index, 
                             char *buffer, 
                             int32_t buffer_length, 
-                            int32_t& error_code) {
+                            int32_t &error_code) {
   __ENTER_FUNCTION
     int32_t result = -1;
     switch (connector_type_) {
@@ -290,7 +290,7 @@ int32_t Manager::get_string(int32_t column_index,
 int32_t Manager::get_field(int32_t column_index, 
                            char *buffer, 
                            int32_t buffer_length, 
-                           int32_t& error_code) {
+                           int32_t &error_code) {
   __ENTER_FUNCTION
     int32_t result = -1;
     switch (connector_type_) {
@@ -312,7 +312,7 @@ int32_t Manager::get_field(int32_t column_index,
 int32_t Manager::get_binary(int32_t column_index, 
                             char *buffer, 
                             int32_t buffer_length, 
-                            int32_t& error_code) {
+                            int32_t &error_code) {
   __ENTER_FUNCTION
     int32_t result = -1;
     switch (connector_type_) {
@@ -334,7 +334,7 @@ int32_t Manager::get_binary(int32_t column_index,
 int32_t Manager::get_binary_withdecompress(int32_t column_index, 
                                            char *buffer, 
                                            int32_t buffer_length, 
-                                           int32_t& error_code) {
+                                           int32_t &error_code) {
   __ENTER_FUNCTION
     int32_t result = -1;
     switch (connector_type_) {

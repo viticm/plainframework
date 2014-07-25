@@ -40,7 +40,7 @@ class Stack {
 
  public:
    void reset();
-   bool stepenter(const char* functionname, int32_t scriptid);
+   bool stepenter(const char *functionname, int32_t scriptid);
    bool stepleave();
 
  public:

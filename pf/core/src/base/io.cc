@@ -44,16 +44,16 @@ void baseio_perror(const char *format, ...) {
 #endif
 }
 
-void baseio_pwarn(const char* format, ...) {
+void baseio_pwarn(const char *format, ...) {
   char buffer[2048] = {0};
 #if __LINUX__ /* { */
-  const char* head = "\e[0;33;1m";
-  const char* end = "\e[0m";
+  const char *head = "\e[0;33;1m";
+  const char *end = "\e[0m";
 #elif __WINDOWS__ /* }{ */
   uint16_t lastcolor = 
     set_consolecolor(FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
-  const char* head = "";
-  const char* end = "";
+  const char *head = "";
+  const char *end = "";
 #endif /* } */
   va_list argptr;
   va_start(argptr, format);
@@ -65,16 +65,16 @@ void baseio_pwarn(const char* format, ...) {
 #endif
 }
 
-void baseio_pdebug(const char* format, ...) {
+void baseio_pdebug(const char *format, ...) {
   char buffer[2048] = {0};
 #if __LINUX__ /* { */
-  const char* head = "\e[0;32;1m";
-  const char* end = "\e[0m";
+  const char *head = "\e[0;32;1m";
+  const char *end = "\e[0m";
 #elif __WINDOWS__ /* }{ */
   uint16_t lastcolor = 
     set_consolecolor(FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-  const char* head = "";
-  const char* end = "";
+  const char *head = "";
+  const char *end = "";
 #endif /* } */
   va_list argptr;
   va_start(argptr, format);

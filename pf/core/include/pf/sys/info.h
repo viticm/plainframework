@@ -6,7 +6,8 @@
  * @license
  * @user viticm<viticm@126.com>
  * @date 2014/07/05 11:38
- * @uses system info namespace, can get system some info just like cpu or memory(use some JianYi code)
+ * @uses system info namespace, 
+ *       can get system some info just like cpu or memory(use some JianYi code)
  *       use the code url: http://code.google.com/p/mooon/source/browse/trunk/common_library/include/sys
  *       (thanks eyjian@gmail.com) -- but this functions also need use in windows
  */
@@ -135,20 +136,20 @@ typedef struct {
   float fifteenminutes;
 } loadaverage_t;
 
-bool get_sys_info(sys_info_t& sys_info);
-bool get_mem_info(memory_info_t& mem_info);
-bool get_cpu_info(cpu_info_t& cpu_info);
-int get_cpu_info_array(std::vector<cpu_info_t>& cpu_info_array);
-bool get_kernel_version(kernel_version_t& kernel_version);
-bool get_process_info(process_info_t& process_info);
-bool get_process_page_info(process_page_info_t& process_page_info);
-bool get_process_times(process_time_t& process_time);
-bool get_net_info(const char* interface_name, net_info_t& net_info);
-bool get_net_info_array(std::vector<net_info_t>& net_info_array);
-bool do_get_net_info_array(const char* interface_name, 
-                           std::vector<net_info_t>& net_info_array);
-bool get_ip(char* &ip, const char* interface_name = NULL);
-bool get_loadaverage(loadaverage_t& loadaverage);
+bool get_sys_info(sys_info_t &sys_info);
+bool get_mem_info(memory_info_t &mem_info);
+bool get_cpu_info(cpu_info_t &cpu_info);
+int get_cpu_info_array(std::vector<cpu_info_t> &cpu_info_array);
+bool get_kernel_version(kernel_version_t &kernel_version);
+bool get_process_info(process_info_t &process_info);
+bool get_process_page_info(process_page_info_t &process_page_info);
+bool get_process_times(process_time_t &process_time);
+bool get_net_info(const char *interface_name, net_info_t &net_info);
+bool get_net_info_array(std::vector<net_info_t> &net_info_array);
+bool do_get_net_info_array(const char *interface_name, 
+                           std::vector<net_info_t> &net_info_array);
+bool get_ip(char *&ip, const char *interface_name = NULL);
+bool get_loadaverage(loadaverage_t &loadaverage);
 
 } //namespace info
 

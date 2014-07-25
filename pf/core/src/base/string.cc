@@ -17,14 +17,14 @@ namespace string {
   * @return: 如果转换成功返回true, 否则返回false
   */
 template <typename IntType>
-static bool fast_toint(const char* str,
-                       IntType& result, 
+static bool fast_toint(const char *str,
+                       IntType &result, 
                        uint8_t max_length, 
                        uint8_t converted_length, 
                        bool ignored_zero) {
   __ENTER_FUNCTION
     bool negative = false;
-    const char* tmp_str = str;
+    const char *tmp_str = str;
     if (NULL == str) return false;
 
     // 处理负数
@@ -78,7 +78,9 @@ static bool fast_toint(const char* str,
     return false;
 }
 
-void replace_all(std::string& str, const std::string source, const std::string destination) {
+void replace_all(std::string& str, 
+                 const std::string source, 
+                 const std::string destination) {
   __ENTER_FUNCTION
     uint32_t position = str.find(source, 0);
     while (position != std::string::npos)
@@ -86,8 +88,8 @@ void replace_all(std::string& str, const std::string source, const std::string d
   __LEAVE_FUNCTION
 }
 
-bool toint32(const char* source, 
-             int32_t& result, 
+bool toint32(const char *source, 
+             int32_t &result, 
              uint8_t converted_length, 
              bool ignored_zero) {
   __ENTER_FUNCTION
@@ -112,8 +114,8 @@ bool toint32(const char* source,
     return false;
 }
 
-bool toint16(const char* source, 
-             int16_t& result, 
+bool toint16(const char *source, 
+             int16_t &result, 
              uint8_t converted_length, 
              bool ignored_zero) {
   __ENTER_FUNCTION
@@ -137,14 +139,14 @@ char get_base64char(int index) {
   return '=';
 }
 
-void encrypt(const char* in, char* out, int32_t out_length) {
+void encrypt(const char *in, char *out, int32_t out_length) {
   __ENTER_FUNCTION
     int insize = static_cast<int>(strlen(in));
     if (insize <= 0) return;
     int middle = 0 == insize % 2 ? insize / 2 : (insize + 1) / 2;
     int length = insize + 2 + 3 + 1;
-    char* src = new char[length];
-    char* temp = new char[length + length / 3 + 10]; //enough output size
+    char *src = new char[length];
+    char *temp = new char[length + length / 3 + 10]; //enough output size
     int i, j, index;
     srand(static_cast<unsigned int>(time(NULL)));
     i = j = 0;
@@ -164,15 +166,15 @@ void encrypt(const char* in, char* out, int32_t out_length) {
   __LEAVE_FUNCTION
 }
 
-void decrypt(const char* in, char* out, int32_t out_length) {
+void decrypt(const char *in, char *out, int32_t out_length) {
   __ENTER_FUNCTION
     int insize = static_cast<int>(strlen(in));
     if (insize <= 0) return;
-    char* temp = new char[insize - insize / 3 + 10]; // enough buffer size
+    char *temp = new char[insize - insize / 3 + 10]; // enough buffer size
     base64decode(temp, in, insize);
     int length = static_cast<int>(strlen(temp));
     int right_length = length - 2 - 3 - 1;
-    char* _temp = new char[right_length + 1];
+    char *_temp = new char[right_length + 1];
     int middle = //用正确的长度算出中间值
       0 == right_length % 2 ? right_length / 2 : (right_length + 1) / 2;
     int i, j;
@@ -190,7 +192,7 @@ void decrypt(const char* in, char* out, int32_t out_length) {
   __LEAVE_FUNCTION
 }
 
-uint32_t crc(const char* str) {
+uint32_t crc(const char *str) {
   __ENTER_FUNCTION
     if (NULL == str|| 0 == str[0]) return 0;
     uint32_t crc32 = 0xFFFFFFFF;
@@ -204,7 +206,7 @@ uint32_t crc(const char* str) {
     return 0;
 }
 
-char* safecopy(char* dest, const char* src, size_t size) {
+char *safecopy(char *dest, const char *src, size_t size) {
   __ENTER_FUNCTION
     Assert(dest && src);
     strncpy(dest, src, size);
@@ -223,11 +225,11 @@ char* safecopy(char* dest, const char* src, size_t size) {
  * @param src want convert string
  * @param srclen want convert string length
  */
-int32_t charset_convert(const char* from, 
-                        const char* to, 
-                        char* save, 
+int32_t charset_convert(const char *from, 
+                        const char *to, 
+                        char *save, 
                         int32_t save_length, 
-                        const char* src, 
+                        const char *src, 
                         int32_t src_length) {
   __ENTER_FUNCTION
     int32_t status = 0;
@@ -237,9 +239,9 @@ int32_t charset_convert(const char* from,
     size_t outbufsize  = save_length;
     size_t savesize    = 0;
     size_t inbufsize   = src_length;
-    const char* inptr  = inbuf;
+    const char *inptr  = inbuf;
     size_t insize      = inbufsize;
-    char* outptr       = outbuf;
+    char *outptr       = outbuf;
     size_t outsize     = outbufsize;
 
     cd = iconv_open(to, from);

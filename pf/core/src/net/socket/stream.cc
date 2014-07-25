@@ -51,8 +51,8 @@ bool Stream::resize(int32_t size) {
     uint32_t newbuffer_length = bufferlength + size;
     if (size < 0 && (newbuffer_length < 0 || newbuffer_length < _reallength))
       return false;
-    char* oldbuffer = streamdata_.buffer;
-    char* newbuffer = new char[sizeof(char) * newbuffer_length];
+    char *oldbuffer = streamdata_.buffer;
+    char *newbuffer = new char[sizeof(char) * newbuffer_length];
     if (!newbuffer) return false;
     memset(newbuffer, 0, sizeof(char) * newbuffer_length);
     if (headlength < taillength) {

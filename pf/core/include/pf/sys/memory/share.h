@@ -67,14 +67,14 @@ namespace api {
 int32_t create(uint64_t key, uint32_t size);
 int32_t open(uint64_t key, uint32_t size);
 void close(int32_t handle);
-char* map(int32_t handle);
+char *map(int32_t handle);
 #elif __WINDOWS__
 HANDLE create(uint64_t key, uint32_t size);
 HANDLE open(uint64_t key, uint32_t size);
 void close(HANDLE handle);
-char* map(HANDLE handle);
+char *map(HANDLE handle);
 #endif
-void unmap(char* pointer);
+void unmap(char *pointer);
 
 }; //namespace api
 
@@ -89,17 +89,17 @@ class Base {
    bool create(uint64_t key, uint32_t size);
    void destory();
    bool attach(uint64_t key, uint32_t size);
-   char* get_data_pointer();
-   char* get_data(uint32_t size, uint32_t index);
+   char *get_data_pointer();
+   char *get_data(uint32_t size, uint32_t index);
    uint32_t get_size();
-   bool dump(const char* filename);
-   bool merge_from_file(const char* filename);
+   bool dump(const char *filename);
+   bool merge_from_file(const char *filename);
    void set_head_version(uint32_t version);
    uint32_t get_head_version();
  private:
    uint32_t size_;
-   char* data_pointer_;
-   char* header_;
+   char *data_pointer_;
+   char *header_;
 #if __LINUX__
    int32_t handle_;
 #elif __WINDOWS__
@@ -290,7 +290,7 @@ class UnitPool {
      __LEAVE_FUNCTION
        return 0;
    };
-   bool dump(const char* filename) {
+   bool dump(const char *filename) {
      __ENTER_FUNCTION
        Assert(ref_obj_pointer_);
        if (!ref_obj_pointer_) return false;
@@ -298,7 +298,7 @@ class UnitPool {
      __LEAVE_FUNCTION
        return false;
    };
-   bool merge_from_file(const char* filename) {
+   bool merge_from_file(const char *filename) {
      __ENTER_FUNCTION
        Assert(ref_obj_pointer_);
        if (!ref_obj_pointer_) return false;

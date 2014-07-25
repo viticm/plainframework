@@ -20,5 +20,8 @@ end
 
 local gateway_cmakelists = "../../../../applications/gateway/src/CMakeLists.txt"
 local gateway_vcproj = "../../../../applications/gateway/scripts/gateway.vc9.vcproj"
+local pf_simple_cmakelists = "../../../../applications/pf_simple/src/CMakeLists.txt"
+local pf_simple_vcproj = "../../../../applications/pf_simple/scripts/pf_simple.vc9.vcproj"
 
 update_CMakeLists(gateway_cmakelists, gateway_vcproj)
+update_CMakeLists(pf_simple_cmakelists, pf_simple_vcproj)

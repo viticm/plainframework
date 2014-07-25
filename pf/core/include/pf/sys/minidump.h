@@ -3,7 +3,7 @@
 
 #include "pf/sys/config.h"
 
-extern const char* g_dump_exename;
+extern const char *g_dump_exename;
 
 namespace pap_common_sys {
 

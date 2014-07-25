@@ -9,7 +9,7 @@ namespace encode {
 bool make(encodeparam_t& encodeparam) {
   unsigned char const* in;
   uint32_t insize;
-  unsigned char* out;
+  unsigned char *out;
   uint32_t outsize;
   unsigned char const* key;
   uint32_t keysize;

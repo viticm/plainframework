@@ -100,31 +100,31 @@ class Interface {
    bool execute(const char *sql_str);
 
  public:
-   float get_float(int32_t column_index, int32_t& error_code);
-   int64_t get_int64(int32_t column_index, int32_t& error_code);
-   uint64_t get_uint64(int32_t column_index, int32_t& error_code);
-   int32_t get_int32(int32_t column_index, int32_t& error_code);
-   uint32_t get_uint32(int32_t column_index, int32_t& error_code);
-   int16_t get_int16(int32_t column_index, int32_t& error_code);
-   uint16_t get_uint16(int32_t column_index, int32_t& error_code);
-   int8_t get_int8(int32_t column_index, int32_t& error_code);
-   uint8_t get_uint8(int32_t column_index, int32_t& error_code);
+   float get_float(int32_t column_index, int32_t &error_code);
+   int64_t get_int64(int32_t column_index, int32_t &error_code);
+   uint64_t get_uint64(int32_t column_index, int32_t &error_code);
+   int32_t get_int32(int32_t column_index, int32_t &error_code);
+   uint32_t get_uint32(int32_t column_index, int32_t &error_code);
+   int16_t get_int16(int32_t column_index, int32_t &error_code);
+   uint16_t get_uint16(int32_t column_index, int32_t &error_code);
+   int8_t get_int8(int32_t column_index, int32_t &error_code);
+   uint8_t get_uint8(int32_t column_index, int32_t &error_code);
    int32_t get_string(int32_t column, 
                       char *buffer, 
                       int32_t buffer_length, 
-                      int32_t& error_code);
+                      int32_t &error_code);
    int32_t get_field(int32_t column_index, 
                      char *buffer, 
                      int32_t buffer_length, 
-                     int32_t& error_code);
+                     int32_t &error_code);
    int32_t get_binary(int32_t column_index, 
                       char *buffer, 
                       int32_t buffer_length, 
-                      int32_t& error_code);
+                      int32_t &error_code);
    int32_t get_binary_withdecompress(int32_t column_index, 
                                      char *buffer, 
                                      int32_t buffer_length, 
-                                     int32_t& error_code);
+                                     int32_t &error_code);
    const char *get_data(int32_t column, const char *_default = NULL);
    const char *get_data(const char *columnname, const char *_default = NULL);
    int32_t get_datalength(int32_t column) const;

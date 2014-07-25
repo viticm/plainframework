@@ -109,8 +109,8 @@ class VM {
   void callfunction_leave(int32_t index);
 
  public:
-   void set_rootpath(const char* path);
-   void set_workpath(const char* path);
+   void set_rootpath(const char *path);
+   void set_workpath(const char *path);
    const char *get_rootpath();
 
  private:

@@ -21,7 +21,7 @@ Database::~Database() {
   __LEAVE_FUNCTION
 }
 
-bool Database::open_from_txt(const char* filename) {
+bool Database::open_from_txt(const char *filename) {
   __ENTER_FUNCTION
     assert(filename);
     FILE* fp = fopen(filename, "rb");
@@ -30,7 +30,7 @@ bool Database::open_from_txt(const char* filename) {
     int32_t filesize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
     //read in memory
-    char* memory = new char[filesize + 1];
+    char *memory = new char[filesize + 1];
     memset(memory, 0, filesize + 1); //use memset to memory pointer
     fread(memory, 1, filesize, fp);
     //memory[filesize + 1] = '\0'; //remember this error, can't change memory like this
@@ -41,9 +41,9 @@ bool Database::open_from_txt(const char* filename) {
     return false;
 }
 
-bool Database::open_from_memory(const char* memory, 
-                                const char* end, 
-                                const char* filename) {
+bool Database::open_from_memory(const char *memory, 
+                                const char *end, 
+                                const char *filename) {
   __ENTER_FUNCTION
     bool result = true;
     if (end - memory >= static_cast<int32_t>(sizeof(file_head_t)) && 
@@ -140,7 +140,7 @@ int32_t Database::get_record_number() const {
     return -1;
 }
 
-void Database::create_index(int32_t column, const char* filename) {
+void Database::create_index(int32_t column, const char *filename) {
   __ENTER_FUNCTION
     if (column < 0 || column > field_number_ || index_column_ == column) return;
     hash_index_.clear();
@@ -168,9 +168,9 @@ void Database::create_index(int32_t column, const char* filename) {
   __LEAVE_FUNCTION
 }
 
-int32_t Database::convert_string_tovector(const char* source,
+int32_t Database::convert_string_tovector(const char *source,
                                           std::vector<std::string> &result,
-                                          const char* key,
+                                          const char *key,
                                           bool one_key,
                                           bool ignore_empty) {
   __ENTER_FUNCTION
@@ -208,12 +208,12 @@ int32_t Database::convert_string_tovector(const char* source,
     return 0;
 }
 
-const char* Database::get_line_from_memory(char* str, 
+const char *Database::get_line_from_memory(char *str, 
                                            int32_t size, 
-                                           const char* memory, 
-                                           const char* end) {
+                                           const char *memory, 
+                                           const char *end) {
   __ENTER_FUNCTION
-    register const char* _memory = memory;
+    register const char *_memory = memory;
     if (_memory >= end || 0 == *_memory) return NULL;
     while (_memory < end &&
            _memory - memory + 1 < size &&
@@ -252,14 +252,14 @@ bool Database::field_equal(field_type_enum type,
     return false;
 }
 
-bool Database::open_from_memory_text(const char* memory, 
-                                     const char* end, 
-                                     const char* filename) {
+bool Database::open_from_memory_text(const char *memory, 
+                                     const char *end, 
+                                     const char *filename) {
   __ENTER_FUNCTION
     using namespace pf_base;
     char line[(1024 * 10) + 1]; //long string
     memset(line, '\0', sizeof(line));
-    register const char* _memory = memory;
+    register const char *_memory = memory;
     _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
     if (!_memory) return false;
     std::vector<std::string> result;
@@ -319,11 +319,11 @@ bool Database::open_from_memory_text(const char* memory,
           }
           case kTypeString: {
 #ifdef FILE_DATABASE_CONVERT_GBK_TO_UTF8
-            const char* value = result[i].c_str();
+            const char *value = result[i].c_str();
             //convert charset
             //utf8 -> gbk 1.5multiple length
             int32_t convert_strlength = strlen(value) * 2;
-            char* convert_str = new char[convert_strlength];
+            char *convert_str = new char[convert_strlength];
             memset(convert_str, 0, convert_strlength);
             int32_t convert_result = 
               string::charset_convert("GBK",
@@ -372,7 +372,7 @@ bool Database::open_from_memory_text(const char* memory,
     USE_PARAM(blank);
     string_buffer_[0] = '\0';
     
-    register char* temp = string_buffer_ + 1;
+    register char *temp = string_buffer_ + 1;
     for (i = 0; i < static_cast<int32_t>(string_buffer.size()); ++i) {
       memcpy(temp, 
              string_buffer[i].first.c_str(), 
@@ -396,11 +396,11 @@ bool Database::open_from_memory_text(const char* memory,
     return false;
 }
 
-bool Database::open_from_memory_binary(const char* memory, 
-                             const char* end, 
-                             const char* filename) {
+bool Database::open_from_memory_binary(const char *memory, 
+                             const char *end, 
+                             const char *filename) {
   __ENTER_FUNCTION
-    register const char* _memory = memory;
+    register const char *_memory = memory;
     file_head_t file_head;
     memcpy(&file_head, _memory, sizeof(file_head_t));
     if (file_head.identify != 0XDDBBCC00) return false;

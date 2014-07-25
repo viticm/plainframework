@@ -20,7 +20,7 @@ namespace pf_file {
 
 namespace api {
 
-int32_t openex(const char* filename, int32_t flag) {
+int32_t openex(const char *filename, int32_t flag) {
 #if __LINUX__
   int32_t fd = open(filename, flag);
 #elif __WINDOWS__
@@ -94,7 +94,7 @@ int32_t openmode_ex(const char * filename, int32_t flag, int32_t mode) {
 }
 
 
-uint32_t readex(int32_t fd, void* buffer, uint32_t length) {
+uint32_t readex(int32_t fd, void *buffer, uint32_t length) {
 #if __LINUX__
   int32_t result = read(fd, buffer, length);
 #elif __WINDOWS__
@@ -126,7 +126,7 @@ uint32_t readex(int32_t fd, void* buffer, uint32_t length) {
   return result;
 }
 
-uint32_t writeex(int32_t fd, const void* buffer, uint32_t length) {
+uint32_t writeex(int32_t fd, const void *buffer, uint32_t length) {
 #if __LINUX__
   int32_t result = write(fd, buffer, length);
 #elif __WINDOWS__
@@ -252,7 +252,7 @@ void set_nonblocking_ex(int32_t fd, bool on) {
 #endif
 }
 
-void ioctlex(int32_t fd, int32_t request, void* argp) {
+void ioctlex(int32_t fd, int32_t request, void *argp) {
 #if __LINUX__
   if (ioctl(fd,request,argp) < 0) {
     switch (errno) {

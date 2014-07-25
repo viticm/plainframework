@@ -549,7 +549,7 @@ struct internal_ip_of_proxy_t {
   char proxy_for_edu_user[kProxyForOneNetworkMax][IP_SIZE];
   internal_ip_of_proxy_t();
   ~internal_ip_of_proxy_t();
-  isp_enum ip_from(const char* ip);
+  isp_enum ip_from(const char *ip);
 };
 
 //structs end --

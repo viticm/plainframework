@@ -39,15 +39,15 @@ class TimeManager : public Singleton<TimeManager> {
    uint32_t get_current_time(); //获取从程序启动到现在经历的时间(ms)
    uint32_t get_saved_time();
    uint32_t get_start_time();
-   static TimeManager& getsingleton();
-   static TimeManager* getsingleton_pointer();
+   static TimeManager &getsingleton();
+   static TimeManager *getsingleton_pointer();
    void reset_time();
    time_t get_ansi_time(); //standard
    uint32_t get_ctime(); //获得以1970年1月1号为起始到现在已经过去的秒数
    tm get_tm();
 
  public:
-   void get_full_format_time(char* format_time, uint32_t length); //2013-11-29 15:38:09
+   void get_full_format_time(char *format_time, uint32_t length); //2013-11-29 15:38:09
    uint16_t get_year();
    uint8_t get_month();
    uint8_t get_day();

@@ -29,9 +29,9 @@ class InputStream : public Stream {
    virtual ~InputStream() {};
    
  public:
-   uint32_t read(char* buffer, uint32_t length);
+   uint32_t read(char *buffer, uint32_t length);
    bool readpacket(packet::Base* packet);
-   bool peek(char* buffer, uint32_t length);
+   bool peek(char *buffer, uint32_t length);
    bool skip(uint32_t length);
    int32_t fill();
 

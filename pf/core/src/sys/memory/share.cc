@@ -97,12 +97,12 @@ HANDLE open(uint64_t key, uint32_t size) {
 }
 
 #if __LINUX__
-char* map(int32_t handle) {
+char *map(int32_t handle) {
 #elif __WINDOWS__
-char* map(HANDLE handle) {
+char *map(HANDLE handle) {
 #endif
   __ENTER_FUNCTION
-    char* result;
+    char *result;
 #if __LINUX__
     result = static_cast<char*>(shmat(handle, 0, 0));
 #elif __WINDOWS__
@@ -114,7 +114,7 @@ char* map(HANDLE handle) {
     return NULL;
 }
 
-void unmap(char* pointer) {
+void unmap(char *pointer) {
   __ENTER_FUNCTION
 #if __LINUX__
     shmdt(pointer);
@@ -250,18 +250,18 @@ bool Base::attach(uint64_t key, uint32_t size) {
     return false;
 }
 
-char* Base::get_data_pointer() {
+char *Base::get_data_pointer() {
   __ENTER_FUNCTION
     return data_pointer_;
   __LEAVE_FUNCTION
     return NULL;
 }
 
-char* Base::get_data(uint32_t size, uint32_t index) {
+char *Base::get_data(uint32_t size, uint32_t index) {
   __ENTER_FUNCTION
     Assert(size > 0);
     Assert(size * index < size_);
-    char* result;
+    char *result;
     result = (size <= 0 || index > size_) ? NULL : data_pointer_ + size * index;
     return result;
   __LEAVE_FUNCTION
@@ -275,7 +275,7 @@ uint32_t Base::get_size() {
     return 0;
 }
 
-bool Base::dump(const char* filename) {
+bool Base::dump(const char *filename) {
   __ENTER_FUNCTION
     Assert(filename);
     FILE* fp = fopen(filename, "wb");
@@ -287,7 +287,7 @@ bool Base::dump(const char* filename) {
     return false;
 }
 
-bool Base::merge_from_file(const char* filename) {
+bool Base::merge_from_file(const char *filename) {
   __ENTER_FUNCTION
     Assert(filename);
     FILE* fp = fopen(filename, "rb");

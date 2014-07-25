@@ -16,4 +16,7 @@ do
   sed -i 's;_PF_LOGIN;_VLOGIN;g' $filename
   sed -i 's;_PF_CENTER;_VCENTER;g' $filename
   sed -i 's;_PF_SERVER;_VSERVER;g' $filename
+  sed -i 's;char\* ;char \*;g' $filename
+  sed -i 's;void\* ;void \*;g' $filename
+  sed -i 's;int32_t\& ;int32_t \&;g' $filename
 done

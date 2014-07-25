@@ -45,9 +45,9 @@ Interface::~Interface() {
   __LEAVE_FUNCTION
 }
 
-bool Interface::connect(const char* connection_name,
-                        const char* user,
-                        const char* password) {
+bool Interface::connect(const char *connection_name,
+                        const char *user,
+                        const char *password) {
   __ENTER_FUNCTION
     using namespace pf_base;
     close(); //first disconnect
@@ -269,7 +269,7 @@ bool Interface::execute() {
   }
 }
 
-bool Interface::execute(const char* sql_str) {
+bool Interface::execute(const char *sql_str) {
   __ENTER_FUNCTION
     memset(query_.sql_str_, '\0', sizeof(query_.sql_str_));
     strncpy(query_.sql_str_, sql_str, sizeof(query_.sql_str_) - 1);
@@ -417,7 +417,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
     return false;
 }
 
-float Interface::get_float(int32_t column_index, int32_t& error_code) {
+float Interface::get_float(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -436,7 +436,7 @@ float Interface::get_float(int32_t column_index, int32_t& error_code) {
     return 0.0f;
 }
 
-int64_t Interface::get_int64(int32_t column_index, int32_t& error_code) {
+int64_t Interface::get_int64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     using namespace pf_base;
     char temp[32] = {0};
@@ -447,7 +447,7 @@ int64_t Interface::get_int64(int32_t column_index, int32_t& error_code) {
     return -1;
 }
 
-uint64_t Interface::get_uint64(int32_t column_index, int32_t& error_code) {
+uint64_t Interface::get_uint64(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     using namespace pf_base;
     char temp[32] = {0};
@@ -458,7 +458,7 @@ uint64_t Interface::get_uint64(int32_t column_index, int32_t& error_code) {
     return 0;
 }
 
-int32_t Interface::get_int32(int32_t column_index, int32_t& error_code) {
+int32_t Interface::get_int32(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -478,7 +478,7 @@ int32_t Interface::get_int32(int32_t column_index, int32_t& error_code) {
     return QUERY_NULL;
 }
 
-uint32_t Interface::get_uint32(int32_t column_index, int32_t& error_code) {
+uint32_t Interface::get_uint32(int32_t column_index, int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -537,7 +537,7 @@ uint8_t Interface::get_uint8(int32_t column_index, int32_t &error_code) {
 int32_t Interface::get_string(int32_t column_index, 
                               char *buffer, 
                               int32_t buffer_length, 
-                              int32_t& error_code) {
+                              int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -574,7 +574,7 @@ int32_t Interface::get_string(int32_t column_index,
 int32_t Interface::get_binary(int32_t column_index, 
                               char *buffer, 
                               int32_t buffer_length, 
-                              int32_t& error_code) {
+                              int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -611,7 +611,7 @@ int32_t Interface::get_binary(int32_t column_index,
 int32_t Interface::get_binary_withdecompress(int32_t column_index, 
                                              char *buffer, 
                                              int32_t buffer_length, 
-                                             int32_t& error_code) {
+                                             int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;
@@ -658,7 +658,7 @@ int32_t Interface::get_binary_withdecompress(int32_t column_index,
 int32_t Interface::get_field(int32_t column_index, 
                              char *buffer, 
                              int32_t buffer_length, 
-                             int32_t& error_code) {
+                             int32_t &error_code) {
   __ENTER_FUNCTION
     if (column_index > column_count_) {
       error_code = QUERY_NO_COLUMN;

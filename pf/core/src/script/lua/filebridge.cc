@@ -9,7 +9,7 @@ namespace pf_script {
 
 namespace lua {
 
-FileBridge::FileBridge(const char* rootpath, const char* workpath) {
+FileBridge::FileBridge(const char *rootpath, const char *workpath) {
   __ENTER_FUNCTION
     fp_ = NULL;
     length_ = 0;
@@ -41,7 +41,7 @@ FileBridge::~FileBridge() {
   __LEAVE_FUNCTION
 }
 
-bool FileBridge::open(const char* filename) {
+bool FileBridge::open(const char *filename) {
   __ENTER_FUNCTION
     if (fp_) close();
     char filepath[FILENAME_MAX] = {0};
@@ -73,7 +73,7 @@ void FileBridge::close() {
   __LEAVE_FUNCTION
 }
 
-uint64_t FileBridge::read(void* buffer, uint64_t read_bytes) {
+uint64_t FileBridge::read(void *buffer, uint64_t read_bytes) {
   __ENTER_FUNCTION
     if (!fp_) return 0;
     uint64_t _read_bytes;
@@ -84,7 +84,7 @@ uint64_t FileBridge::read(void* buffer, uint64_t read_bytes) {
     return 0;
 }
 
-uint64_t FileBridge::write(void* buffer, uint64_t write_bytes) {
+uint64_t FileBridge::write(void *buffer, uint64_t write_bytes) {
   __ENTER_FUNCTION
     if (!fp_) return 0;
     uint64_t _write_bytes;
@@ -126,20 +126,20 @@ uint64_t FileBridge::size() {
     return 0;
 }
 
-void FileBridge::set_rootpath(const char* path) {
+void FileBridge::set_rootpath(const char *path) {
   __ENTER_FUNCTION
     string::safecopy(rootpath_, path, sizeof(rootpath_));
   __LEAVE_FUNCTION
 }
 
-void FileBridge::set_workpath(const char* path) {
+void FileBridge::set_workpath(const char *path) {
   __ENTER_FUNCTION
     string::safecopy(workpath_, path, sizeof(workpath_));
   __LEAVE_FUNCTION
 }
 
-void FileBridge::get_fullpath(char* path, 
-                              const char* filename, 
+void FileBridge::get_fullpath(char *path, 
+                              const char *filename, 
                               size_t length) {
   __ENTER_FUNCTION
     if (':' == filename[1]) {

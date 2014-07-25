@@ -1,18 +1,18 @@
 #include "pf/base/time_manager.h"
 
-pf_base::TimeManager* g_time_manager = NULL;
+pf_base::TimeManager *g_time_manager = NULL;
 
 int32_t g_file_name_fix = 0;
 uint32_t g_file_name_fix_last = 0;
 
 namespace pf_base {
 
-template<> TimeManager* Singleton<TimeManager>::singleton_ = NULL;
-TimeManager* TimeManager::getsingleton_pointer() {
+template<> TimeManager *Singleton<TimeManager>::singleton_ = NULL;
+TimeManager *TimeManager::getsingleton_pointer() {
   return singleton_;
 }
 
-TimeManager& TimeManager::getsingleton() {
+TimeManager &TimeManager::getsingleton() {
   Assert(singleton_);
   return *singleton_;
 }
@@ -107,7 +107,7 @@ uint32_t TimeManager::get_ctime() {
     return 0;
 }
 
-void TimeManager::get_full_format_time(char* format_time, uint32_t length) {
+void TimeManager::get_full_format_time(char *format_time, uint32_t length) {
   __ENTER_FUNCTION
     reset_time();
     strftime(format_time, length, "%Y-%m-%d %H:%M:%S", &tm_);

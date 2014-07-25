@@ -29,7 +29,7 @@ class Thread {
    virtual ~Thread();
    void start();
    virtual void stop();
-   void exit(void* retval = NULL);
+   void exit(void *retval = NULL);
    virtual void run();
 #if __WINDOWS__
    DWORD get_id();
@@ -53,9 +53,9 @@ class Thread {
 };
 
 #if __LINUX__
-void* ps_thread_process(void* derived_thread);
+void *ps_thread_process(void *derived_thread);
 #elif __WINDOWS__
-DWORD WINAPI ps_thread_process(void* derived_thread);
+DWORD WINAPI ps_thread_process(void *derived_thread);
 #endif
 
 class ThreadLock {

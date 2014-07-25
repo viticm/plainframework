@@ -24,15 +24,15 @@ class StaticAllocator {
    ~StaticAllocator();
 
  public:
-   void init(char* buffer, size_t size);
+   void init(char *buffer, size_t size);
    void clear();
-   void* malloc(size_t size);
-   void* calloc(size_t count, size_t size);
-   void* realloc(void* data, size_t newsize);
-   void free(void* data);
+   void *malloc(size_t size);
+   void *calloc(size_t count, size_t size);
+   void *realloc(void *data, size_t newsize);
+   void free(void *data);
 
  private:
-   char* buffer_;
+   char *buffer_;
    size_t size_;
    size_t offset_;
 

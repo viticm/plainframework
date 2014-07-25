@@ -52,7 +52,7 @@ class InputStream;
 class OutputStream;
 
 typedef struct {
-  char* buffer;
+  char *buffer;
   uint32_t bufferlength;
   uint32_t bufferlength_max;
   uint32_t headlength;
@@ -60,9 +60,9 @@ typedef struct {
 } streamdata_t;
 
 typedef struct {
-  unsigned char* in;
+  unsigned char *in;
   uint32_t insize;
-  unsigned char* out;
+  unsigned char *out;
   uint32_t outsize;
   unsigned char const* key;
   uint32_t keysize;

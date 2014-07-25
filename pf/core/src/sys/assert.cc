@@ -16,7 +16,7 @@ namespace pf_sys {
  * 2:继续抛出异常用于获取运行堆栈
  **/
 
-void __show__(const char* temp) {
+void __show__(const char *temp) {
 #if __LINUX__
   printf("Assert:%s",temp);
 #endif
@@ -47,7 +47,7 @@ void __show__(const char* temp) {
 #endif
 }
 
-void __messagebox__(const char* msg) {
+void __messagebox__(const char *msg) {
   if (g_command_ignore_message_box)
     return;
 #if __WINDOWS__
@@ -56,10 +56,10 @@ void __messagebox__(const char* msg) {
 #endif
 }
 
-void __assert__ (const char* file, 
+void __assert__ (const char *file, 
                  unsigned int line, 
-                 const char* func , 
-                 const char* expr) {
+                 const char *func , 
+                 const char *expr) {
   char temp[1024] = {0};
 #if __LINUX__ //换个格式
   sprintf(temp, "[%s][%d][%s][%s]\n", file, line, func, expr);
@@ -69,11 +69,11 @@ void __assert__ (const char* file,
   __show__(temp);
 }
 
-void __assertex__ (const char* file, 
+void __assertex__ (const char *file, 
                    unsigned int line, 
-                   const char* func, 
-                   const char* expr,
-                   const char* msg) {
+                   const char *func, 
+                   const char *expr,
+                   const char *msg) {
   char temp[1024] = {0};
 #if __LINUX__
   sprintf(temp, "[%s][%d][%s][%s]\n[%s]\n", file, line, func, expr, msg);
@@ -83,11 +83,11 @@ void __assertex__ (const char* file,
   __show__(temp);
 }
 
-void __assertspecial__ (const char* file, 
+void __assertspecial__ (const char *file, 
                         unsigned int line, 
-                        const char* func, 
-                        const char* expr,
-                        const char* msg) {
+                        const char *func, 
+                        const char *expr,
+                        const char *msg) {
   char temp[1024] = {0};
 #if __LINUX__
   sprintf(temp, "S[%s][%d][%s][%s]\n[%s]\n", file, line, func, expr, msg) ;
@@ -97,10 +97,10 @@ void __assertspecial__ (const char* file,
   __show__(temp) ;
 }
 
-void __protocol_assert__(const char* file, 
+void __protocol_assert__(const char *file, 
                          unsigned int line, 
-                         const char* func, 
-                         const char* expr) {
+                         const char *func, 
+                         const char *expr) {
   printf("[%s][%d][%s][%s]", file, line, func, expr);
 }
 

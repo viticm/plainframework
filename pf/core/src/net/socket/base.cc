@@ -13,7 +13,7 @@ Base::Base() {
   __LEAVE_FUNCTION
 }
 
-Base::Base(const char* host, uint16_t port) {
+Base::Base(const char *host, uint16_t port) {
   __ENTER_FUNCTION
     using namespace pf_base;
     memset(host_, '\0', sizeof(host_));
@@ -65,7 +65,7 @@ bool Base::connect() {
     return false;
 }
 
-bool Base::connect(const char* host, uint16_t port) {
+bool Base::connect(const char *host, uint16_t port) {
   __ENTER_FUNCTION
     using namespace pf_base;
     bool result = true;
@@ -78,7 +78,7 @@ bool Base::connect(const char* host, uint16_t port) {
     return false;
 }
 
-bool Base::reconnect(const char* host, uint16_t port) {
+bool Base::reconnect(const char *host, uint16_t port) {
   __ENTER_FUNCTION
     using namespace pf_base;
     bool result = true;
@@ -93,7 +93,7 @@ bool Base::reconnect(const char* host, uint16_t port) {
     return false;
 }
 
-int32_t Base::send(const void* buffer, uint32_t length, uint32_t flag) {
+int32_t Base::send(const void *buffer, uint32_t length, uint32_t flag) {
   __ENTER_FUNCTION
     int32_t result = 0;
     result = api::sendex(socketid_, buffer, length, flag);
@@ -102,7 +102,7 @@ int32_t Base::send(const void* buffer, uint32_t length, uint32_t flag) {
     return 0;
 }
 
-int32_t Base::receive(void* buffer, uint32_t length, uint32_t flag) {
+int32_t Base::receive(void *buffer, uint32_t length, uint32_t flag) {
   __ENTER_FUNCTION
     int32_t result = 0;
     result = api::recvex(socketid_, buffer, length, flag);
@@ -203,10 +203,10 @@ bool Base::listen(uint32_t backlog) {
     return false;
 }
 int32_t Base::select(int32_t maxfdp, 
-                     fd_set* readset, 
-                     fd_set* writeset, 
-                     fd_set* exceptset,
-                     timeval* timeout) {
+                     fd_set *readset, 
+                     fd_set *writeset, 
+                     fd_set *exceptset,
+                     timeval *timeout) {
   __ENTER_FUNCTION
     int32_t result = SOCKET_ERROR;
     result = api::selectex(maxfdp, readset, writeset, exceptset, timeout);
@@ -281,7 +281,7 @@ uint32_t Base::getlast_errorcode() const {
     return 0;
 }
 
-void Base::getlast_errormessage(char* buffer, uint16_t length) const {
+void Base::getlast_errormessage(char *buffer, uint16_t length) const {
   __ENTER_FUNCTION
     api::getlast_errormessage(buffer, length);
   __LEAVE_FUNCTION

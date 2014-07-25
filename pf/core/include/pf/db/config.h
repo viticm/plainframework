@@ -24,7 +24,7 @@ struct db_query_t {
   void clear() {
     memset(sql_str_, '\0', sizeof(sql_str_));
   }
-  void parse(const char* temp, ...) {
+  void parse(const char *temp, ...) {
     va_list argptr;
     va_start(argptr, temp);
     int nchars  = vsnprintf(sql_str_, 
@@ -44,7 +44,7 @@ struct long_db_query_t {
   void clear() {
     memset(sql_str_, '\0', LONG_SQL_LENGTH_MAX);
   }
-  void parse(const char* temp, ...) {
+  void parse(const char *temp, ...) {
     va_list argptr;
     va_start(argptr, temp);
     int nchars  = vsnprintf(sql_str_, 

@@ -48,7 +48,7 @@ void Thread::stop() {
   //do nothing
 }
 
-void Thread::exit(void* retval) {
+void Thread::exit(void *retval) {
   __ENTER_FUNCTION
 #if __LINUX__
     pthread_exit(retval);
@@ -64,9 +64,9 @@ void Thread::run() {
 }
 
 #if __LINUX__
-void* ps_thread_process(void* derived_thread) {
+void *ps_thread_process(void *derived_thread) {
 #elif __WINDOWS__
-DWORD WINAPI ps_thread_process(void* derived_thread) {
+DWORD WINAPI ps_thread_process(void *derived_thread) {
 #endif
   __ENTER_FUNCTION
     Thread* thread = static_cast<Thread*>(derived_thread);

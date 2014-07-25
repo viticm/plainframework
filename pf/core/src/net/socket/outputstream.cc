@@ -5,7 +5,7 @@ namespace pf_net {
 
 namespace socket {
 
-uint32_t OutputStream::write(const char* buffer, uint32_t length) {
+uint32_t OutputStream::write(const char *buffer, uint32_t length) {
   __ENTER_FUNCTION
     /**
      * tail head       head tail --length 10
@@ -19,7 +19,7 @@ uint32_t OutputStream::write(const char* buffer, uint32_t length) {
                          bufferlength - taillength + headlength - 1 : 
                          headlength - taillength - 1;
     if (length >= freecount && !resize(length - freecount + 1)) return 0;
-    unsigned char* tempbuffer = new unsigned char[length];
+    unsigned char *tempbuffer = new unsigned char[length];
     if (NULL == tempbuffer) return 0;
     memset(tempbuffer, 0, length);
     if (encodeparam_.keysize > 0) {
@@ -85,7 +85,7 @@ int32_t OutputStream::flush() {
     uint32_t bufferlength_max = streamdata_.bufferlength_max;
     uint32_t headlength = streamdata_.headlength;
     uint32_t taillength = streamdata_.taillength;
-    char* stream_buffer = streamdata_.buffer;
+    char *stream_buffer = streamdata_.buffer;
     if (bufferlength > bufferlength_max) {
       init();
       return SOCKET_ERROR - 1;
