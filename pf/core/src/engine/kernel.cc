@@ -279,6 +279,13 @@ void Kernel::set_base_logactive(bool flag) {
   __LEAVE_FUNCTION
 }
 
+void Kernel::set_applicationname(const char *name) {
+  __ENTER_FUNCTION
+    pf_base::string::safecopy(
+        g_applicationname, name, sizeof(g_applicationname));
+  __LEAVE_FUNCTION
+}
+
 bool Kernel::init_base() {
   __ENTER_FUNCTION
     using namespace pf_base;
