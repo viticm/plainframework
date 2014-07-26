@@ -23,13 +23,11 @@ enum {
   kErrorLogFile = 1,
   kNetLogFile = 2,
   kFunctionLogFile = 3,
-  kApplicationLogFile, //应用的日志记录ID
   kLogFileCount,
 };
 /* } base log */
 
-char g_applicationname[FILENAME_MAX] = {0}; //应用全局名称
-uint8_t g_applicationtype = 0; //应用的类型 0 服务器 1 客户端
+#include "pf/application/extend/define.h"
 
 //headers include order: pf/base/config.h -> sys include -> module include
 

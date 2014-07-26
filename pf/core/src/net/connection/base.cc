@@ -3,6 +3,9 @@
 #include "pf/net/packet/factorymanager.h"
 #include "pf/net/connection/base.h"
 
+#define NET_MODULENAME \
+  strlen(APPLICATION_NAME) > 0 ? "net_"APPLICATION_NAME : "net"
+
 namespace pf_net {
 
 namespace connection {
@@ -68,7 +71,7 @@ bool Base::processinput() {
         socket_inputstream_->getsocket()->getlast_errormessage(
             errormessage, 
             static_cast<uint16_t>(sizeof(errormessage) - 1));
-        SLOW_ERRORLOG(g_applicationname,
+        SLOW_ERRORLOG(NET_MODULENAME,
                       "[net.connection] (connection::Base::processinput)"
                       " socket_inputstream_->fill() result: %d %s",
                       fillresult,
@@ -101,7 +104,7 @@ bool Base::processoutput() {
         socket_inputstream_->getsocket()->getlast_errormessage(
             errormessage, 
             static_cast<uint16_t>(sizeof(errormessage) - 1));
-        SLOW_ERRORLOG(g_applicationname,
+        SLOW_ERRORLOG(NET_MODULENAME,
                       "[net.connection] (Base::processoutput)"
                       " socket_outputstream_->flush() result: %d %s",
                       flushresult,
@@ -236,23 +239,25 @@ bool Base::sendpacket(packet::Base* packet) {
     if (isdisconnect()) return true;
     if (socket_outputstream_ != NULL) {
       packet->setindex(++packetindex_);
+#if defined(_VSERVER)
       uint32_t before_writesize = socket_outputstream_->reallength();
+#endif
       result = socket_outputstream_->writepacket(packet);
       Assert(result);
+#if defined(_VSERVER)
       uint32_t after_writesize = socket_outputstream_->reallength();
       if (packet->getsize() != after_writesize - before_writesize - 6) {
-        FAST_ERRORLOG(kApplicationLogFile,
+        FAST_ERRORLOG(APPLICATION_LOGFILE,
                       "[net.connection] (Base::sendpacket) size error"
                       "id = %d(write: %d, should: %d)",
                       pakcet->getid(),
                       after_writesize - before_writesize - 6,
                       pakcet->getsize());
       }
-      /**
       if (kPacketIdSCCharacterIdle == packet->getid()) {
         //save heartbeat log
       }
-      **/
+#endif
     }
     return result;
   __LEAVE_FUNCTION

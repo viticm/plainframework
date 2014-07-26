@@ -45,7 +45,6 @@ class Kernel {
  public: //kernel for set_* functions
    void set_base_logprint(bool flag);
    void set_base_logactive(bool flag);
-   void set_applicationname(const char *name);
 
  protected:
    pf_base::hashmap::Template<int32_t, const char *> config_string_;

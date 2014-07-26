@@ -7,15 +7,14 @@ namespace pf_base {
 
 bool g_command_logprint = true;
 bool g_command_logactive = true;
-uint8_t g_logmodule = 0;
 const char *kBaseLogSaveDir = "./log";
 pf_sys::ThreadLock g_log_lock;
 
 const char *g_log_filename[] = {
-  "debug", //kDebugLogFile
-  "error", //kErrorLogFile
-  "net", //kNetLogFile
-  "function", //kFunctionLogFile
+  "./log/debug", //kDebugLogFile
+  "./log/error", //kErrorLogFile
+  "./log/net", //kNetLogFile
+  "./log/function", //kFunctionLogFile
   '\0',
 };
 
@@ -34,7 +33,7 @@ Log &Log::getsingleton() {
 Log::Log() {
   __ENTER_FUNCTION
     int32_t i;
-    for (i = 0; i < kLogFileCount; ++i) {
+    for (i = 0; i < kFinalLogFileCount; ++i) {
       log_cache_[i] = NULL;
       log_position_[i] = 0;
     }
@@ -141,16 +140,16 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
 
 bool Log::init(int32_t cache_size) {
   __ENTER_FUNCTION
-    if (1 == g_applicationtype) return true; //客户端不进行快速日志
     cache_size_ = cache_size;
     int32_t i;
-    for (i = 0; i < kLogFileCount; ++i) {
+    for (i = 0; i < kFinalLogFileCount; ++i) {
       if (NULL == log_cache_[i]) log_cache_[i] = new char[cache_size_];
       if (NULL == log_cache_[i]) { //local memory is failed
         return false;
       }
       log_position_[i] = 0;
     }
+    day_time_ = g_time_manager ? g_time_manager->get_day_time() : 6000;
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -158,22 +157,24 @@ bool Log::init(int32_t cache_size) {
 
 void Log::get_log_filename(uint8_t logid, char *save) {
   __ENTER_FUNCTION
-    const char *filename = g_log_filename[logid];
+    const char *filename = logid > kLogFileCount ? 
+                           g_extend_log_filename[logid - kLogFileCount] : 
+                           g_log_filename[logid];
     if (g_time_manager) {
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s_%d_%d_%d.log",
-               kBaseLogSaveDir,
+               "%s_%d_%d_%d.log",
                filename,
                g_time_manager->get_year(),
                g_time_manager->get_month() + 1,
                g_time_manager->get_day());
-    } else {
+    }
+    else {
       snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s.log",
-               kBaseLogSaveDir,
-               filename);
+               "%s_%d.log",
+               filename,
+               day_time_);
     }
   __LEAVE_FUNCTION
 }
@@ -203,7 +204,7 @@ void Log::get_log_filename(const char *file_nameprefix, char *file_name) {
 
 void Log::flush_log(uint8_t logid) {
   __ENTER_FUNCTION
-    if (logid > kLogFileCount) return;
+    if (logid > kFinalLogFileCount) return;
     char log_file_name[FILENAME_MAX];
     memset(log_file_name, '\0', sizeof(log_file_name));
     get_log_filename(logid, log_file_name);
@@ -225,7 +226,7 @@ void Log::flush_log(uint8_t logid) {
 void Log::flush_alllog() {
   __ENTER_FUNCTION
     int32_t i;
-    for (i = 0; i < kLogFileCount; ++i) {
+    for (i = 0; i < kFinalLogFileCount; ++i) {
       uint8_t logid = static_cast<uint8_t>(i);
       flush_log(logid);
     }

@@ -65,7 +65,8 @@ bool Select::select() {
           &exceptfds_[kSelectUse],
           &timeout_[kSelectUse]);
       Assert(result != SOCKET_ERROR);
-    } catch(...) {
+    }
+    catch(...) {
       FAST_ERRORLOG(kNetLogFile, 
                     "[net.connection.manager] (Select::select)"
                     " have error, result: %d", 
