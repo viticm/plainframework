@@ -80,7 +80,7 @@ bool Interface::connect(const char *connection_name,
                connection_name_,
                user_,
                password);
-      SLOW_ERRORLOG("odbc_interface", 
+      SLOW_ERRORLOG(DB_MODULENAME, 
                     "[db.odbc] (Interface::connect) failed. %s", 
                     log_buffer);
       diag_state();
@@ -123,7 +123,7 @@ bool Interface::connect() {
                "connection name: %s connect user: %s", 
                connection_name_,
                user_); 
-      SLOW_ERRORLOG("odbc_interface", 
+      SLOW_ERRORLOG(DB_MODULENAME, 
                     "[db.odbc] (Interface::connect) failed, %s", 
                     log_buffer);
       diag_state();

@@ -4,8 +4,7 @@
 pf_net::packet::FactoryManager* g_packetfactory_manager = NULL;
 
 template<> 
-pf_net::packet::FactoryManager 
-  *pf_base::Singleton<
+pf_net::packet::FactoryManager *pf_base::Singleton<
   pf_net::packet::FactoryManager>::singleton_ = NULL;
 
 namespace pf_net {
@@ -26,16 +25,8 @@ FactoryManager::FactoryManager() {
     factories_ = NULL;
     factorycount_ = 0;
     size_ = 0;
-    Assert(size_ > 0);
-    factories_ = new Factory * [size_];
-    Assert(factories_);
-    packet_alloccount_ = new uint32_t[size_];
-    Assert(packet_alloccount_);
-    uint16_t i;
-    for (i = 0; i < size_; ++i) {
-      factories_[i] = NULL;
-      packet_alloccount_[i] = 0;
-    }
+    function_registerfactories_ = NULL;
+    function_isvalid_packetid_ = NULL;
   __LEAVE_FUNCTION
 }
 
@@ -52,9 +43,40 @@ FactoryManager::~FactoryManager() {
 
 bool FactoryManager::init() {
   __ENTER_FUNCTION
+    Assert(size_ > 0);
+    if (!function_isvalid_packetid_ || !function_registerfactories_)
+      return false;
+    factories_ = new Factory * [size_];
+    Assert(factories_);
+    packet_alloccount_ = new uint32_t[size_];
+    Assert(packet_alloccount_);
+    uint16_t i;
+    for (i = 0; i < size_; ++i) {
+      factories_[i] = NULL;
+      packet_alloccount_[i] = 0;
+    }
+    if (!(*function_registerfactories_)()) return false;
     return true;
   __LEAVE_FUNCTION
     return false;
+}
+
+void FactoryManager::setsize(uint16_t size) {
+  size_ = size;
+}
+
+uint16_t FactoryManager::getsize() const {
+  return size_;
+}
+
+void FactoryManager::set_function_registerfactories(
+    function_registerfactories function) {
+  function_registerfactories_ = function;
+}
+
+void FactoryManager::set_function_isvalid_packetid(
+    function_isvalid_packetid function) {
+  function_isvalid_packetid_ = function;
 }
 
 Base* FactoryManager::createpacket(uint16_t packetid) {
@@ -70,8 +92,7 @@ Base* FactoryManager::createpacket(uint16_t packetid) {
     try {
       packet = factories_[index]->createpacket();
       ++(packet_alloccount_[index]);
-    }
-    catch(...) {
+    } catch(...) {
       packet = NULL;
     }
     unlock();
@@ -113,8 +134,7 @@ void FactoryManager::removepacket(Base* packet) {
     try {
       SAFE_DELETE(packet);
       --(packet_alloccount_[packetid]);
-    }
-    catch(...) {
+    } catch(...) {
       unlock();
     }
     unlock();
@@ -147,6 +167,8 @@ void FactoryManager::addfactory(Factory* factory) {
 bool FactoryManager::isvalid_packetid(uint16_t id) {
   bool result = false;
   __ENTER_FUNCTION
+    if (!function_isvalid_packetid_) return false;
+    result = (*function_isvalid_packetid_)(id);
     return result;
   __LEAVE_FUNCTION
     return result;

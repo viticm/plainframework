@@ -14,6 +14,7 @@
 
 #include "pf/base/singleton.h"
 #include "pf/sys/thread.h"
+#include "pf/net/config.h"
 #include "pf/net/connection/pool.h"
 #if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
 #include "pf/net/connection/manager/epoll.h"

@@ -21,6 +21,9 @@ namespace pf_net {
 
 namespace packet {
 
+typedef bool (* function_registerfactories)();
+typedef bool (* function_isvalid_packetid)(uint16_t id);
+
 class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
 
  public:
@@ -28,11 +31,11 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    ~FactoryManager();
 
  public:
-   uint32_t* packet_alloccount_;
+   uint32_t *packet_alloccount_;
 
  public:
-   static FactoryManager& getsingleton();
-   static FactoryManager* getsingleton_pointer();
+   static FactoryManager &getsingleton();
+   static FactoryManager *getsingleton_pointer();
  
  public:
    bool init();
@@ -41,20 +44,24 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    //根据消息类型取得对应消息的最大尺寸（允许多线程同时调用）
    uint32_t getpacket_maxsize(uint16_t packetid);
    //删除消息实体（允许多线程同时调用）
-   void removepacket(Base* packet);
+   void removepacket(Base *packet);
    void lock();
    void unlock();
-   static bool isvalid_packetid(uint16_t id); //packetid is valid
+   bool isvalid_packetid(uint16_t id); //packetid is valid
+   void setsize(uint16_t size);
+   uint16_t getsize() const;
+   void addfactory(Factory *factory);
+   void set_function_registerfactories(function_registerfactories function);
+   void set_function_isvalid_packetid(function_isvalid_packetid function);
 
  private:
-   Factory** factories_;
+   Factory **factories_;
    pf_base::hashmap::Template<uint16_t, uint16_t> idindexs_;
    uint16_t size_;
    uint16_t factorycount_;
    pf_sys::ThreadLock lock_;
-
- private:
-   void addfactory(Factory* factory);
+   function_registerfactories function_registerfactories_;
+   function_isvalid_packetid function_isvalid_packetid_;
 
 };
 

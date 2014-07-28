@@ -44,7 +44,9 @@ class PF_API Log : public Singleton<Log> {
    void flush_log(uint8_t logid);
    int32_t get_logsize(uint8_t logid);
    void get_log_filename(uint8_t logid, char *filename);
-   static void get_log_filename(const char *filename_prefix, char *filename);
+   static void get_log_filename(const char *filename_prefix, 
+                                char *filename, 
+                                uint8_t type = 0);
    void flush_alllog();
    static void get_serial(char *serial, int16_t worldid, int16_t serverid);
    static void remove_log(const char *filename);
@@ -154,7 +156,7 @@ class PF_API Log : public Singleton<Log> {
          if (!g_command_logactive) return;
          char log_file_name[FILENAME_MAX];
          memset(log_file_name, '\0', sizeof(log_file_name));
-         get_log_filename(filename_prefix, log_file_name);
+         get_log_filename(filename_prefix, log_file_name, type);
          FILE* fp;
          fp = fopen(log_file_name, "ab");
          if (fp) {

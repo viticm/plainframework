@@ -80,7 +80,7 @@ bool Epoll::addsocket(int32_t socketid, int16_t connectionid) {
     }
     Assert(SOCKET_INVALID != socketid);
     if (poll_add(polldata_, socketid, EPOLLIN | EPOLLET, connectionid) != 0) {
-      SLOW_ERRORLOG("net", 
+      SLOW_ERRORLOG(NET_MODULENAME, 
                     "[net.connection.manager] (Epoll::addsocket)"
                     " error, message: %s", 
                     strerror(errno));
@@ -95,19 +95,19 @@ bool Epoll::addsocket(int32_t socketid, int16_t connectionid) {
 bool Epoll::removesocket(int32_t socketid) {
   __ENTER_FUNCTION
     if (SOCKET_INVALID == socketid) {
-      SLOW_ERRORLOG("net",
+      SLOW_ERRORLOG(NET_MODULENAME,
                     "[net.connection.manager] (Epoll::removesocket) error!"
                     " SOCKET_INVALID == socketid");
       return false;
     }
     if (socketid <= 0) {
-      SLOW_ERRORLOG("net",
+      SLOW_ERRORLOG(NET_MODULENAME,
                     "[net.connection.manager] (Epoll::removesocket) error!"
                     "socketid(%d) <= 0", socketid);
       return false;
     }
     if (poll_delete(polldata_, socketid) != 0) {
-      SLOW_ERRORLOG("net",
+      SLOW_ERRORLOG(NET_MODULENAME,
                     "[net.connection.manager] (Epoll::removesocket) error!"
                     " message: %s",
                     strerror(errno));
@@ -141,7 +141,7 @@ bool Epoll::processinput() {
         if (connection->isdisconnect()) continue;
         int32_t _socketid = connection->getsocket()->getid();
         if (SOCKET_INVALID == _socketid) {
-          SLOW_ERRORLOG("net",
+          SLOW_ERRORLOG(NET_MODULENAME,
                         "[net.connection.manager] (Epoll::processinput)"
                         " error! _socketid == SOCKET_INVALID, connectionid: %d",
                         connectionid);

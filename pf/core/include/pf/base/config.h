@@ -144,6 +144,8 @@ enum {
 PF_API extern char g_applicationname[FILENAME_MAX]; //应用全局名称
 PF_API extern uint8_t g_applicationtype; //应用的类型 0 服务器 1 客户端
 
+#include "pf/base/global.h" //全局定义
+
 #define IP_SIZE 24 //max ip size
 #if __LINUX__
 #define HANDLE_INVALID (-1)

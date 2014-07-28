@@ -39,6 +39,7 @@ PF_API void get_sizestr(uint64_t size,
                  int8_t type = -1);
 
 PF_API void path_tounix(char *buffer, uint16_t length);
+PF_API void path_towindows(char *buffer, uint16_t length); 
 
 //获取当前执行文件名
 PF_API void get_module_filename(char *buffer, size_t size);

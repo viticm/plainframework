@@ -1,5 +1,6 @@
 #include "pf/base/log.h"
 #include "pf/sys/thread.h"
+#include "pf/net/packet/factorymanager.h"
 #include "pf/net/connection/manager/base.h"
 
 namespace pf_net {
@@ -48,6 +49,12 @@ bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
       serversocket_->set_nonblocking();
       socketid_ = serversocket_->getid();
       Assert(socketid_ != SOCKET_INVALID);
+      if (g_net_stream_usepacket) {
+        if (!NET_PACKET_FACTORYMANAGER_POINTER)
+          g_packetfactory_manager = new packet::FactoryManager();
+        if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
+        if (!NET_PACKET_FACTORYMANAGER_POINTER->init()) return false;
+      }
     }
     threadid_ = pf_sys::get_current_thread_id();
     return true;
@@ -165,7 +172,7 @@ bool Base::destroy() {
     uint16_t i = 0;
     for (i = 0; i < count; ++i) {
       if (ID_INVALID == connection_idset_[i]) {
-        SLOW_ERRORLOG("net", 
+        SLOW_ERRORLOG(NET_MODULENAME, 
                       "[net.connection.manager] (Base::destroy) error!"
                       " ID_INVALID == connection_idset_[%d]",
                       i);
@@ -173,7 +180,7 @@ bool Base::destroy() {
       }
       connection::Base *connection = get(connection_idset_[i]);
       if (NULL == connection) {
-        SLOW_ERRORLOG("net",
+        SLOW_ERRORLOG(NET_MODULENAME,
                       "[net.connection.manager]( Base::destroy) error!"
                       " connection is NULL, id: %d",
                       connection_idset_[i]);

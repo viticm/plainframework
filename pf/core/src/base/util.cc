@@ -269,6 +269,14 @@ void path_tounix(char *buffer, uint16_t length) {
   __LEAVE_FUNCTION
 }
 
+void path_towindows(char *buffer, uint16_t length) {
+  __ENTER_FUNCTION
+    for (uint16_t i = 0; i < length; ++i) {
+      if ('/' == buffer[i]) buffer[i] = '\\';
+    }
+  __LEAVE_FUNCTION
+}
+
 void get_module_filename(char *buffer, size_t size) {
   __ENTER_FUNCTION
     int32_t resultcode = 0;

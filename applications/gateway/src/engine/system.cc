@@ -1,4 +1,6 @@
 #include "pf/base/log.h"
+#include "pf/net/packet/factorymanager.h"
+#include "common/net/packetfactory.h"
 #include "common/setting.h"
 #include "engine/system.h"
 
@@ -42,17 +44,18 @@ pf_db::Manager *System::get_dbmanager() {
 
 bool System::init() {
   __ENTER_FUNCTION
+    Kernel::set_applicationname("gateway");
     DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
     if (!Kernel::init_base()) {
-      SLOW_ERRORLOG("engine", 
+      SLOW_ERRORLOG(ENGINE_MODULENAME, 
                     "[engine] (System::init) base module failed");
       return false;
     }
     SLOW_LOG("engine", "[engine] (System::init) base module success");
     SLOW_LOG("engine", "[engine] (System::init) start setting module");
     if (!init_setting()) {
-      SLOW_ERRORLOG("engine", 
-        "[engine] (System::init) setting module failed");
+      SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                    "[engine] (System::init) setting module failed");
       return false;
     }
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
@@ -75,7 +78,16 @@ bool System::init() {
               APPLICATION_SETTING_POINTER->gateway_info_.listenport_);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               APPLICATION_SETTING_POINTER->gateway_info_.net_connectionmax_);
-    SLOW_LOG("engine", "[engine] (System::init) setting module success");
+    SLOW_LOG(ENGINE_MODULENAME, 
+             "[engine] (System::init) setting module success");
+    if (!NET_PACKET_FACTORYMANAGER_POINTER)
+      g_packetfactory_manager = new pf_net::packet::FactoryManager();
+    if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
+    NET_PACKET_FACTORYMANAGER_POINTER->set_function_registerfactories(
+        common::net::registerfactories);
+    NET_PACKET_FACTORYMANAGER_POINTER->set_function_isvalid_packetid(
+        common::net::isvalid_packetid);
+    NET_PACKET_FACTORYMANAGER_POINTER->setsize(common::net::get_facctorysize());
     bool result = Kernel::init();
     return result;
   __LEAVE_FUNCTION

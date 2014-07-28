@@ -68,7 +68,7 @@ bool Base::processinput() {
         socket_inputstream_->getsocket()->getlast_errormessage(
             errormessage, 
             static_cast<uint16_t>(sizeof(errormessage) - 1));
-        SLOW_ERRORLOG(g_applicationname,
+        SLOW_ERRORLOG(NET_MODULENAME,
                       "[net.connection] (connection::Base::processinput)"
                       " socket_inputstream_->fill() result: %d %s",
                       fillresult,
@@ -101,7 +101,7 @@ bool Base::processoutput() {
         socket_inputstream_->getsocket()->getlast_errormessage(
             errormessage, 
             static_cast<uint16_t>(sizeof(errormessage) - 1));
-        SLOW_ERRORLOG(g_applicationname,
+        SLOW_ERRORLOG(NET_MODULENAME,
                       "[net.connection] (Base::processoutput)"
                       " socket_outputstream_->flush() result: %d %s",
                       flushresult,

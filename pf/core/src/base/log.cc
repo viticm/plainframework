@@ -92,8 +92,7 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
         strncat(buffer, time_str, strlen(time_str));
       }
       strncat(buffer, LF, sizeof(LF)); //add wrap
-    }
-    catch(...) {
+    } catch(...) {
       if (g_command_logprint) printf("ERROR: SaveLog unknown error!%s", LF); 
       return;
     }
@@ -140,7 +139,18 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
 
 bool Log::init(int32_t cache_size) {
   __ENTER_FUNCTION
-    if (1 == g_applicationtype) return true; //客户端不进行快速日志
+    if (1 == g_applicationtype) {
+      //初始化时将所有日志目录下的日志清除，防止客户端日志堆积过大
+      char command[128] = {0};
+#if __LINUX__
+      snprintf(command, sizeof(command) - 1, "rm -rf %s/*.log", kBaseLogSaveDir);
+#elif __WINDOWS__
+      snprintf(command, sizeof(command) - 1, "del %s/*.log", kBaseLogSaveDir);
+      path_towindows(command, strlen(command));
+#endif
+      system(command);
+      return true; //客户端不进行快速日志
+    }
     cache_size_ = cache_size;
     int32_t i;
     for (i = 0; i < kLogFileCount; ++i) {
@@ -157,13 +167,14 @@ bool Log::init(int32_t cache_size) {
 
 void Log::get_log_filename(uint8_t logid, char *save) {
   __ENTER_FUNCTION
-    const char *filename = g_log_filename[logid];
+    const char *filename_prefix = 
+      logid != kApplicationLogFile ? g_log_filename[logid] : g_applicationname;
     if (g_time_manager) {
       snprintf(save,
                FILENAME_MAX - 1,
                "%s/%s_%d_%d_%d.log",
                kBaseLogSaveDir,
-               filename,
+               filename_prefix,
                g_time_manager->get_year(),
                g_time_manager->get_month() + 1,
                g_time_manager->get_day());
@@ -172,31 +183,50 @@ void Log::get_log_filename(uint8_t logid, char *save) {
                FILENAME_MAX - 1,
                "%s/%s.log",
                kBaseLogSaveDir,
-               filename);
+               filename_prefix);
     }
   __LEAVE_FUNCTION
 }
 
-void Log::get_log_filename(const char *file_nameprefix, char *file_name) { 
-//remember the file_nameprefix is model name
+void Log::get_log_filename(const char *filename_prefix, 
+                           char *save, 
+                           uint8_t type) { 
   __ENTER_FUNCTION
-     if (g_time_manager) {
-      snprintf(file_name,
+    const char *typestr = NULL;
+    switch (type) {
+      case 1:
+        typestr = "warning";
+        break;
+      case 2:
+        typestr = "error";
+        break;
+      case 3:
+        typestr = "debug";
+        break;
+      default:
+        typestr = "";
+        break;
+    }
+    if (g_time_manager) {
+      snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s_%d_%d_%d.log", //structure BASE_SAVE_LOG_DIR/logfilename.log
+               "%s/%s%s%s_%d_%d_%d.log",
                kBaseLogSaveDir,
-               file_nameprefix,
+               filename_prefix,
+               strlen(typestr) > 0 ? "_" : "",
+               typestr,
                g_time_manager->get_year(),
                g_time_manager->get_month() + 1,
                g_time_manager->get_day());
     } else {
-      snprintf(file_name,
+      snprintf(save,
                FILENAME_MAX - 1,
-               "%s/%s.log",
+               "%s/%s%s%s.log",
                kBaseLogSaveDir,
-               file_nameprefix);
+               filename_prefix,
+               strlen(typestr) > 0 ? "_" : "",
+               typestr);
     }
-   
   __LEAVE_FUNCTION
 }
 
@@ -205,7 +235,7 @@ void Log::flush_log(uint8_t logid) {
     if (logid > kLogFileCount) return;
     char log_file_name[FILENAME_MAX];
     memset(log_file_name, '\0', sizeof(log_file_name));
-    get_log_filename(logid, log_file_name);
+    get_log_filename(logid, log_file_name); //快速日志不分错误
     log_lock_[logid].lock();
     try {
       FILE* fp;

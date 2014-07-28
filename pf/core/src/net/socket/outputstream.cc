@@ -34,8 +34,7 @@ uint32_t OutputStream::write(const char *buffer, uint32_t length) {
         SAFE_DELETE_ARRAY(tempbuffer);
         return 0;
       }
-    }
-    else {
+    } else {
       memcpy(tempbuffer, buffer, length);
     }
     if (headlength <= taillength && 
@@ -43,8 +42,7 @@ uint32_t OutputStream::write(const char *buffer, uint32_t length) {
         (freecount = bufferlength - taillength) <= length) {
       memcpy(&(streamdata_.buffer[taillength]), tempbuffer, freecount);
       memcpy(streamdata_.buffer, &tempbuffer[freecount], length - freecount);
-    }
-    else {
+    } else {
       memcpy(&(streamdata_.buffer[taillength]), tempbuffer, length);
     }
     streamdata_.taillength = (taillength + length) % bufferlength;

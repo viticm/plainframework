@@ -16,6 +16,8 @@
 #define NET_OVER_SERVER_MAX 256
 #define NET_ONESTEP_ACCEPT_DEFAULT 50 //每帧接受新连接的默认值
 
+extern bool g_net_stream_usepacket; //true 使用包对象处理 false不使用
+
 namespace pf_net {
 
 namespace packet {

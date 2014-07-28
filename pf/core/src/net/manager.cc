@@ -5,6 +5,8 @@
 #include "pf/performance/eyes.h"
 #include "pf/net/manager.h"
 
+bool g_net_stream_usepacket = true;
+
 namespace pf_net {
 
 Manager::Manager() {

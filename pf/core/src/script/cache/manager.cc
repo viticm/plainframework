@@ -81,7 +81,7 @@ bool Manager::init(const char *filename, bool force_arraymode) {
                kFileName);
       FILE *fp = fopen(_filename, "r");
       if (!fp) {
-        SLOW_ERRORLOG("scripterror",
+        SLOW_ERRORLOG(SCRIPT_MODULENAME,
                       "[script.cache] (Manager::init) script file [%d:%s]"
                       " not exist!",
                       id,

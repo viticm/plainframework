@@ -54,7 +54,7 @@ bool FileBridge::open(const char *filename) {
 #endif
     fp_ = fp_ ? fp_ : fopen(filepath, "rb");
     if (NULL == fp_) {
-      SLOW_ERRORLOG("error", 
+      SLOW_ERRORLOG(SCRIPT_MODULENAME, 
                     "[script][lua] (FileBridge::open) file error: %s", 
                     filepath);  
       return false;

@@ -38,8 +38,7 @@ uint32_t InputStream::read(char *buffer, uint32_t length) {
       encodeparam_.outsize = length;
       encode_result = encode::make(encodeparam_);
       if (!encode_result) result = 0;
-    }
-    else {
+    } else {
       memcpy(buffer, tempbuffer, length);
     }
     SAFE_DELETE_ARRAY(tempbuffer);
@@ -70,13 +69,11 @@ bool InputStream::peek(char *buffer, uint32_t length) {
     char *stream_buffer = streamdata_.buffer;
     if (headlength < taillength) {
       memcpy(buffer, &(stream_buffer[headlength]), length);
-    }
-    else {
+    } else {
       uint32_t rightlength = bufferlength - headlength;
       if (length < rightlength) {
         memcpy(&buffer[0], &(stream_buffer[headlength]), length);
-      }
-      else {
+      } else {
         memcpy(&buffer[0], &(stream_buffer[headlength]), rightlength);
         memcpy(&buffer[rightlength], &(stream_buffer[0]), length - rightlength);
       }
@@ -123,8 +120,7 @@ int32_t InputStream::fill() {
       freecount = 0 == headlength ? 
                   bufferlength - taillength - 1 : 
                   bufferlength - headlength;
-    }
-    else {
+    } else {
       freecount = headlength - taillength - 1;
     }
     if (freecount != 0) {

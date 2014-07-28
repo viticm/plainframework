@@ -47,6 +47,7 @@ class PF_API Kernel {
    void set_base_logactive(bool flag);
    void set_applicationname(const char *name);
    void set_applicationtype(uint8_t type);
+   void set_net_stream_usepacket(bool flag);
 
  protected:
    pf_base::hashmap::Template<int32_t, const char *> config_string_;

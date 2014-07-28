@@ -41,7 +41,7 @@ bool VM::load(const char *filename) {
     using namespace pf_sys;
     uint64_t size;
     if (!filebridge_.open(filename)) {
-      SLOW_ERRORLOG("luaerror",
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) open file %s failed",
                     filename);
       return false;
@@ -49,14 +49,14 @@ bool VM::load(const char *filename) {
     size = filebridge_.size();
     memory::DynamicAllocator memory;
     if (!memory.malloc(size + 4)) {
-      SLOW_ERRORLOG("luaerror",
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) memory for file %s failed",
                     filename);
       filebridge_.close();
       return false;
     }
     if (filebridge_.read(memory.getpointer(), size) != size) {
-      SLOW_ERRORLOG("luaerror",
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) read file %s failed",
                     filename);
       filebridge_.close();
@@ -69,22 +69,21 @@ bool VM::load(const char *filename) {
       unsigned char *temp_pointer = 
         reinterpret_cast<unsigned char *>(memory.getpointer());
       if (!loadbuffer(temp_pointer, size)) {
-        SLOW_ERRORLOG("luaerror",
+        SLOW_ERRORLOG(SCRIPT_MODULENAME,
                       "[script.lua] (VM::load) load file %s"
                       " buffer cache failed",
                       filename);
         return false;
       }
-    }
-    catch (...) {
-      SLOW_ERRORLOG("luaerror",
+    } catch (...) {
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) load file %s"
                     " buffer cache have a exception",
                     filename);
       return false;
     }
     if (!executecode()) {
-      SLOW_ERRORLOG("luaerror",
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) execute code"
                     " failed from file %s",
                     filename);
@@ -530,7 +529,7 @@ void VM::set_workpath(const char *path) {
 
 void VM::on_scripterror(int32_t error) {
   __ENTER_FUNCTION
-    SLOW_ERRORLOG("luaerror",
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
                   "[script.lua] (VM::on_scripterror) code: %d",
                   error);
   __LEAVE_FUNCTION
@@ -538,7 +537,7 @@ void VM::on_scripterror(int32_t error) {
 
 void VM::on_scripterror(int32_t error, int32_t error1) {
   __ENTER_FUNCTION
-    SLOW_ERRORLOG("luaerror",
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
                   "[script.lua] (VM::on_scripterror) code: %d:[%d]",
                   error,
                   error1);

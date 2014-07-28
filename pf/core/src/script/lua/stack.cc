@@ -52,7 +52,7 @@ bool Stack::stepenter(const char *functionname, int32_t scriptid) {
   __ENTER_FUNCTION
     using namespace pf_base;
     if (currentstep_ >= SCRIPT_LUA_STACK_STEP_MAX) {
-      SLOW_ERRORLOG("luaerror",
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script][lua] (Stack::stepenter)"
                     " out of stack: %s %d",
                     functionname,

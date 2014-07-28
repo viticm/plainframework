@@ -30,7 +30,7 @@ bool System::init(const char *connectionname,
     Assert(odbc_interface_);
     connected = odbc_interface_->connect(connectionname, username, password);
     if (!connected) {
-      SLOW_ERRORLOG("database",
+      SLOW_ERRORLOG(DB_MODULENAME,
                     "[db.odbc] (System::init) failed."
                     " connectionname: %s, username: %s, password: %s,"
                     " errormessage: %s",
@@ -79,7 +79,7 @@ bool System::check_db_connect() {
     if (!odbc_interface_->is_connected()) {
       int i;
       for (i = 0; i < 5; ++i) {
-        SLOW_WARNINGLOG("odbc", 
+        SLOW_WARNINGLOG(DB_MODULENAME, 
                         "[db.odbc] the connection lost, try connect after 5 seconds!"
                         " connection name: %s.",
                         odbc_interface_->connection_name_);

@@ -294,6 +294,10 @@ void Kernel::set_applicationtype(uint8_t type) {
   g_applicationtype = type;
 }
 
+void Kernel::set_net_stream_usepacket(bool flag) {
+  g_net_stream_usepacket = flag;
+}
+
 bool Kernel::init_base() {
   __ENTER_FUNCTION
     using namespace pf_base;
@@ -320,7 +324,7 @@ bool Kernel::init_db() {
       const char *connection_or_dbname = 
         getconfig_stringvalue(ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME);
       if (NULL == connection_or_dbname) {
-        SLOW_ERRORLOG("engine",
+        SLOW_ERRORLOG(ENGINE_MODULENAME,
                       "[engine] (Kernel::init_db) the connection or db name"
                       " is empty!");
         return false;
@@ -358,7 +362,7 @@ bool Kernel::init_net() {
         getconfig_int32value(ENGINE_CONFIG_NET_CONNECTION_MAX);
       const char *listenip = getconfig_stringvalue(ENGINE_CONFIG_NET_LISTEN_IP);
       if (_connectionmax <= 0) {
-        SLOW_ERRORLOG("engine",
+        SLOW_ERRORLOG(ENGINE_MODULENAME,
                       "[engine] (Kernel::init_net)"
                       " the connection maxcount <= 0");
         return false;
@@ -386,7 +390,7 @@ bool Kernel::init_net() {
         listenport = is_usethread ? 
                      net_thread_->get_listenport() : 
                      net_manager_->get_listenport();
-        SLOW_LOG("engine",
+        SLOW_LOG(ENGINE_MODULENAME,
                  "[engine] (Kernel::init_net) success!"
                  " connection maxcount: %d, listenport: %d, listenip: %s",
                  connectionmax,
