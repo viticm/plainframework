@@ -159,6 +159,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/lib/ReleaseLib/pf_iconv.lib ../../dependencies/lib/ReleaseLib/pf_lua.lib"
 				OutputFile="..\dll\$(ConfigurationName)\$(ProjectName).dll"
+				GenerateDebugInformation="true"
 				ImportLibrary="..\lib\$(ConfigurationName)\$(ProjectName).lib"
 			/>
 			<Tool
@@ -354,6 +355,10 @@
 			<Filter
 				Name="base"
 				>
+				<File
+					RelativePath="..\src\base\global.cc"
+					>
+				</File>
 				<File
 					RelativePath="..\src\base\io.cc"
 					>
@@ -682,6 +687,10 @@
 				</File>
 				<File
 					RelativePath="..\include\pf\base\config.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\pf\base\global.h"
 					>
 				</File>
 				<File

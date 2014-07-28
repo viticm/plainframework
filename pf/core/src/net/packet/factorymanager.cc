@@ -1,3 +1,4 @@
+#include "pf/base/log.h"
 #include "pf/net/packet/base.h"
 #include "pf/net/packet/factorymanager.h"
 
@@ -44,8 +45,12 @@ FactoryManager::~FactoryManager() {
 bool FactoryManager::init() {
   __ENTER_FUNCTION
     Assert(size_ > 0);
-    if (!function_isvalid_packetid_ || !function_registerfactories_)
+    if (!function_isvalid_packetid_ || !function_registerfactories_) {
+      SLOW_ERRORLOG(NET_MODULENAME, 
+                    "[net.packet] (FactoryManager::init) error,"
+                    " the register factories and is valid packet id function pointer is NULL");
       return false;
+    }
     factories_ = new Factory * [size_];
     Assert(factories_);
     packet_alloccount_ = new uint32_t[size_];
@@ -158,8 +163,10 @@ void FactoryManager::addfactory(Factory* factory) {
       Assert(false);
       return;
     }
-    if (!isfind) idindexs_.add(factory->get_packetid(), index);
-    ++factorycount_;
+    if (!isfind) {
+      ++factorycount_;
+      idindexs_.add(factory->get_packetid(), index);
+    }
     factories_[index] = factory;
   __LEAVE_FUNCTION
 }

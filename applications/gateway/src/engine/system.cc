@@ -51,8 +51,9 @@ bool System::init() {
                     "[engine] (System::init) base module failed");
       return false;
     }
-    SLOW_LOG("engine", "[engine] (System::init) base module success");
-    SLOW_LOG("engine", "[engine] (System::init) start setting module");
+    SLOW_LOG(ENGINE_MODULENAME, "[engine] (System::init) base module success");
+    SLOW_LOG(ENGINE_MODULENAME, "[engine] (System::init) start setting module");
+    
     if (!init_setting()) {
       SLOW_ERRORLOG(ENGINE_MODULENAME, 
                     "[engine] (System::init) setting module failed");
@@ -84,10 +85,11 @@ bool System::init() {
       g_packetfactory_manager = new pf_net::packet::FactoryManager();
     if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
     NET_PACKET_FACTORYMANAGER_POINTER->set_function_registerfactories(
-        common::net::registerfactories);
+        &common::net::registerfactories);
     NET_PACKET_FACTORYMANAGER_POINTER->set_function_isvalid_packetid(
-        common::net::isvalid_packetid);
-    NET_PACKET_FACTORYMANAGER_POINTER->setsize(common::net::get_facctorysize());
+        &common::net::isvalid_packetid);
+    uint16_t factorysize = common::net::get_facctorysize();
+    NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();
     return result;
   __LEAVE_FUNCTION

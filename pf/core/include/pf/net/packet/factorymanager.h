@@ -69,7 +69,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
 
 }; //namespace pap_common_net
 
-extern pf_net::packet::FactoryManager* g_packetfactory_manager;
+PF_API extern pf_net::packet::FactoryManager *g_packetfactory_manager;
 
 #define NET_PACKET_FACTORYMANAGER_POINTER \
   pf_net::packet::FactoryManager::getsingleton_pointer()

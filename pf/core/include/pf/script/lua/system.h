@@ -42,6 +42,6 @@ class PF_API System : public pf_base::Singleton<System>, public Interface {
 #define SCRIPT_LUASYSTEM_POINTER \
 pf_script::lua::System::getsingleton_pointer()
 
-extern pf_script::lua::System *g_script_luasystem;
+PF_API extern pf_script::lua::System *g_script_luasystem;
 
 #endif //PF_SCRIPT_LUA_SYSTEM_H_

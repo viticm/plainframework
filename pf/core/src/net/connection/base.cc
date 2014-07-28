@@ -142,7 +142,7 @@ bool Base::processcommand(bool option) {
         memcpy(&packetcheck, &packetheader[sizeof(uint16_t)], sizeof(uint32_t));
         packetsize = GET_PACKETLENGTH(packetcheck);
         packetindex = GET_PACKETINDEX(packetcheck);
-        if (!packet::FactoryManager::isvalid_packetid(packetid)) {
+        if (!g_packetfactory_manager->isvalid_packetid(packetid)) {
           return false;
         }
         try {

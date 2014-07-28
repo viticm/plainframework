@@ -67,7 +67,7 @@ const char *get_engine_modulename() {
     if (strlen(engine_modulename) > 0) return engine_modulename;
     snprintf(engine_modulename, 
              sizeof(engine_modulename) - 1, 
-             "net%s%s", 
+             "engine%s%s", 
              strlen(g_applicationname) > 0 ? "_" : "", 
              g_applicationname);
     return engine_modulename;

@@ -1,3 +1,4 @@
+#include "pf/base/log.h"
 #include "pf/net/packet/factorymanager.h"
 #include "common/define/net/packet/id/all.h"
 
@@ -60,6 +61,7 @@ uint16_t get_facctorysize() {
 bool registerfactories() {
   __ENTER_FUNCTION
     using namespace common::net::packet;
+    SLOW_LOG(NET_MODULENAME, "[net] (registerfactories) start");
     if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
 #if defined(_GATEWAY) || \
   defined(_LOGIN) || \
@@ -91,6 +93,7 @@ bool registerfactories() {
 #if defined(_CLIENT) || defined(_SERVER) /* { */
 
 #endif /* } */
+    SLOW_LOG(NET_MODULENAME, "[net] (registerfactories) end");
   __LEAVE_FUNCTION
     return false;
 }

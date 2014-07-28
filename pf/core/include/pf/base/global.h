@@ -23,11 +23,11 @@ extern char performance_modulename[FILENAME_MAX];
 extern char db_modulename[FILENAME_MAX];
 extern char engine_modulename[FILENAME_MAX];
 
-const char *get_net_modulename();
-const char *get_script_modulename();
-const char *get_performanace_modulename();
-const char *get_db_modulename();
-const char *get_engine_modulename();
+PF_API const char *get_net_modulename();
+PF_API const char *get_script_modulename();
+PF_API const char *get_performanace_modulename();
+PF_API const char *get_db_modulename();
+PF_API const char *get_engine_modulename();
 
 }; //namespace global
 

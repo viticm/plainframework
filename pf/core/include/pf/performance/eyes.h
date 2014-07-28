@@ -64,6 +64,6 @@ class PF_API Eyes : public pf_base::Singleton<Eyes> {
 #define PERFORMANCE_EYES_POINTER \
   pf_performance::Eyes::getsingleton_pointer()
 
-extern pf_performance::Eyes *g_performance_eyes;
+PF_API extern pf_performance::Eyes *g_performance_eyes;
 
 #endif //PF_PERFORMANCE_EYES_H_

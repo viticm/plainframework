@@ -146,7 +146,7 @@ bool Log::init(int32_t cache_size) {
       snprintf(command, sizeof(command) - 1, "rm -rf %s/*.log", kBaseLogSaveDir);
 #elif __WINDOWS__
       snprintf(command, sizeof(command) - 1, "del %s/*.log", kBaseLogSaveDir);
-      path_towindows(command, strlen(command));
+      util::path_towindows(command, static_cast<uint16_t>(strlen(command)));
 #endif
       system(command);
       return true; //客户端不进行快速日志

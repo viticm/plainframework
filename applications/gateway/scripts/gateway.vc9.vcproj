@@ -342,6 +342,10 @@
 				<Filter
 					Name="net"
 					>
+					<File
+						RelativePath="..\..\common\src\net\packetfactory.cc"
+						>
+					</File>
 					<Filter
 						Name="packet"
 						>
@@ -464,6 +468,10 @@
 					>
 					<File
 						RelativePath="..\..\common\include\common\net\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\common\include\common\net\packetfactory.h"
 						>
 					</File>
 					<Filter

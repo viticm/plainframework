@@ -73,9 +73,7 @@ class PF_API TimeManager : public Singleton<TimeManager> {
 
 }; //namespace pf_base
 
-extern pf_base::TimeManager* g_time_manager;
-extern uint32_t g_file_name_fix_last;
-extern int32_t g_file_name_fix;
+PF_API extern pf_base::TimeManager* g_time_manager;
 
 #define TIME_MANAGER_POINTER \
   pf_base::TimeManager::getsingleton_pointer()
