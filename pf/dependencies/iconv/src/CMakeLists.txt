@@ -32,7 +32,7 @@ if (WIN32)
 endif()
 
 
-ADD_LIBRARY(iconv
+ADD_LIBRARY(pf_iconv STATIC
 	${INCLUDE_LIST}
 	${SRC_LIST}
 	${RESOURCE_LIST}
@@ -45,12 +45,10 @@ IF(CMAKE_SYSTEM MATCHES Windows)
   TARGET_LINK_LIBRARIES(vnet ws2_32)
 ELSE()
   if(USE_32BITS)
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
   else()
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
   endif(USE_32BITS)
 ENDIF(CMAKE_SYSTEM MATCHES Windows)
-
-

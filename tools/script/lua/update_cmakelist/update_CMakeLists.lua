@@ -22,9 +22,9 @@ local gateway_cmakelists = "../../../../applications/gateway/src/CMakeLists.txt"
 local gateway_vcproj = "../../../../applications/gateway/scripts/gateway.vc9.vcproj"
 local pf_simple_cmakelists = "../../../../applications/pf_simple/src/CMakeLists.txt"
 local pf_simple_vcproj = "../../../../applications/pf_simple/scripts/pf_simple.vc9.vcproj"
-local plugin_kmp_cmakelists = "../../../../pf/kpmlib/src/CMakeLists.txt"
-local plugin_kmp_vcproj = "../../../../pf/kpmlib/script/kpmLib.vc9.vcproj"
+local pf_core_cmakelists = "../../../../pf/core/src/CMakeLists.txt"
+local pf_core_vcproj = "../../../../pf/core/scripts/pf_core.vc9.vcproj"
 
 update_CMakeLists(gateway_cmakelists, gateway_vcproj)
 update_CMakeLists(pf_simple_cmakelists, pf_simple_vcproj)
-update_CMakeLists(plugin_kmp_cmakelists, plugin_kmp_vcproj, nil, true, "shared")
+update_CMakeLists(pf_core_cmakelists, pf_core_vcproj, nil, true, "shared")

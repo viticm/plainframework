@@ -64,18 +64,18 @@ SET(SRC_LIST lvm.h
 if (WIN32)             
 else()
   if(USE_32BITS)
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
   else()
-    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+    SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
+    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
   endif(USE_32BITS)
 endif()
 
 
 SET(LIBRARY_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_LIB})
 
-ADD_LIBRARY(luascript STATIC ${SRC_LIST} ${BASELIB_LIST})
+ADD_LIBRARY(pf_lua STATIC ${SRC_LIST} ${BASELIB_LIST})
 
 IF(CMAKE_SYSTEM MATCHES Windows)
   
