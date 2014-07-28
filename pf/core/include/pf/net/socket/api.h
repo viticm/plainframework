@@ -34,88 +34,88 @@ namespace socket {
 
 namespace api {
 
-int32_t socketex(int32_t domain, int32_t type, int32_t protocol);
+PF_API int32_t socketex(int32_t domain, int32_t type, int32_t protocol);
 
-bool bindex(int32_t socketid, 
-            const struct sockaddr* name, 
-            uint32_t namelength);
+PF_API bool bindex(int32_t socketid, 
+                   const struct sockaddr* name, 
+                   uint32_t namelength);
 
-bool connectex(int32_t socketid, 
-               const struct sockaddr* name, 
-               uint32_t namelength);
+PF_API bool connectex(int32_t socketid, 
+                      const struct sockaddr* name, 
+                      uint32_t namelength);
 
-bool listenex(int32_t socketid, uint32_t backlog);
+PF_API bool listenex(int32_t socketid, uint32_t backlog);
 
-int32_t acceptex(int32_t socketid, 
-                 struct sockaddr* addr, 
-                 uint32_t* addrlength);
+PF_API int32_t acceptex(int32_t socketid, 
+                        struct sockaddr* addr, 
+                        uint32_t* addrlength);
 
-bool getsockopt_exb(int32_t socketid, 
-                    int32_t level, 
-                    int32_t optname, 
-                    void *optval, 
-                    uint32_t* optlength);
+PF_API bool getsockopt_exb(int32_t socketid, 
+                           int32_t level, 
+                           int32_t optname, 
+                           void *optval, 
+                           uint32_t* optlength);
 
-uint32_t getsockopt_exu(int32_t socketid, 
-                        int32_t level, 
-                        int32_t optname, 
-                        void *optval, 
-                        uint32_t* optlength);
+PF_API uint32_t getsockopt_exu(int32_t socketid, 
+                               int32_t level, 
+                               int32_t optname, 
+                               void *optval, 
+                               uint32_t* optlength);
 
-bool setsockopt_ex(int32_t socketid,
-                   int32_t level,
-                   int32_t optname,
-                   const void *optval,
-                   uint32_t optlength);
+PF_API bool setsockopt_ex(int32_t socketid,
+                          int32_t level,
+                          int32_t optname,
+                          const void *optval,
+                          uint32_t optlength);
 
-int32_t sendex(int32_t socketid, 
-               const void *buffer, 
-               uint32_t length, 
-               uint32_t flag);
+PF_API int32_t sendex(int32_t socketid, 
+                      const void *buffer, 
+                      uint32_t length, 
+                      uint32_t flag);
 
-int32_t sendto_ex(int32_t socketid, 
-                  const void *buffer, 
-                  int32_t length, 
-                  uint32_t flag, 
-                  const struct sockaddr* to, 
-                  int32_t tolength);
+PF_API int32_t sendto_ex(int32_t socketid, 
+                         const void *buffer, 
+                         int32_t length, 
+                         uint32_t flag, 
+                         const struct sockaddr* to, 
+                         int32_t tolength);
 
-int32_t recvex(int32_t socketid, 
-               void *buffer, 
-               uint32_t length, 
-               uint32_t flag);
+PF_API int32_t recvex(int32_t socketid, 
+                      void *buffer, 
+                      uint32_t length, 
+                      uint32_t flag);
 
-int32_t recvfrom_ex(int32_t socketid, 
-                    void *buffer, 
-                    int32_t length, 
-                    uint32_t flag, 
-                    struct sockaddr* from, 
-                    uint32_t* fromlength);
+PF_API int32_t recvfrom_ex(int32_t socketid, 
+                           void *buffer, 
+                           int32_t length, 
+                           uint32_t flag, 
+                           struct sockaddr* from, 
+                           uint32_t* fromlength);
 
-bool closeex(int32_t socketid);
+PF_API bool closeex(int32_t socketid);
 
-bool ioctlex(int32_t socketid, int64_t cmd, uint64_t* argp);
+PF_API bool ioctlex(int32_t socketid, int64_t cmd, uint64_t* argp);
 
-bool get_nonblocking_ex(int32_t socketid);
+PF_API bool get_nonblocking_ex(int32_t socketid);
 
-bool set_nonblocking_ex(int32_t socketid, bool on);
+PF_API bool set_nonblocking_ex(int32_t socketid, bool on);
 
-uint32_t availableex(int32_t socketid);
+PF_API uint32_t availableex(int32_t socketid);
 
-bool shutdown_ex(int32_t socketid, int32_t how);
+PF_API bool shutdown_ex(int32_t socketid, int32_t how);
 
-int32_t selectex(int32_t maxfdp, 
-                 fd_set* readset, 
-                 fd_set* writeset, 
-                 fd_set* exceptset, 
-                 struct timeval* timeout);
+PF_API int32_t selectex(int32_t maxfdp, 
+                        fd_set* readset, 
+                        fd_set* writeset, 
+                        fd_set* exceptset, 
+                        struct timeval* timeout);
 
-int32_t getsockname_ex(int32_t socketid, 
-                       struct sockaddr *name, 
-                       int32_t *namelength);
+PF_API int32_t getsockname_ex(int32_t socketid, 
+                              struct sockaddr *name, 
+                              int32_t *namelength);
 
-int32_t getlast_errorcode();
-void getlast_errormessage(char *buffer, uint16_t length);
+PF_API int32_t getlast_errorcode();
+PF_API void getlast_errormessage(char *buffer, uint16_t length);
 
 }; //namespace api
 

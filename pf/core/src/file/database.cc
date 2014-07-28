@@ -322,7 +322,7 @@ bool Database::open_from_memory_text(const char *memory,
             const char *value = result[i].c_str();
             //convert charset
             //utf8 -> gbk 1.5multiple length
-            int32_t convert_strlength = strlen(value) * 2;
+            int32_t convert_strlength = static_cast<int32_t>(strlen(value) * 2);
             char *convert_str = new char[convert_strlength];
             memset(convert_str, 0, convert_strlength);
             int32_t convert_result = 
@@ -331,7 +331,7 @@ bool Database::open_from_memory_text(const char *memory,
                                       convert_str,
                                       convert_strlength,
                                       value,
-                                      strlen(value));
+                                      static_cast<int32_t>(strlen(value)));
             if (convert_result > 0) {
               value = convert_str;
               result[i] = convert_str;

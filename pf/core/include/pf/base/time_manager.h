@@ -20,7 +20,7 @@
 
 namespace pf_base {
 
-class TimeManager : public Singleton<TimeManager> {
+class PF_API TimeManager : public Singleton<TimeManager> {
 
  public:
    TimeManager();

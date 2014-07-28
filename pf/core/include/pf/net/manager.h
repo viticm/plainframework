@@ -28,11 +28,11 @@
 namespace pf_net {
 
 #if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
-class Manager : public connection::manager::Epoll {
+class PF_API Manager : public connection::manager::Epoll {
 #elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
-class Manager : public connection::manager::Iocp {
+class PF_API Manager : public connection::manager::Iocp {
 #else /* }{ */
-class Manager : public connection::manager::Select {
+class PF_API Manager : public connection::manager::Select {
 #endif /* } */
 
  public:

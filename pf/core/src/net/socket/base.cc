@@ -378,8 +378,7 @@ uint64_t Base::getu64host() const {
     uint64_t result = 0;
     if (0 == strlen(host_)) {
       result = static_cast<uint64_t>(htonl(INADDR_ANY));
-    }
-    else {
+    } else {
       result = static_cast<uint64_t>(inet_addr(host_));
     }
     return result;

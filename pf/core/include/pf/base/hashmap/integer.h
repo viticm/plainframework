@@ -17,7 +17,7 @@ namespace pf_base {
 
 namespace hashmap {
 
-class Integer {
+class PF_API Integer {
 
  public:
    typedef hash_map<uint32_t, void *> hashmap_t;

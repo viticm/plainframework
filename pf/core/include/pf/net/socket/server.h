@@ -17,7 +17,7 @@ namespace pf_net {
 
 namespace socket {
 
-class Server {
+class PF_API Server {
 
  public:
    Server(uint16_t port, const char *ip = NULL, uint32_t backlog = 5);

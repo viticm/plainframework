@@ -17,7 +17,7 @@ namespace pf_script {
 
 namespace cache {
 
-class Base {
+class PF_API Base {
 
  public:
    Base();

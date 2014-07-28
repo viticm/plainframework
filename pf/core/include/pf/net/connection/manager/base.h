@@ -24,7 +24,7 @@ namespace connection {
 
 namespace manager {
 
-class Base {
+class PF_API Base {
 
  public:
    Base();

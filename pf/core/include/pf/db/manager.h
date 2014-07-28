@@ -16,7 +16,7 @@
 
 namespace pf_db {
 
-class Manager {
+class PF_API Manager {
 
  public:
    Manager(dbconnector_type_t connector_type = kDBConnectorTypeODBC);

@@ -17,7 +17,7 @@ namespace pf_net {
 
 namespace packet {
 
-class Factory {
+class PF_API Factory {
 
  public:
    virtual ~Factory() {};

@@ -19,7 +19,7 @@ namespace pf_net {
 
 namespace socket {
 
-class OutputStream : public Stream {
+class PF_API OutputStream : public Stream {
 
  public:
    OutputStream(

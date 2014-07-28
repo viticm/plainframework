@@ -113,12 +113,12 @@ bool get_mem_info(memory_info_t &mem_info) {
 #elif __WINDOWS__
     MEMORYSTATUS memory_status;
     GlobalMemoryStatus(&memory_status); //memory
-    mem_info.mem_total = memory_status.dwTotalPhys;
-    mem_info.mem_free = memory_status.dwAvailPhys;
-    mem_info.buffers = memory_status.dwTotalPageFile;
-    mem_info.cached = memory_status.dwAvailPageFile;
-    mem_info.swap_total = memory_status.dwTotalVirtual;
-    mem_info.swap_free = memory_status.dwAvailVirtual;
+    mem_info.mem_total = static_cast<uint32_t>(memory_status.dwTotalPhys);
+    mem_info.mem_free = static_cast<uint32_t>(memory_status.dwAvailPhys);
+    mem_info.buffers = static_cast<uint32_t>(memory_status.dwTotalPageFile);
+    mem_info.cached = static_cast<uint32_t>(memory_status.dwAvailPageFile);
+    mem_info.swap_total = static_cast<uint32_t>(memory_status.dwTotalVirtual);
+    mem_info.swap_free = static_cast<uint32_t>(memory_status.dwAvailVirtual);
 #endif
   __LEAVE_FUNCTION
     return false;

@@ -17,7 +17,7 @@ namespace pf_sys {
 
 namespace memory {
 
-class StaticAllocator {
+class PF_API StaticAllocator {
 
  public:
    StaticAllocator();

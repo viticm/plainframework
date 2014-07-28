@@ -33,6 +33,8 @@ documentation and/or software.
 #ifndef PF_BASE_MD5_H_
 #define PF_BASE_MD5_H_
 
+#include "pf/base/config.h"
+
 #include <string>
 #include <iostream>
 
@@ -47,8 +49,7 @@ namespace pf_base {
 //      MD5(std::string).hexdigest()
 //
 // assumes that char is 8 bit and int is 32 bit
-class MD5
-{
+class PF_API MD5 {
 public:
   typedef unsigned int size_type; // must be 32bit
 

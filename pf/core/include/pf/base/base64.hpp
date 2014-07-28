@@ -65,8 +65,8 @@
 namespace pf_base {
 
 //编码后的长度一般比原文多占1/3的存储空间，请保证base64code有足够的空间
-int base64encode(char * base64code, const char * src, int src_len = 0);
-int base64decode(char * buf, const char * base64code, int src_len = 0);
+PF_API int base64encode(char * base64code, const char * src, int src_len = 0);
+PF_API int base64decode(char * buf, const char * base64code, int src_len = 0);
 
 char getb64char(int index) {
   const char kBase64Table[] = 

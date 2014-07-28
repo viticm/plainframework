@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE;_PF_SIMPLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE;PF_BUILD_AS_DLL"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../../pf/dependencies/lib/ReleaseLib/luascript.lib ../../../pf/dependencies/lib/ReleaseLib/iconv.lib"
+				AdditionalDependencies="ws2_32.lib ../../../pf/lib/Release/pf_core.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib;LIBCMT"
@@ -130,10 +130,10 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;__WINDOWS__;_CRT_SECURE_NO_DEPRECATE;_PF_SIMPLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;PF_BUILD_AS_DLL"
 				StringPooling="true"
 				ExceptionHandling="2"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
@@ -153,7 +153,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../../pf/dependencies/lib/ReleaseLib/luascript.lib ../../../pf/dependencies/lib/ReleaseLib/iconv.lib"
+				AdditionalDependencies="ws2_32.lib ../../../pf/core/lib/Release/pf_core.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib;LIBCMT"
@@ -204,330 +204,6 @@
 				RelativePath="..\src\main.cc"
 				>
 			</File>
-			<Filter
-				Name="pf"
-				>
-				<Filter
-					Name="base"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\io.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\log.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\md5.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\string.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\time_manager.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\base\util.cc"
-						>
-					</File>
-					<Filter
-						Name="hashmap"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\base\hashmap\integer.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="sys"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\assert.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\info.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\minidump.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\process.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\thread.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\sys\util.cc"
-						>
-					</File>
-					<Filter
-						Name="memory"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\sys\memory\dynamic_allocator.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\sys\memory\share.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\sys\memory\static_allocator.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="file"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\file\api.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\file\database.cc"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\pf\core\src\file\ini.cc"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="net"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\net\manager.cc"
-						>
-					</File>
-					<Filter
-						Name="packet"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\packet\base.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\packet\factorymanager.cc"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="socket"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\api.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\base.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\encode.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\inputstream.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\outputstream.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\server.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\socket\stream.cc"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="connection"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\connection\base.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\connection\pool.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\net\connection\server.cc"
-							>
-						</File>
-						<Filter
-							Name="manager"
-							>
-							<File
-								RelativePath="..\..\..\pf\core\src\net\connection\manager\base.cc"
-								>
-							</File>
-							<File
-								RelativePath="..\..\..\pf\core\src\net\connection\manager\epoll.cc"
-								>
-							</File>
-							<File
-								RelativePath="..\..\..\pf\core\src\net\connection\manager\iocp.cc"
-								>
-							</File>
-							<File
-								RelativePath="..\..\..\pf\core\src\net\connection\manager\select.cc"
-								>
-							</File>
-						</Filter>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="engine"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\engine\kernel.cc"
-						>
-					</File>
-					<Filter
-						Name="thread"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\engine\thread\db.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\engine\thread\net.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\engine\thread\performance.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\engine\thread\script.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="db"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\db\manager.cc"
-						>
-					</File>
-					<Filter
-						Name="odbc"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\db\odbc\interface.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\db\odbc\system.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="script"
-					>
-					<Filter
-						Name="cache"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\cache\base.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\cache\manager.cc"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="lua"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\filebridge.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\interface.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\lunar.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\stack.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\system.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\script\lua\vm.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="performance"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\performance\eyes.cc"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="util"
-					>
-					<Filter
-						Name="compressor"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\util\compressor\mini.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\util\compressor\minilzo.c"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="application"
-					>
-					<File
-						RelativePath="..\..\..\pf\core\src\application\setting.cc"
-						>
-					</File>
-					<Filter
-						Name="extend"
-						>
-						<File
-							RelativePath="..\..\..\pf\core\src\application\extend\log.cc"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\pf\core\src\application\extend\net_packet_factorymanager.cc"
-							>
-						</File>
-					</Filter>
-				</Filter>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

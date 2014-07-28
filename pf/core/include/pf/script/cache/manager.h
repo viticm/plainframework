@@ -19,7 +19,7 @@ namespace pf_script {
 
 namespace cache {
 
-class Manager : public pf_base::Singleton<Manager> {
+class PF_API Manager : public pf_base::Singleton<Manager> {
 
  public:
    Manager();

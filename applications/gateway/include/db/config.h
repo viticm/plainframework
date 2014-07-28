@@ -12,7 +12,7 @@
 #define DB_CONFIG_H_
 
 #include "pf/base/config.h"
-#include "pf/application/define/macros.h"
+#include "common/define/macros.h"
 
 #define DB_TABLE_USER "users"
 

@@ -5,10 +5,6 @@
 #if !(__LINUX__ && defined(_PF_NET_EPOLL)) && \
   !(__WINDOWS__ && defined(_PF_NET_IOCP))
 
-#if __WINDOWS__
-#pragma warning(disable : 4127) //why use it? for FD_* functions
-#endif
-
 namespace pf_net {
 
 namespace connection {
@@ -65,8 +61,7 @@ bool Select::select() {
           &exceptfds_[kSelectUse],
           &timeout_[kSelectUse]);
       Assert(result != SOCKET_ERROR);
-    }
-    catch(...) {
+    } catch(...) {
       FAST_ERRORLOG(kNetLogFile, 
                     "[net.connection.manager] (Select::select)"
                     " have error, result: %d", 

@@ -17,7 +17,7 @@ namespace pf_script {
 
 namespace lua {
 
-class FileBridge {
+class PF_API FileBridge {
 
  public:
    FileBridge(const char *rootpath = NULL, const char *workpath = NULL);

@@ -37,7 +37,7 @@ namespace pf_util {
 
 namespace compressor {
 
-class Mini {
+class PF_API Mini {
 
  public:
    Mini();

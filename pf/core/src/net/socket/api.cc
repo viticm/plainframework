@@ -2,7 +2,7 @@
 #include "pf/net/socket/api.h"
 
 int32_t sys_socket(int32_t domain, int32_t type, int32_t protocol) {
-  int32_t result = socket(domain, type, protocol);
+  int32_t result = static_cast<int32_t>(socket(domain, type, protocol));
   return result;
 }
 
@@ -335,7 +335,7 @@ int32_t acceptex(int32_t socketid,
 #if __LINUX__
   client = accept(socketid, addr, addrlength);
 #elif __WINDOWS__
-  client = accept(socketid, addr, (int32_t*)addrlength);
+  client = static_cast<int32_t>(accept(socketid, addr, (int32_t*)addrlength));
 #endif
   
   if (ID_INVALID == client) {

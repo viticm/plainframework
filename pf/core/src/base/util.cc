@@ -297,10 +297,11 @@ void disable_windowclose() {
 
 bool makedir(const char *path, uint16_t mode) {
   __ENTER_FUNCTION
+    USE_PARAM(mode);
     char _path[FILENAME_MAX] = {0};
     int32_t i = 0;
     int32_t result = 0;
-    int32_t length = strlen(path);
+    int32_t length = static_cast<int32_t>(strlen(path));
     string::safecopy(_path, path, sizeof(_path));
     path_tounix(_path, static_cast<uint16_t>(length));
     if (_path[length - 1] != '/') {

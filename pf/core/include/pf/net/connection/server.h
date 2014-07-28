@@ -19,7 +19,7 @@ namespace pf_net {
 
 namespace connection {
 
-class Server : public Base {
+class PF_API Server : public Base {
 
  public:
    Server();

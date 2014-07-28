@@ -64,21 +64,21 @@ typedef enum {
 namespace api {
 
 #if __LINUX__
-int32_t create(uint64_t key, uint32_t size);
-int32_t open(uint64_t key, uint32_t size);
-void close(int32_t handle);
-char *map(int32_t handle);
+PF_API int32_t create(uint64_t key, uint32_t size);
+PF_API int32_t open(uint64_t key, uint32_t size);
+PF_API void close(int32_t handle);
+PF_API char *map(int32_t handle);
 #elif __WINDOWS__
-HANDLE create(uint64_t key, uint32_t size);
-HANDLE open(uint64_t key, uint32_t size);
-void close(HANDLE handle);
-char *map(HANDLE handle);
+PF_API HANDLE create(uint64_t key, uint32_t size);
+PF_API HANDLE open(uint64_t key, uint32_t size);
+PF_API void close(HANDLE handle);
+PF_API char *map(HANDLE handle);
 #endif
-void unmap(char *pointer);
+PF_API void unmap(char *pointer);
 
 }; //namespace api
 
-class Base {
+class PF_API Base {
 
  public:
    int32_t cmd_model_; //命令行模式，几种模式在config.h定义
@@ -331,9 +331,9 @@ class UnitPool {
 
 };
 
-void lock(char &flag, char type);
-void unlock(char &flag, char type);
-bool trylock(char &flag, char type);
+PF_API void lock(char &flag, char type);
+PF_API void unlock(char &flag, char type);
+PF_API bool trylock(char &flag, char type);
 
 }; //namespace share
 

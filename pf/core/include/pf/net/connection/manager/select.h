@@ -22,7 +22,7 @@ namespace connection {
 
 namespace manager {
 
-class Select : public Base {
+class PF_API Select : public Base {
 
  public:
    Select();

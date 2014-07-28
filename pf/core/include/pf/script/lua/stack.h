@@ -17,7 +17,7 @@ namespace pf_script {
 
 namespace lua {
 
-class StackStep {
+class PF_API StackStep {
 
  public:
    StackStep();
@@ -32,7 +32,7 @@ class StackStep {
 
 };
 
-class Stack {
+class PF_API Stack {
 
  public:
    Stack();

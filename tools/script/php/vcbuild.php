@@ -85,6 +85,7 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 $g_scriptdirs = array(
   "gateway applications/gateway/scripts",
   "pf_simple applications/pf_simple/scripts",
+  "pf_core pf/core/scripts",
 
 ); //not use EOF, if you want it work not just use output
 

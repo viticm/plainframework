@@ -18,7 +18,7 @@
 
 namespace pf_performance {
 
-class Eyes : public pf_base::Singleton<Eyes> {
+class PF_API Eyes : public pf_base::Singleton<Eyes> {
 
  public:
    Eyes();

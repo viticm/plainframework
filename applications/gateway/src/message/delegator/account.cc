@@ -1,11 +1,11 @@
-#include "pf/application/net/packet/gateway_tologin/resultauth.h"
 #include "pf/base/log.h"
+#include "common/net/packet/gateway_tologin/resultauth.h"
 #include "db/user.h"
 #include "message/delegator/account.h"
 
 using namespace message::delegator;
 using namespace pf_net;
-using namespace pf_application::net::packet;
+using namespace common::net::packet;
 
 void account::auth(login_togateway::AskAuth *message,
                    connection::Base *connection) {

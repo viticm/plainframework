@@ -52,7 +52,6 @@ FactoryManager::~FactoryManager() {
 
 bool FactoryManager::init() {
   __ENTER_FUNCTION
-    extend_forinit();
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -148,7 +147,6 @@ void FactoryManager::addfactory(Factory* factory) {
 bool FactoryManager::isvalid_packetid(uint16_t id) {
   bool result = false;
   __ENTER_FUNCTION
-    result = extend_for_packetid_isvalid(id);
     return result;
   __LEAVE_FUNCTION
     return result;

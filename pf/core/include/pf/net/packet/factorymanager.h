@@ -21,7 +21,7 @@ namespace pf_net {
 
 namespace packet {
 
-class FactoryManager : public pf_base::Singleton<FactoryManager> {
+class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
 
  public:
    FactoryManager();
@@ -55,9 +55,6 @@ class FactoryManager : public pf_base::Singleton<FactoryManager> {
 
  private:
    void addfactory(Factory* factory);
-   void extend_forconstruct(); //构造的扩展函数，对象建立的时候即调用
-   void extend_forinit(); //初始化的扩展函数，调用函数init初始化时调用
-   static bool extend_for_packetid_isvalid(uint16_t id); //扩展包ID是否有效
 
 };
 

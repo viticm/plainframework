@@ -109,7 +109,7 @@ end
 -- get cmake from vs vcproj file
 -- @param string vcprojname
 -- @param table | string  include_path
-function get_vcproj_cmake(vcprojname, include_path)
+function get_vcproj_cmake(vcprojname, include_path, is_lib, libtype)
   local cmake_text = ""
   cmake_result = {}
   path_result = {}
@@ -150,7 +150,12 @@ function get_vcproj_cmake(vcprojname, include_path)
   local exefiles = split(vcprojname, "/")
   local firstpos = string.find(exefiles[#exefiles], "%.")
   local projectname = string.sub(exefiles[#exefiles], 1, firstpos - 1);
-  cmake_text = cmake_text .. "ADD_EXECUTABLE(" .. projectname .. "\n"
+  if is_lib then
+    cmake_text = cmake_text.."SET(LIBRARY_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_LIB})".."\n"
+    cmake_text = cmake_text .. "ADD_LIBRARY(" .. projectname .. " ".. string.upper(libtype) .. "\n"
+  else
+    cmake_text = cmake_text .. "ADD_EXECUTABLE(" .. projectname .. "\n"
+  end
   for i = 1, #cmake_result do
     if(string.len(cmake_result[i].filterline) > 0) then
       cmake_text = cmake_text .. "\t${" .. 

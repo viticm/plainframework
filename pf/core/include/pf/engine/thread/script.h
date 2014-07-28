@@ -18,7 +18,7 @@ namespace pf_engine {
 
 namespace thread {
 
-class Script : public pf_sys::Thread {
+class PF_API Script : public pf_sys::Thread {
 
  public:
    Script();

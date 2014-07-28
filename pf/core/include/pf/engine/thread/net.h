@@ -19,7 +19,7 @@ namespace pf_engine {
 
 namespace thread {
 
-class Net : public pf_net::Manager, public pf_sys::Thread {
+class PF_API Net : public pf_net::Manager, public pf_sys::Thread {
 
  public:
    Net();

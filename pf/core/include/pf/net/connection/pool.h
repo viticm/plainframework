@@ -19,7 +19,7 @@ namespace pf_net {
 
 namespace connection {
 
-class Pool {
+class PF_API Pool {
 
  public:
    Pool();

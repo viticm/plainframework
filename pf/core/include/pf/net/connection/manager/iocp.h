@@ -22,7 +22,7 @@ namespace connection {
 
 namespace manager {
 
-class Iocp : public Base {
+class PF_API Iocp : public Base {
 
  public:
    Iocp();

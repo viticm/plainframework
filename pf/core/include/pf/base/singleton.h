@@ -15,13 +15,12 @@
 
 namespace pf_base {
 
-template <typename T>
-class Singleton {
+template <typename T> class Singleton {
  
  public:
    Singleton() {
      Assert(!singleton_);
-     singleton_ = static_cast<T*>(this);
+     singleton_ = static_cast<T *>(this);
    }
 
    ~Singleton() {
@@ -29,17 +28,17 @@ class Singleton {
      singleton_ = NULL;
    }
 
-   static T& getsingleton() {
+   static T &getsingleton() {
      Assert(singleton_);
      return *singleton_;
    }
 
-   static T* getsingleton_pointer() {
+   static T *getsingleton_pointer() {
      return singleton_;
    }
 
  protected:
-   static T* singleton_;
+   static T *singleton_;
 
  private:
    Singleton(const Singleton<T> &);

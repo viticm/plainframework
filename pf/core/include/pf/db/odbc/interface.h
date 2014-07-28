@@ -28,7 +28,7 @@ namespace pf_db {
 
 namespace odbc {
 
-class Interface {
+class PF_API Interface {
  public:
    enum
    {

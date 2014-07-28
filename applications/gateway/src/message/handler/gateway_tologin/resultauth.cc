@@ -1,7 +1,7 @@
 #include "message/delegator/account.h"
-#include "pf/application/net/packet/gateway_tologin/resultauth.h"
+#include "common/net/packet/gateway_tologin/resultauth.h"
 
-using namespace pf_application::net::packet::gateway_tologin;
+using namespace common::net::packet::gateway_tologin;
 
 uint32_t ResultAuthHandler::execute(ResultAuth *packet, 
                                     pf_net::connection::Base *connection) {

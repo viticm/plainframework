@@ -15,7 +15,7 @@
 
 namespace pf_sys {
 
-class Thread {
+class PF_API Thread {
  public:
    typedef enum { //线程的四种状态 (准备、运行中、退出中、已退出)
      kReady,
@@ -53,12 +53,12 @@ class Thread {
 };
 
 #if __LINUX__
-void *ps_thread_process(void *derived_thread);
+PF_API void *ps_thread_process(void *derived_thread);
 #elif __WINDOWS__
-DWORD WINAPI ps_thread_process(void *derived_thread);
+PF_API DWORD WINAPI ps_thread_process(void *derived_thread);
 #endif
 
-class ThreadLock {
+class PF_API ThreadLock {
  public:
 #if __LINUX__
    pthread_mutex_t mutex_;
@@ -71,7 +71,7 @@ class ThreadLock {
    void unlock();
 };
 
-uint64_t get_current_thread_id();
+PF_API uint64_t get_current_thread_id();
 
 //global variable
 extern uint16_t g_thread_quit_count;

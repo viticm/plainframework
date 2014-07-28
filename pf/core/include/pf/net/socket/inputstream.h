@@ -18,7 +18,7 @@ namespace pf_net {
 
 namespace socket {
 
-class InputStream : public Stream {
+class PF_API InputStream : public Stream {
 
  public: //construct and destruct
    InputStream(

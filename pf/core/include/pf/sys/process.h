@@ -24,15 +24,15 @@ typedef struct {
   uint64_t RSS;
 } info_t;
 
-int32_t getid();
-int32_t getid(const char *filename);
-bool writeid(const char *filename);
-bool waitexit(const char *filename);
-void getinfo(int32_t id, info_t &info);
-float get_cpu_usage(int32_t id);
-uint64_t get_virtualmemory_usage(int32_t id);
-uint64_t get_physicalmemory_usage(int32_t id);
-bool daemon();
+PF_API int32_t getid();
+PF_API int32_t getid(const char *filename);
+PF_API bool writeid(const char *filename);
+PF_API bool waitexit(const char *filename);
+PF_API void getinfo(int32_t id, info_t &info);
+PF_API float get_cpu_usage(int32_t id);
+PF_API uint64_t get_virtualmemory_usage(int32_t id);
+PF_API uint64_t get_physicalmemory_usage(int32_t id);
+PF_API bool daemon();
 
 }; //namespace process
 

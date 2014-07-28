@@ -42,7 +42,7 @@ namespace pf_net {
 
 namespace packet {
 
-class Base {
+class PF_API Base {
 
  public:
    Base();

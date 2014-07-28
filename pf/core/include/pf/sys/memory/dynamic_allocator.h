@@ -17,7 +17,7 @@ namespace pf_sys {
 
 namespace memory {
 
-class DynamicAllocator {
+class PF_API DynamicAllocator {
 
  public:
    DynamicAllocator();

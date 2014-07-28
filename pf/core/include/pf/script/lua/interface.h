@@ -22,7 +22,7 @@ namespace pf_script {
 
 namespace lua {
 
-class Interface {
+class PF_API Interface {
 
  public:
    Interface();

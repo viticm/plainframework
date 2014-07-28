@@ -20,25 +20,25 @@ extern int g_need_manager_do_pos_init;//控制参数，是否需要初始化管�
 
 namespace pf_sys {
 
-void __assert__(const char *file, 
-                unsigned int line, 
-                const char *func, 
-                const char *expr);
-void __assertex__(const char *file, 
-                  unsigned int line, 
-                  const char *func, 
-                  const char *expr, 
-                  const char *msg);
-void __assertspecial__(const char *file, 
+PF_API void __assert__(const char *file, 
                        unsigned int line, 
                        const char *func, 
-                       const char *expr, 
-                       const char *msg);
-void __messagebox__(const char *msg);
-void __protocol_assert__(const char *file, 
+                       const char *expr);
+PF_API void __assertex__(const char *file, 
                          unsigned int line, 
                          const char *func, 
-                         const char *expr);
+                         const char *expr, 
+                         const char *msg);
+PF_API void __assertspecial__(const char *file, 
+                              unsigned int line, 
+                              const char *func, 
+                              const char *expr, 
+                              const char *msg);
+PF_API void __messagebox__(const char *msg);
+PF_API void __protocol_assert__(const char *file, 
+                                unsigned int line, 
+                                const char *func, 
+                                const char *expr);
 
 //--------------------------------------------------------------------------------
 // if nIndex was in [nFrom, nTo], this function will return TRUE. that means legal.
@@ -48,10 +48,10 @@ void __protocol_assert__(const char *file,
 // Legal: 0<=i<=10;
 // Illegal: i<0 or i>10;
 //--------------------------------------------------------------------------------
-bool RangeCheckForIndex_Assert(int index, 
-                               int from, 
-                               int to, 
-                               char const* code_location);
+PF_API bool RangeCheckForIndex_Assert(int index, 
+                                      int from, 
+                                      int to, 
+                                      char const *code_location);
 
 } //namespace pap_common_sys
 

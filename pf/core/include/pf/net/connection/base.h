@@ -38,7 +38,7 @@ namespace pf_net {
 
 namespace connection {
 
-class Base {
+class PF_API Base {
 
  public:
    Base();

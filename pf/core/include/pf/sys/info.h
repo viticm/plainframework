@@ -21,7 +21,7 @@ namespace pf_sys {
 namespace info {
 
 //这是一个快速释放文件指针的类，暂时放置此处，以后有需要移到base的util下
-class CloseHelper {
+class PF_API CloseHelper {
  public:
    CloseHelper(FILE*& fp) : fp_(fp) {}; //Initialization can be placed here, 
                                                //but the method to achieve must be placed inside, 
@@ -136,20 +136,20 @@ typedef struct {
   float fifteenminutes;
 } loadaverage_t;
 
-bool get_sys_info(sys_info_t &sys_info);
-bool get_mem_info(memory_info_t &mem_info);
-bool get_cpu_info(cpu_info_t &cpu_info);
-int get_cpu_info_array(std::vector<cpu_info_t> &cpu_info_array);
-bool get_kernel_version(kernel_version_t &kernel_version);
-bool get_process_info(process_info_t &process_info);
-bool get_process_page_info(process_page_info_t &process_page_info);
-bool get_process_times(process_time_t &process_time);
-bool get_net_info(const char *interface_name, net_info_t &net_info);
-bool get_net_info_array(std::vector<net_info_t> &net_info_array);
-bool do_get_net_info_array(const char *interface_name, 
-                           std::vector<net_info_t> &net_info_array);
-bool get_ip(char *&ip, const char *interface_name = NULL);
-bool get_loadaverage(loadaverage_t &loadaverage);
+PF_API bool get_sys_info(sys_info_t &sys_info);
+PF_API bool get_mem_info(memory_info_t &mem_info);
+PF_API bool get_cpu_info(cpu_info_t &cpu_info);
+PF_API int32_t get_cpu_info_array(std::vector<cpu_info_t> &cpu_info_array);
+PF_API bool get_kernel_version(kernel_version_t &kernel_version);
+PF_API bool get_process_info(process_info_t &process_info);
+PF_API bool get_process_page_info(process_page_info_t &process_page_info);
+PF_API bool get_process_times(process_time_t &process_time);
+PF_API bool get_net_info(const char *interface_name, net_info_t &net_info);
+PF_API bool get_net_info_array(std::vector<net_info_t> &net_info_array);
+PF_API bool do_get_net_info_array(const char *interface_name, 
+                                  std::vector<net_info_t> &net_info_array);
+PF_API bool get_ip(char *&ip, const char *interface_name = NULL);
+PF_API bool get_loadaverage(loadaverage_t &loadaverage);
 
 } //namespace info
 

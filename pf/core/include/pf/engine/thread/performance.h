@@ -18,7 +18,7 @@ namespace pf_engine {
 
 namespace thread {
 
-class Performance : public pf_sys::Thread {
+class PF_API Performance : public pf_sys::Thread {
 
  public:
    Performance();

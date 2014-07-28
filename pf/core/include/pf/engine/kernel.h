@@ -22,7 +22,7 @@
 
 namespace pf_engine {
 
-class Kernel {
+class PF_API Kernel {
 
  public:
    Kernel();
@@ -45,6 +45,8 @@ class Kernel {
  public: //kernel for set_* functions
    void set_base_logprint(bool flag);
    void set_base_logactive(bool flag);
+   void set_applicationname(const char *name);
+   void set_applicationtype(uint8_t type);
 
  protected:
    pf_base::hashmap::Template<int32_t, const char *> config_string_;

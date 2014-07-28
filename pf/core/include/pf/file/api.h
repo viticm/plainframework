@@ -29,20 +29,20 @@ namespace pf_file {
 
 namespace api {
 
-int32_t openex(const char *filename, int32_t flag);
-int32_t openmode_ex(const char *filename, int32_t flag, int32_t mode);
-void closeex(int32_t fd);
-uint32_t readex(int32_t fd, void *buffer, uint32_t length);
-uint32_t writeex(int32_t fd, const void *buffer, uint32_t length);
-int32_t fcntlex(int32_t fd, int32_t cmd);
-int32_t fcntlarg_ex(int32_t fd, int32_t cmd, int32_t arg);
-bool get_nonblocking_ex(int32_t socketid);
-void set_nonblocking_ex(int32_t socketid, bool on);
-void ioctlex(int32_t fd, int32_t request, void *argp);
-uint32_t availableex(int32_t fd);
-int32_t dupex(int32_t fd);
-int64_t lseekex(int32_t fd, uint64_t offset, int32_t whence);
-int64_t tellex(int32_t fd);
+PF_API int32_t openex(const char *filename, int32_t flag);
+PF_API int32_t openmode_ex(const char *filename, int32_t flag, int32_t mode);
+PF_API void closeex(int32_t fd);
+PF_API uint32_t readex(int32_t fd, void *buffer, uint32_t length);
+PF_API uint32_t writeex(int32_t fd, const void *buffer, uint32_t length);
+PF_API int32_t fcntlex(int32_t fd, int32_t cmd);
+PF_API int32_t fcntlarg_ex(int32_t fd, int32_t cmd, int32_t arg);
+PF_API bool get_nonblocking_ex(int32_t socketid);
+PF_API void set_nonblocking_ex(int32_t socketid, bool on);
+PF_API void ioctlex(int32_t fd, int32_t request, void *argp);
+PF_API uint32_t availableex(int32_t fd);
+PF_API int32_t dupex(int32_t fd);
+PF_API int64_t lseekex(int32_t fd, uint64_t offset, int32_t whence);
+PF_API int64_t tellex(int32_t fd);
 
 }; //namespace api
 

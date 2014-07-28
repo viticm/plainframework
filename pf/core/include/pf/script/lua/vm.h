@@ -22,7 +22,7 @@ namespace pf_script {
 
 namespace lua {
 
-class VM {
+class PF_API VM {
 
  public:
    VM(const char *rootpath = NULL, const char *workpath = NULL);

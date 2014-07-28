@@ -17,7 +17,7 @@ namespace pf_net {
 
 namespace socket {
 
-class Base {
+class PF_API Base {
  
  public:
    Base();

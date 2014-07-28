@@ -18,39 +18,39 @@ namespace pf_base {
 
 namespace string {
 
-char get_base64char(int index);
+PF_API char get_base64char(int index);
 
-void replace_all(std::string &str, 
+PF_API void replace_all(std::string &str, 
                  const std::string source, 
                  const std::string destination);
 
-bool toint16(const char *source, 
+PF_API bool toint16(const char *source, 
              int16_t &result, 
              uint8_t converted_length = 0, 
              bool ignored_zero = false);
 
-bool toint32(const char *source, 
+PF_API bool toint32(const char *source, 
              int32_t &result, 
              uint8_t converted_length = 0, 
              bool ignored_zero = false);
-int64_t toint64(const char *str);
-uint64_t touint64(const char *str);
+PF_API int64_t toint64(const char *str);
+PF_API uint64_t touint64(const char *str);
 
-void encrypt(const char *in, char *out, int32_t out_length);
+PF_API void encrypt(const char *in, char *out, int32_t out_length);
 
-void decrypt(const char *in, char *out, int32_t out_length);
+PF_API void decrypt(const char *in, char *out, int32_t out_length);
 
-char *safecopy(char *dest, const char *src, size_t size);
+PF_API char *safecopy(char *dest, const char *src, size_t size);
 
-int32_t charset_convert(const char *from, 
+PF_API int32_t charset_convert(const char *from, 
                         const char *to, 
                         char *save, 
                         int32_t save_length, 
                         const char *src, 
                         int32_t src_length) ;
 
-bool get_escapechar(char in, char &out);
-bool getescape(const char *in, size_t insize, char *out, size_t outsize);
+PF_API bool get_escapechar(char in, char &out);
+PF_API bool getescape(const char *in, size_t insize, char *out, size_t outsize);
 
 }; //namespace string
 

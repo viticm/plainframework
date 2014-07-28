@@ -82,7 +82,7 @@ void replace_all(std::string& str,
                  const std::string source, 
                  const std::string destination) {
   __ENTER_FUNCTION
-    uint32_t position = str.find(source, 0);
+    uint32_t position = static_cast<uint32_t>(str.find(source, 0));
     while (position != std::string::npos)
       str.replace(position - 1, source.length(), destination);
   __LEAVE_FUNCTION
@@ -254,7 +254,7 @@ int32_t charset_convert(const char *from,
       size_t res = iconv(cd, (const char**)&inptr, &insize, &outptr, &outsize);
       if (outptr != outbuf) {
         int32_t saved_errno = errno;
-        int32_t outsize = outptr - outbuf;
+        int32_t outsize = static_cast<int32_t>(outptr - outbuf);
         strncpy(save + savesize, outbuf, outsize);
         errno = saved_errno;
       }
@@ -280,7 +280,7 @@ int32_t charset_convert(const char *from,
         }
       }
     }
-    status = strlen(save);
+    status = static_cast<int32_t>(strlen(save));
     done:
     iconv_close(cd);
     return status;

@@ -22,7 +22,7 @@ namespace connection {
 
 namespace manager {
 
-class Epoll : public Base {
+class PF_API Epoll : public Base {
 
  public:
    Epoll();

@@ -19,7 +19,7 @@ namespace pf_script {
 
 namespace lua {
 
-class System : public pf_base::Singleton<System>, public Interface {
+class PF_API System : public pf_base::Singleton<System>, public Interface {
 
  public:
    System();

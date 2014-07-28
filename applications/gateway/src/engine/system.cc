@@ -1,5 +1,5 @@
 #include "pf/base/log.h"
-#include "pf/application/setting.h"
+#include "common/setting.h"
 #include "engine/system.h"
 
 engine::System *g_engine_system = NULL;
@@ -42,7 +42,7 @@ pf_db::Manager *System::get_dbmanager() {
 
 bool System::init() {
   __ENTER_FUNCTION
-    DEBUGPRINTF("(###) engine for (%s) start...", APPLICATION_NAME);
+    DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
     if (!Kernel::init_base()) {
       SLOW_ERRORLOG("engine", 
                     "[engine] (System::init) base module failed");
@@ -85,7 +85,7 @@ bool System::init() {
 bool System::init_setting() {
   __ENTER_FUNCTION
     if (!APPLICATION_SETTING_POINTER)
-      g_application_setting = new pf_application::Setting();
+      g_application_setting = new common::Setting();
     if (!APPLICATION_SETTING_POINTER) return false;
     bool result = APPLICATION_SETTING_POINTER->init();
     return result;

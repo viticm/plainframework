@@ -16,7 +16,7 @@
 
 namespace pf_file {
 
-class Database {
+class PF_API Database {
 
  public:
    typedef struct {

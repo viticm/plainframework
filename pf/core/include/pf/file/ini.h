@@ -18,7 +18,7 @@
 
 namespace pf_file {
 
-class Ini {
+class PF_API Ini {
 
  public: //base functions
    Ini();

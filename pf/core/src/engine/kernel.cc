@@ -4,9 +4,13 @@
 #include "pf/net/connection/server.h"
 #include "pf/script/lua/system.h"
 #include "pf/performance/eyes.h"
+#include "pf/base/string.h"
 #include "pf/sys/process.h"
 #include "pf/sys/util.h"
 #include "pf/engine/kernel.h"
+
+char g_applicationname[FILENAME_MAX] = {0};
+uint8_t g_applicationtype = 0;
 
 namespace pf_engine {
 
@@ -66,7 +70,7 @@ bool Kernel::init() {
     //base
     bool hasinit = getconfig_boolvalue(ENGINE_CONFIG_BASEMODULE_HAS_INIT);
     if (!hasinit) 
-      DEBUGPRINTF("(###) engine for (%s) start...", APPLICATION_NAME);
+      DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
     if (!hasinit && !init_base()) {
       SLOW_ERRORLOG("engine", 
                     "[engine] (Kernel::init) base module failed");
@@ -277,6 +281,17 @@ void Kernel::set_base_logactive(bool flag) {
   __ENTER_FUNCTION
     pf_base::g_command_logactive = flag;
   __LEAVE_FUNCTION
+}
+
+void Kernel::set_applicationname(const char *name) {
+  __ENTER_FUNCTION
+    pf_base::string::safecopy(
+        g_applicationname, name, sizeof(g_applicationname));
+  __LEAVE_FUNCTION
+}
+
+void Kernel::set_applicationtype(uint8_t type) {
+  g_applicationtype = type;
 }
 
 bool Kernel::init_base() {

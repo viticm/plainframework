@@ -11,8 +11,8 @@ namespace minidump {
 
 #if __WINDOWS__
 #include <windows.h>
-LONG WINAPI unhandled_exceptionfilter(
-    struct _EXCEPTION_POINTERS* exceptioninfo);
+PF_API LONG WINAPI unhandled_exceptionfilter(
+  struct _EXCEPTION_POINTERS* exceptioninfo);
 #endif
 
 }; //namespace minidump

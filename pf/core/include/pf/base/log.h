@@ -13,7 +13,6 @@
 
 #include "pf/base/config.h"
 #include "pf/sys/thread.h"
-#include "pf/application/extend/log.h"
 #include "pf/base/singleton.h"
 #include "pf/base/time_manager.h"
 
@@ -21,16 +20,17 @@ namespace pf_base {
 
 extern const char *kBaseLogSaveDir; //如果不要外部使用，就别使用宏
 
-extern bool g_command_logprint; //global if print log to io
-extern bool g_command_logactive; //global if write log to file
-extern bool g_log_in_one_file;
-extern pf_sys::ThreadLock g_log_lock;
+PF_API extern bool g_command_logprint; //global if print log to io
+PF_API extern bool g_command_logactive; //global if write log to file
+PF_API extern bool g_log_in_one_file;
+PF_API extern const char *g_log_filename[];
+PF_API extern pf_sys::ThreadLock g_log_lock;
 
 const uint32_t kLogBufferTemp = 4096;
 const uint32_t kLogNameTemp = 128;
 const uint32_t kDefaultLogCacheSize = 1024 * 1024 * 4;
 
-class Log : public Singleton<Log> {
+class PF_API Log : public Singleton<Log> {
 
  public:
    Log();
@@ -55,7 +55,7 @@ class Log : public Singleton<Log> {
    template <uint8_t type>
    void fast_savelog(uint8_t logid, const char *format, ...) {
      __ENTER_FUNCTION
-       if (logid < 0 || logid >= kFinalLogFileCount) return;
+       if (logid < 0 || logid >= kLogFileCount) return;
        char buffer[4096] = {0};
        char temp[4096] = {0};
        va_list argptr;
@@ -63,6 +63,10 @@ class Log : public Singleton<Log> {
          va_start(argptr, format);
          vsnprintf(temp, sizeof(temp) - 1, format, argptr);
          va_end(argptr);
+         if (1 == g_applicationtype) { //如果客户端使用了快速日志，则转为慢速
+           slow_savelog<type>(g_log_filename[logid], temp);
+           return;
+          }
          char time_str[256] = {0};
          memset(time_str, '\0', sizeof(time_str));
          get_log_timestr(time_str, sizeof(time_str) - 1);
@@ -71,7 +75,6 @@ class Log : public Singleton<Log> {
          Assert(false);
          return;
        }
-
        if (g_command_logprint) {
          switch (type) {
           case 1:
@@ -171,7 +174,6 @@ class Log : public Singleton<Log> {
    int32_t log_position_[kLogFileCount];
    pf_sys::ThreadLock log_lock_[kLogFileCount];
    int32_t cache_size_;
-   uint32_t day_time_;
 
 };
 

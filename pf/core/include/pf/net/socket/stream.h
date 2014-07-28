@@ -17,7 +17,7 @@ namespace pf_net {
 
 namespace socket {
 
-class Stream {
+class PF_API Stream {
 
  public:
    Stream(

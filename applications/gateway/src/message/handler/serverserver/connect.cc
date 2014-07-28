@@ -1,12 +1,12 @@
 #include "pf/base/log.h"
-#include "pf/application/net/packet/serverserver/connect.h"
+#include "common/net/packet/serverserver/connect.h"
 
-using namespace pf_application::net::packet::serverserver;
+using namespace common::net::packet::serverserver;
 uint32_t ConnectHandler::execute(Connect* packet, 
                                  pf_net::connection::Base* connection) {
   __ENTER_FUNCTION
     USE_PARAM(connection);
-    FAST_LOG(kGatewayLogFile,
+    FAST_LOG(kApplicationLogFile,
              "[gateway][message][handler][serverver]"
              " (ConnectHandler::execut) success"
              " server id: %d",
