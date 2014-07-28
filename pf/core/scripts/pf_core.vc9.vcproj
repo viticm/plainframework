@@ -157,7 +157,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/lib/ReleaseLib/iconv.lib ../../dependencies/lib/ReleaseLib/luascript.lib"
+				AdditionalDependencies="ws2_32.lib psapi.lib ../../dependencies/lib/ReleaseLib/pf_iconv.lib ../../dependencies/lib/ReleaseLib/pf_lua.lib"
 				OutputFile="..\dll\$(ConfigurationName)\$(ProjectName).dll"
 				ImportLibrary="..\lib\$(ConfigurationName)\$(ProjectName).lib"
 			/>
