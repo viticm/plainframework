@@ -145,6 +145,10 @@ SET (SOURCEFILES_SYS_LIST
 	../src/sys/util.cc
 )
 
+SET (SOURCEFILES_EVENT_LIST
+	../src/event/system.cc
+)
+
 SET (SOURCEFILES_LIST
 )
 
@@ -291,6 +295,11 @@ SET (HEADERFILES_SYS_LIST
 	../include/pf/sys/util.h
 )
 
+SET (HEADERFILES_EVENT_LIST
+	../include/pf/event/config.h
+	../include/pf/event/system.h
+)
+
 SET (HEADERFILES_LIST
 )
 
@@ -317,6 +326,7 @@ if (WIN32)
 	source_group(SourceFiles\\script FILES ${SOURCEFILES_SCRIPT_LIST})
 	source_group(SourceFiles\\sys\\memory FILES ${SOURCEFILES_SYS_MEMORY_LIST})
 	source_group(SourceFiles\\sys FILES ${SOURCEFILES_SYS_LIST})
+	source_group(SourceFiles\\event FILES ${SOURCEFILES_EVENT_LIST})
 	source_group(SourceFiles FILES ${SOURCEFILES_LIST})
 	source_group(HeaderFiles\\util\\compressor FILES ${HEADERFILES_UTIL_COMPRESSOR_LIST})
 	source_group(HeaderFiles\\util FILES ${HEADERFILES_UTIL_LIST})
@@ -338,6 +348,7 @@ if (WIN32)
 	source_group(HeaderFiles\\script FILES ${HEADERFILES_SCRIPT_LIST})
 	source_group(HeaderFiles\\sys\\memory FILES ${HEADERFILES_SYS_MEMORY_LIST})
 	source_group(HeaderFiles\\sys FILES ${HEADERFILES_SYS_LIST})
+	source_group(HeaderFiles\\event FILES ${HEADERFILES_EVENT_LIST})
 	source_group(HeaderFiles FILES ${HEADERFILES_LIST})
 endif()
 
@@ -364,6 +375,7 @@ ADD_LIBRARY(pf_core SHARED
 	${SOURCEFILES_SCRIPT_LIST}
 	${SOURCEFILES_SYS_MEMORY_LIST}
 	${SOURCEFILES_SYS_LIST}
+	${SOURCEFILES_EVENT_LIST}
 	${SOURCEFILES_LIST}
 	${HEADERFILES_UTIL_COMPRESSOR_LIST}
 	${HEADERFILES_UTIL_LIST}
@@ -385,6 +397,7 @@ ADD_LIBRARY(pf_core SHARED
 	${HEADERFILES_SCRIPT_LIST}
 	${HEADERFILES_SYS_MEMORY_LIST}
 	${HEADERFILES_SYS_LIST}
+	${HEADERFILES_EVENT_LIST}
 	${HEADERFILES_LIST}
 )
 
