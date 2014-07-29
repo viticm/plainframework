@@ -114,6 +114,8 @@ enum {
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <list>
+#include <map>
 #if __WINDOWS__ //diffrent system include
 #include <windows.h>
 #include <crtdbg.h>
@@ -242,6 +244,10 @@ PF_API extern uint8_t g_applicationtype; //应用的类型 0 服务器 1 客户�
 #elif __LINUX__
 #define DELETE_ARRAY(x)	if ((x) != NULL) { delete[] (x); (x) = NULL; }
 #endif
+#endif
+
+#if __LINUX__
+#define __stdcall
 #endif
 
 #ifndef USE_PARAM

@@ -21,8 +21,8 @@ namespace pf_net {
 
 namespace packet {
 
-typedef bool (* function_registerfactories)();
-typedef bool (* function_isvalid_packetid)(uint16_t id);
+typedef bool (__stdcall *function_registerfactories)();
+typedef bool (__stdcall *function_isvalid_packetid)(uint16_t id);
 
 class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
 
