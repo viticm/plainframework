@@ -640,6 +640,14 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="event"
+				>
+				<File
+					RelativePath="..\src\event\system.cc"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1057,6 +1065,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="event"
+				>
+				<File
+					RelativePath="..\include\pf\event\config.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\pf\event\system.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

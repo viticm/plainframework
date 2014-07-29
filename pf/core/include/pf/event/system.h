@@ -16,7 +16,7 @@
 
 namespace pf_event {
 
-class System : public pf_base::Singleton<System> {
+class PF_API System : public pf_base::Singleton<System> {
 
  public:
    System();
