@@ -40,7 +40,7 @@ bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
     maxcount_ = maxcount;
     connection_idset_ = new int16_t[maxcount_];
     Assert(connection_idset_);
-    memset(connection_idset_, ID_INVALID, maxcount_);
+    memset(connection_idset_, ID_INVALID, sizeof(int16_t) * maxcount_);
     if (is_servermode_) {
       listenport_ = listenport;
       serversocket_ = new socket::Server(listenport_, listenip);

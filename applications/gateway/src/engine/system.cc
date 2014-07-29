@@ -91,6 +91,7 @@ bool System::init() {
     uint16_t factorysize = common::net::get_facctorysize();
     NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();
+    NET_PACKET_FACTORYMANAGER_POINTER->init();
     return result;
   __LEAVE_FUNCTION
     return false;

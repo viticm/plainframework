@@ -53,6 +53,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    void addfactory(Factory *factory);
    void set_function_registerfactories(function_registerfactories function);
    void set_function_isvalid_packetid(function_isvalid_packetid function);
+   bool isinit() const;
 
  private:
    Factory **factories_;
@@ -60,6 +61,7 @@ class PF_API FactoryManager : public pf_base::Singleton<FactoryManager> {
    uint16_t size_;
    uint16_t factorycount_;
    pf_sys::ThreadLock lock_;
+   bool isinit_; //凡是有内存的初始化都需加上这个标记，已检测再次初始化的情况
    function_registerfactories function_registerfactories_;
    function_isvalid_packetid function_isvalid_packetid_;
 

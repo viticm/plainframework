@@ -61,7 +61,7 @@ uint16_t get_facctorysize() {
 bool registerfactories() {
   __ENTER_FUNCTION
     using namespace common::net::packet;
-    SLOW_LOG(NET_MODULENAME, "[net] (registerfactories) start");
+    SLOW_LOG(NET_MODULENAME, "[common.net] (registerfactories) start");
     if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
 #if defined(_GATEWAY) || \
   defined(_LOGIN) || \
@@ -93,7 +93,8 @@ bool registerfactories() {
 #if defined(_CLIENT) || defined(_SERVER) /* { */
 
 #endif /* } */
-    SLOW_LOG(NET_MODULENAME, "[net] (registerfactories) end");
+    SLOW_LOG(NET_MODULENAME, "[common.net] (registerfactories) end");
+    return true; //没有返回，这是我以为内存泄露的根源，小错误造成的后果真的难以想象
   __LEAVE_FUNCTION
     return false;
 }

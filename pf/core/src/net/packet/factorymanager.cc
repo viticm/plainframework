@@ -23,6 +23,7 @@ FactoryManager& FactoryManager::getsingleton() {
 
 FactoryManager::FactoryManager() {
   __ENTER_FUNCTION
+    isinit_ = false;
     factories_ = NULL;
     factorycount_ = 0;
     size_ = 0;
@@ -42,8 +43,13 @@ FactoryManager::~FactoryManager() {
   __LEAVE_FUNCTION
 }
 
+bool FactoryManager::isinit() const {
+  return isinit_;
+}
+
 bool FactoryManager::init() {
   __ENTER_FUNCTION
+    if (isinit()) return true;
     Assert(size_ > 0);
     if (!function_isvalid_packetid_ || !function_registerfactories_) {
       SLOW_ERRORLOG(NET_MODULENAME, 
@@ -61,6 +67,7 @@ bool FactoryManager::init() {
       packet_alloccount_[i] = 0;
     }
     if (!(*function_registerfactories_)()) return false;
+    isinit_ = true;
     return true;
   __LEAVE_FUNCTION
     return false;
