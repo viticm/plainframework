@@ -57,8 +57,7 @@ bool Stream::resize(int32_t size) {
     memset(newbuffer, 0, sizeof(char) * newbuffer_length);
     if (headlength < taillength) {
       memcpy(newbuffer, &oldbuffer[headlength], taillength - headlength);
-    }
-    else {
+    } else {
       memcpy(newbuffer, &oldbuffer[headlength], bufferlength - headlength);
       memcpy(&newbuffer[bufferlength - headlength], oldbuffer, taillength);
     }
@@ -80,8 +79,7 @@ uint32_t Stream::reallength() {
     uint32_t taillength = streamdata_.taillength;
     if (headlength < taillength) {
       length = taillength - headlength;
-    }
-    else {
+    } else {
       length = bufferlength - headlength + taillength;
     }
     return length;

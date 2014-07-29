@@ -109,6 +109,7 @@ SET (COMMON_SRC_NET_PACKET_LIST
 )
 
 SET (COMMON_SRC_NET_LIST
+	../../common/src/net/packetfactory.cc
 )
 
 SET (COMMON_SRC_LIST
@@ -163,6 +164,7 @@ SET (COMMON_INCLUDE_NET_PACKET_LIST
 
 SET (COMMON_INCLUDE_NET_LIST
 	../../common/include/common/net/config.h
+	../../common/include/common/net/packetfactory.h
 )
 
 SET (COMMON_INCLUDE_LIST

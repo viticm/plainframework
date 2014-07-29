@@ -256,6 +256,30 @@ home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/server
 	cd /home/dc/develop/gitwork/plainframework/applications/gateway && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/serverserver/connect.cc.s
 .PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/serverserver/connect.cc.s
 
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.o: home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.o
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.o
+
+# target to build an object file
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.o:
+	cd /home/dc/develop/gitwork/plainframework/applications/gateway && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.o
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.o
+
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.i: home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.i
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.i
+
+# target to preprocess a source file
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.i:
+	cd /home/dc/develop/gitwork/plainframework/applications/gateway && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.i
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.i
+
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.s: home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.s
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.s
+
+# target to generate assembly for a file
+home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.s:
+	cd /home/dc/develop/gitwork/plainframework/applications/gateway && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.s
+.PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.cc.s
+
 home/dc/develop/gitwork/plainframework/applications/common/src/setting.o: home/dc/develop/gitwork/plainframework/applications/common/src/setting.cc.o
 .PHONY : home/dc/develop/gitwork/plainframework/applications/common/src/setting.o
 
@@ -403,6 +427,9 @@ help:
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/serverserver/connect.o"
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/serverserver/connect.i"
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packet/serverserver/connect.s"
+	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.o"
+	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.i"
+	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/net/packetfactory.s"
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/setting.o"
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/setting.i"
 	@echo "... home/dc/develop/gitwork/plainframework/applications/common/src/setting.s"

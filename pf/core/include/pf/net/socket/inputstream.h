@@ -30,10 +30,23 @@ class PF_API InputStream : public Stream {
    
  public:
    uint32_t read(char *buffer, uint32_t length);
-   bool readpacket(packet::Base* packet);
+   bool readpacket(packet::Base *packet);
    bool peek(char *buffer, uint32_t length);
    bool skip(uint32_t length);
    int32_t fill();
+
+ public:
+   int8_t read_int8();
+   uint8_t read_uint8();
+   int16_t read_int16();
+   uint16_t read_uint16();
+   int32_t read_int32();
+   uint32_t read_uint32();
+   int64_t read_int64();
+   uint64_t read_uint64();
+   void read_string(char *buffer, size_t size);
+   float read_float();
+   double read_double();
 
 };
 

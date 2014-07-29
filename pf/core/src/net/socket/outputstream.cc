@@ -25,7 +25,7 @@ uint32_t OutputStream::write(const char *buffer, uint32_t length) {
     if (encodeparam_.keysize > 0) {
       bool encode_result = true;
       encodeparam_.in = 
-        reinterpret_cast<unsigned char*>(const_cast<char*>(buffer));
+        reinterpret_cast<unsigned char *>(const_cast<char *>(buffer));
       encodeparam_.insize = length;
       encodeparam_.out = tempbuffer;
       encodeparam_.outsize = length;
@@ -59,12 +59,13 @@ bool OutputStream::writepacket(const packet::Base* packet) {
     uint32_t writecount = 0;
     uint32_t packetcheck; //index and size(if diffrent then have error)
     //write packetid
-    writecount = write(reinterpret_cast<const char*>(&packetid), sizeof(packetid));
+    writecount = 
+      write(reinterpret_cast<const char *>(&packetid), sizeof(packetid));
     uint32_t packetsize = packet->getsize();
     uint32_t packetindex = packet->getindex();
     SET_PACKETINDEX(packetcheck, packetindex);
     SET_PACKETLENGTH(packetcheck, packetsize);
-    writecount = write(reinterpret_cast<const char*>(&packetcheck), 
+    writecount = write(reinterpret_cast<const char *>(&packetcheck), 
                        sizeof(packetcheck));
     result = packet->write(*this);
     return result;
@@ -135,6 +136,111 @@ int32_t OutputStream::flush() {
     return result;
   __LEAVE_FUNCTION
     return 0;
+}
+
+bool OutputStream::write_int8(int8_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_uint8(uint8_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_int16(int16_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_uint16(uint16_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_int32(int32_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_uint32(uint32_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+
+
+bool OutputStream::write_int64(int64_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+   
+bool OutputStream::write_uint64(uint64_t value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+   
+bool OutputStream::write_string(const char *value) {
+  __ENTER_FUNCTION
+    uint32_t count = 0;
+    uint32_t length = strlen(value);
+    bool result = false;
+    if (!write_uint32(length)) return false;
+    count = write(value, length);
+    result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+   
+bool OutputStream::write_float(float value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool OutputStream::write_dobule(double value) {
+  __ENTER_FUNCTION
+    uint32_t count = write((char*)&value, sizeof(value));
+    bool result = count == sizeof(value) ? true : false;
+    return result;
+  __LEAVE_FUNCTION
+    return false;
 }
 
 } //namespace socket

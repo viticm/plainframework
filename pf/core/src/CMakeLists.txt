@@ -42,6 +42,7 @@ SET (SOURCEFILES_BASE_HASHMAP_LIST
 )
 
 SET (SOURCEFILES_BASE_LIST
+	../src/base/global.cc
 	../src/base/io.cc
 	../src/base/log.cc
 	../src/base/md5.cc
@@ -168,6 +169,7 @@ SET (HEADERFILES_BASE_HASHMAP_LIST
 SET (HEADERFILES_BASE_LIST
 	../include/pf/base/base64.hpp
 	../include/pf/base/config.h
+	../include/pf/base/global.h
 	../include/pf/base/io.h
 	../include/pf/base/log.h
 	../include/pf/base/md5.h

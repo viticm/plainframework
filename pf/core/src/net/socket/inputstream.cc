@@ -18,13 +18,11 @@ uint32_t InputStream::read(char *buffer, uint32_t length) {
     if (0 == tempbuffer) return 0;
     if (headlength < taillength) {
       memcpy(tempbuffer, &stream_buffer[headlength], length);
-    }
-    else {
+    } else {
       uint32_t rightlength = bufferlength - headlength;
       if (length < rightlength) {
         memcpy(tempbuffer, &stream_buffer[headlength], length);
-      }
-      else {
+      } else {
         memcpy(tempbuffer, &stream_buffer[headlength], rightlength);
         memcpy(&(tempbuffer[rightlength]), stream_buffer, length - rightlength);
       }
@@ -47,7 +45,7 @@ uint32_t InputStream::read(char *buffer, uint32_t length) {
     return 0;
 }
 
-bool InputStream::readpacket(packet::Base* packet) {
+bool InputStream::readpacket(packet::Base *packet) {
   __ENTER_FUNCTION
     bool result = false;
     result = skip(PACKET_HEADERSIZE);
@@ -148,6 +146,104 @@ int32_t InputStream::fill() {
     return fillcount;
   __LEAVE_FUNCTION
     return 0;
+}
+
+int8_t InputStream::read_int8() {
+  __ENTER_FUNCTION
+    int8_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+
+uint8_t InputStream::read_uint8() {
+  __ENTER_FUNCTION
+    uint8_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+
+int16_t InputStream::read_int16() {
+  __ENTER_FUNCTION
+    int16_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+   
+uint16_t InputStream::read_uint16() {
+  __ENTER_FUNCTION
+    uint16_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+   
+int32_t InputStream::read_int32() {
+  __ENTER_FUNCTION
+    int32_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+
+uint32_t InputStream::read_uint32() {
+  __ENTER_FUNCTION
+    uint32_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+   
+int64_t InputStream::read_int64() {
+  __ENTER_FUNCTION
+    int64_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+   
+uint64_t InputStream::read_uint64() {
+  __ENTER_FUNCTION
+    uint64_t result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0;
+}
+   
+void InputStream::read_string(char *buffer, size_t size) {
+  __ENTER_FUNCTION
+    uint32_t length = read_uint32();
+    if (length <= 0 || size < length) return;
+    read(buffer, length);
+  __LEAVE_FUNCTION
+}
+
+float InputStream::read_float() {
+  __ENTER_FUNCTION
+    float result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0.0f;
+}
+
+double InputStream::read_double() {
+  __ENTER_FUNCTION
+    double result = 0;
+    read((char*)&result, sizeof(result));
+    return result;
+  __LEAVE_FUNCTION
+    return 0.0;
 }
 
 } //namespace socket
