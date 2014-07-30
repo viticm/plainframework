@@ -1,41 +1,51 @@
-SET(TF_CURRENT_BINARY_PATH_LIB "../../lib")
-SET(LIBRARY_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_LIB})
+cmake_minimum_required(VERSION 2.6)
 
-INCLUDE_DIRECTORIES(../include)
+SET(LIBRARY_OUTPUT_PATH "../lib")
 
 ##update_begin
 
-
-INCLUDE_DIRECTORIES(../../../../include)
-
-
-SET (INCLUDE_LIST
-	../include/iconv.h
+SET (SOURCEFILES_LIST
+	adler32.c
+	compress.c
+	crc32.c
+	deflate.c
+	gzclose.c
+	gzlib.c
+	gzread.c
+	gzwrite.c
+	infback.c
+	inffast.c
+	inflate.c
+	inftrees.c
+	trees.c
+	uncompr.c
+	zutil.c
 )
 
-SET (SRC_LIST
-	../src/iconv.c
-	../src/localcharset.c
-	../src/relocatable.c
-)
-
-SET (RESOURCE_LIST
-	../src/libiconv.rc
+SET (HEADERFILES_LIST
+	crc32.h
+	deflate.h
+	gzguts.h
+	inffast.h
+	inffixed.h
+	inflate.h
+	inftrees.h
+	trees.h
+	zconf.h
+	zlib.h
+	zutil.h
 )
 
 
 
 if (WIN32)
-	source_group(include FILES ${INCLUDE_LIST})
-	source_group(src FILES ${SRC_LIST})
-	source_group(resource FILES ${RESOURCE_LIST})
+	source_group(SourceFiles FILES ${SOURCEFILES_LIST})
+	source_group(HeaderFiles FILES ${HEADERFILES_LIST})
 endif()
 
-
 ADD_LIBRARY(pf_zlib STATIC
-	${INCLUDE_LIST}
-	${SRC_LIST}
-	${RESOURCE_LIST}
+	${SOURCEFILES_LIST}
+	${HEADERFILES_LIST}
 )
 
 
