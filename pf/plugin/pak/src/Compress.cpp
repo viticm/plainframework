@@ -119,7 +119,7 @@ namespace KPM
   {
     TDataInfo Info;                    // Data information
     char * work_buf = KPM_ALLOC(char, CMP_BUFFER_SIZE);  // Pklib's work buffer
-    assert(work_buf);
+    Assert(work_buf);
     memset(work_buf,0,CMP_BUFFER_SIZE);
     unsigned int dict_size;                // Dictionary size
     unsigned int ctype;                  // Compression type
@@ -152,7 +152,7 @@ namespace KPM
   {
     TDataInfo Info;                             // Data information
     char * work_buf = KPM_ALLOC(char, EXP_BUFFER_SIZE);// Pklib's work buffer
-    assert(work_buf);
+    Assert(work_buf);
     memset(work_buf,0,EXP_BUFFER_SIZE);
 
     // Fill data information structure
@@ -509,7 +509,7 @@ namespace KPM
     if(dwCompressCount >= 2)
     {
       pbTempBuff = KPM_ALLOC(char, *pdwOutLength + 1);
-      assert(pbTempBuff);
+      Assert(pbTempBuff);
       memset(pbTempBuff,0,*pdwOutLength + 1);
     }
 
@@ -648,7 +648,7 @@ namespace KPM
     if(dwCount >= 2)
     {
       pbTempBuff = KPM_ALLOC(char, dwOutLength);
-      assert(pbTempBuff);
+      Assert(pbTempBuff);
       memset(pbTempBuff,0,dwOutLength);
     }
     // Apply all decompressions

@@ -48,9 +48,11 @@ using namespace std;
   typedef long           LONG;
   typedef unsigned long  DWORD;
   typedef unsigned long  DWORD_PTR;
+  typedef DWORD *LPDWORD;
   typedef long           LONG_PTR;
   typedef long           INT_PTR;
   typedef long long      LONGLONG;
+  typedef unsigned int UINT;
 #ifndef __OBJC__
 #define BOOL           bool
 #endif
@@ -63,8 +65,7 @@ using namespace std;
   { 
     DWORD dwLowDateTime; 
     DWORD dwHighDateTime; 
-  }
-  FILETIME, *PFILETIME;
+  } FILETIME, *PFILETIME;
 
   typedef union _LARGE_INTEGER
   {
@@ -82,8 +83,7 @@ using namespace std;
     };
 #endif
     LONGLONG QuadPart;
-  }
-  LARGE_INTEGER, *PLARGE_INTEGER;
+  } LARGE_INTEGER, *PLARGE_INTEGER;
 
   // Some Windows-specific defines
 #ifndef MAX_PATH
@@ -138,14 +138,6 @@ using namespace std;
 #define ERROR_INSUFFICIENT_BUFFER      4999
 
 #define INVALID_HANDLE_VALUE ((HANDLE) -1)
-
-#ifndef min
-#define min(a, b) ((a < b) ? a : b)
-#endif
-
-#ifndef max
-#define max(a, b) ((a > b) ? a : b)
-#endif
 
 #define _stricmp strcasecmp
 #define _strnicmp strncasecmp

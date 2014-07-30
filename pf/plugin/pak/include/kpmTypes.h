@@ -2,6 +2,7 @@
 #define _KPM_TYPES_H_
 
 #include "pf/base/config.h"
+#include "pf/sys/thread.h"
 
 namespace KPM
 {
@@ -226,7 +227,11 @@ namespace KPM
     TKPMAttr*    pFileAttr;        // Pointer to File attr in (attr) file
     TFileNode  **  pListFile;        // File name array
     DWORD      dwFlags;        // KPM flags;
+#if __WINDOWS__
     CRITICAL_SECTION section;
+#else
+    pf_sys::ThreadLock threadlock_;
+#endif
 
     void Clean(char* name)
     {
@@ -320,6 +325,6 @@ namespace KPM
 
 
   
-}
+};
 
 #endif
