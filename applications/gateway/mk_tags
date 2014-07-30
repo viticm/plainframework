@@ -2,7 +2,12 @@
 #@desc this script can auto create cscope file and ctags
 #@date 2013-12-9 13:53:44
 #@author viticm<viticm@126.com>
-paths="./ ../pf/core/include ../pf/dependencies/iconv/include ../pf/dependencies/lua/src"
+paths="
+./ ../../pf/core/include 
+../../pf/dependencies/iconv/include 
+../../pf/dependencies/lua/src
+../common/
+"
 types="php lua h cpp c cc hpp erl hrl inl"
 n=0
 

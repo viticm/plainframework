@@ -361,8 +361,7 @@ bool trylock(char &flag, char type) {
         }
         goto _loop;
       }
-    }
-    else {
+    } else {
       ++_lock_times;
       pf_base::util::sleep(1);
       if (_lock_times > 10) {

@@ -37,8 +37,6 @@ struct data_header_t {
 
 typedef enum {
   kSmptShareMemory,
-  kSmptWorld,
-  kSmptServer,
 } pool_type_enum;
 
 typedef enum {
@@ -47,17 +45,6 @@ typedef enum {
   kUseFreed = 2,
   kUseHoldData = 3,
 } use_enum; //共享内存的使用状态
-
-
-typedef enum {
-  kFlagFree = 0x00, //共享内存空闲
-  kFlagSelfRead = 0x01, //共享内存自己读取
-  kFlagSelfWrite = 0x02, //共享内存自己写
-  kFlagServerRead = 0x03, //游戏服务器读
-  kFlagServerWrite = 0x04, //游戏服务器写
-  kFlagWorldRead = 0x05, //世界服务器读
-  kFlagWorldWrite = 0x06, //世界服务器写
-} flag_enum;
 
 //static define --
 
