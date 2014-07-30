@@ -37,14 +37,14 @@ struct data_header_t {
 
 typedef enum {
   kSmptShareMemory,
-} pool_type_enum;
+} pool_type_t;
 
 typedef enum {
   kUseFree = 0,
   kUseReadyFree = 1,
   kUseFreed = 2,
   kUseHoldData = 3,
-} use_enum; //共享内存的使用状态
+} use_t; //共享内存的使用状态
 
 //static define --
 
@@ -169,7 +169,7 @@ class UnitPool {
        SAFE_DELETE_ARRAY(obj_);
      __LEAVE_FUNCTION
    };
-   bool init(uint32_t max_count, uint64_t key, pool_type_enum pool_type) {
+   bool init(uint32_t max_count, uint64_t key, pool_type_t pool_type) {
      __ENTER_FUNCTION
        ref_obj_pointer_ = new Base();
        Assert(ref_obj_pointer_);

@@ -13,6 +13,8 @@
 
 #include "common/sharememory/config.h"
 
+namespace common {
+
 namespace sharememory { //共享内存存储数据结构体
 
 //-- static define
@@ -52,7 +54,7 @@ typedef enum {
 //static define --
 
 typedef struct head_struct {
-  uint32_t pool_id;
+  uint32_t poolid;
   int32_t id;
   int32_t usestatus;
   char flag;
@@ -80,5 +82,7 @@ typedef struct globaldata_struct {
 } globaldata_t;
 
 }; //namespace sharememory
+
+}; //namespace common
 
 #endif //COMMON_SHAREMEMORY_DEFINE_H_
