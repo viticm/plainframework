@@ -20,7 +20,7 @@ uint32_t lock_times = 0;
 bool lock_time_enable = false;
 
 //-- struct start
-data_header_t::data_header_t() {
+dataheader_struct::dataheader_struct() {
   __ENTER_FUNCTION
     key = 0;
     size = 0;
@@ -28,7 +28,7 @@ data_header_t::data_header_t() {
   __LEAVE_FUNCTION
 }
 
-data_header_t::~data_header_t() {
+dataheader_struct::~dataheader_struct() {
   //do nothing
 }
 //struct end --
@@ -170,9 +170,9 @@ bool Base::create(uint64_t key, uint32_t size) {
     }
     header_ = api::map(handle_);
     if (header_) {
-      data_pointer_ = header_ + sizeof(data_header_t);
-      (reinterpret_cast<data_header_t*>(header_))->key = key;
-      (reinterpret_cast<data_header_t*>(header_))->size = size;
+      data_pointer_ = header_ + sizeof(dataheader_t);
+      (reinterpret_cast<dataheader_struct *>(header_))->key = key;
+      (reinterpret_cast<dataheader_struct *>(header_))->size = size;
       size_ = size;
       SLOW_LOG(
           "sharememory", 
@@ -229,9 +229,9 @@ bool Base::attach(uint64_t key, uint32_t size) {
     }
     header_ = api::map(handle_);
     if (header_) {
-      data_pointer_ = header_ + sizeof(data_header_t);
-      Assert((reinterpret_cast<data_header_t*>(header_))->key == key);
-      Assert((reinterpret_cast<data_header_t*>(header_))->size == size);
+      data_pointer_ = header_ + sizeof(dataheader_t);
+      Assert((reinterpret_cast<dataheader_struct *>(header_))->key == key);
+      Assert((reinterpret_cast<dataheader_struct *>(header_))->size == size);
       size_ = size;
       SLOW_LOG(
           "sharememory", 
@@ -304,13 +304,14 @@ bool Base::merge_from_file(const char *filename) {
 
 void Base::set_head_version(uint32_t version) {
   __ENTER_FUNCTION
-    (reinterpret_cast<data_header_t*>(header_))->version = version;
+    (reinterpret_cast<dataheader_struct *>(header_))->version = version;
   __LEAVE_FUNCTION
 }
 
 uint32_t Base::get_head_version() {
   __ENTER_FUNCTION
-    uint32_t version = (reinterpret_cast<data_header_t*>(header_))->version;
+    uint32_t version = 
+      (reinterpret_cast<dataheader_struct *>(header_))->version;
     return version;
   __LEAVE_FUNCTION
     return 0;

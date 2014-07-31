@@ -21,23 +21,23 @@ namespace memory {
 namespace share {
 
 //-- static define
-const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
-const uint8_t kObjMax = 20;
+extern const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
+//extern const uint8_t kObjMax = 20;
 #if __LINUX__
 extern uint32_t lock_times; //内存锁定的时间
 extern bool lock_time_enable; //共享内存是否有时间锁的限制
 #endif
-struct data_header_t {
+struct dataheader_struct {
   uint64_t key;
   uint32_t size;
   uint32_t version;
-  data_header_t();
-  ~data_header_t();
-};
+  dataheader_struct();
+  ~dataheader_struct();
+} dataheader_t;
 
 typedef enum {
   kSmptShareMemory,
-} pool_type_t;
+} pooltype_t;
 
 typedef enum {
   kUseFree = 0,
@@ -118,7 +118,7 @@ class UnitManager {
      __LEAVE_FUNCTION
    };
    bool heartbeat(uint32_t time = 0);
-   bool add_data(T* data) {
+   bool add_data(T *data) {
      __ENTER_FUNCTION
        Assert(count_ < kManagerUnitDataMax);
        if (count_ >= kManagerUnitDataMax) return false;
@@ -129,7 +129,7 @@ class UnitManager {
      __LEAVE_FUNCTION
        return false;
    };
-   bool delete_data(T* data) {
+   bool delete_data(T *data) {
      __ENTER_FUNCTION
        uint32_t id = data->get_id();
        Assert(id < static_cast<uint32_t>(count_));
@@ -140,7 +140,7 @@ class UnitManager {
      __LEAVE_FUNCTION
        return false;
    };
-   T* get_data(uint16_t id) {
+   T *get_data(uint16_t id) {
      __ENTER_FUNCTION
        Assert(id < static_cast<uint32_t>(count_));
        if (id >= static_cast<uint32_t>(count_)) return false;
@@ -169,7 +169,7 @@ class UnitPool {
        SAFE_DELETE_ARRAY(obj_);
      __LEAVE_FUNCTION
    };
-   bool init(uint32_t max_count, uint64_t key, pool_type_t pool_type) {
+   bool init(uint32_t max_count, uint64_t key, uint8_t pooltype) {
      __ENTER_FUNCTION
        ref_obj_pointer_ = new Base();
        Assert(ref_obj_pointer_);
@@ -178,20 +178,18 @@ class UnitPool {
        bool result = true;
        result = ref_obj_pointer_->attach(
            key, 
-           sizeof(T) * max_count + sizeof(data_header_t));
-       if (kSmptShareMemory == pool_type && !result) {
+           sizeof(T) * max_count + sizeof(dataheader_t));
+       if (kSmptShareMemory == pooltype && !result) {
          result = ref_obj_pointer_->create(
              key, 
-             sizeof(T) * max_count + sizeof(data_header_t));
-       }
-       else if(!result) {
+             sizeof(T) * max_count + sizeof(dataheader_t));
+       } else if(!result) {
          return false;
        }
 
        if (!result && kCmdModelClearAll == ref_obj_pointer_->cmd_model_) {
          return true;
-       }
-       else if(!result) {
+       } else if(!result) {
          SLOW_ERRORLOG(
              "sharememory", 
              "[sys][sharememory] (UnitPool::init) failed");
@@ -203,7 +201,7 @@ class UnitPool {
        obj_ = new T*[max_size_];
        uint32_t i;
        for (i = 0; i < max_size_; ++i) {
-         obj_[i] = reinterpret_cast<T*>
+         obj_[i] = reinterpret_cast<T *>
                    (ref_obj_pointer_->get_data(sizeof(T), i));
          if (NULL == obj_[i]) {
            Assert(false);
@@ -223,11 +221,11 @@ class UnitPool {
      __LEAVE_FUNCTION
        return false;
    };
-   T* new_obj() {
+   T *new_obj() {
      __ENTER_FUNCTION
        Assert(position_ < max_size_);
        if (position_ >= max_size_) return NULL;
-       T* obj = obj_[position_];
+       T *obj = obj_[position_];
        obj->set_pool_id(static_cast<uint32_t>(position_)); //this function 
                                                            //must define in T*
        ++position_;
@@ -235,7 +233,7 @@ class UnitPool {
      __LEAVE_FUNCTION
        return NULL;
    };
-   void delete_obj(T* obj) {
+   void delete_obj(T *obj) {
      __ENTER_FUNCTION
        Assert(obj != NULL);
        Assert(position_ > 0);
@@ -252,7 +250,7 @@ class UnitPool {
        obj_[position_]->set_pool_id(ID_INVALID);
      __LEAVE_FUNCTION
    };
-   T* get_obj(int32_t index) {
+   T *get_obj(int32_t index) {
      __ENTER_FUNCTION
        Assert(index >= 0 && static_cast<uint32_t>(index) < max_size_);
        return obj_[index];
@@ -310,10 +308,10 @@ class UnitPool {
    };
 
  private:
-   T** obj_;
+   T **obj_;
    uint32_t max_size_;
    int32_t position_;
-   Base* ref_obj_pointer_;
+   Base *ref_obj_pointer_;
    uint64_t key_;
 
 };

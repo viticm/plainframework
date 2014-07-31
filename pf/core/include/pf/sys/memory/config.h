@@ -15,7 +15,7 @@
 
 typedef enum {
   kCmdModelClearAll = 1,
-    kCmdModelLoadDump = 2,
+  kCmdModelLoadDump = 2,
 } cmd_model_t; //命令行模式
 extern int32_t g_cmd_model;
 

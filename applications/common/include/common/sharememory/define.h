@@ -13,13 +13,16 @@
 
 #include "common/sharememory/config.h"
 
+extern bool g_commond_exit = false;
+
 namespace common {
 
 namespace sharememory { //共享内存存储数据结构体
 
 //-- static define
-const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
-const uint8_t kObjMax = 20;
+extern const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
+extern const uint8_t kObjMax = 20;
+
 typedef struct dataheader_struct {
   uint64_t key;
   uint32_t size;
@@ -50,6 +53,13 @@ typedef enum {
   kFlagCenterRead = 0x05, //世界服务器读
   kFlagCenterWrite = 0x06, //世界服务器写
 } flag_t; //共享内存的当前状态
+
+typedef enum {
+  kTypeInvaild = -1,
+  kTypePlayer = 1, //玩家
+  kTypeGuild = 2, //帮会
+  kTypeGlobal = 3, //全局数据
+} type_t; //共享内存的类型
 
 //static define --
 
