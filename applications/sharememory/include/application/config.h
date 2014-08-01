@@ -12,6 +12,6 @@
 #define APPLICATION_CONFIG_H_
 
 #include "common/config.h"
-#define APPLICATION_NAME "sharememory"
+#define _APPLICATION_NAME "sharememory" //客户端定义此值应该注意不要与框架冲突
 
 #endif //APPLICATION_CONFIG_H_

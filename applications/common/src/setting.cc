@@ -5,11 +5,10 @@
 #include "pf/net/connection/config.h"
 #include "common/setting.h"
 
-common::Setting *g_application_setting;
+common::Setting *g_setting;
 
 template <>
-common::Setting 
-  *pf_base::Singleton<common::Setting>::singleton_ = NULL;
+common::Setting *pf_base::Singleton<common::Setting>::singleton_ = NULL;
 
 namespace common {
 

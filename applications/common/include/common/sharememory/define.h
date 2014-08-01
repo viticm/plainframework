@@ -12,6 +12,8 @@
 #define COMMON_SHAREMEMORY_DEFINE_H_
 
 #include "common/sharememory/config.h"
+#include "common/db/define.h"
+#include "pf/sys/memory/share.h"
 
 extern bool g_commond_exit = false;
 
@@ -75,21 +77,52 @@ typedef struct head_struct {
   void cleanup();
 } head_t;
 
-typedef struct globaldata_struct {
+template <typename T>
+struct data_template {
   head_t head;
-  uint32_t data;
-  void lock(char type);
-  void unlock(char type);
-  void set_poolid(uint32_t id);
-  uint32_t get_poolid();
-  bool set_usestatus(int32_t status, char type);
-  int32_t get_usestatus(char type);
-  uint32_t get_savetime(char type);
-  void set_savetime(uint32_t time, char type);
-  uint32_t getdata(char type);
-  void setdata(char type, uint32_t data);
-  void init();
-} globaldata_t;
+  T data;
+  void lock(char type) {
+    pf_sys::memory::share::lock(&head.flag, type);
+  }
+  void unlock(char type) {
+    pf_sys::memory::share::unlock(&head.flag, type);
+  }
+  void set_poolid(uint32_t id) {
+    head.poolid = id;
+  }
+  uint32_t get_poolid() {
+    return head.poolid;
+  }
+  void set_usestatus(int32_t status, char type) {
+    lock(type);
+    head.usestatus = status;
+    unlock(type);
+  }
+  int32_t get_usestatus(char type) {
+    int32_t status;
+    lock(type);
+    status = head.usestatus;
+    unlock(type);
+    return status;
+  }
+  uint32_t get_savetime(char type) {
+    uint32_t savetime;
+    lock(type);
+    savetime = head.savetime;
+    unlock(type);
+    return savetime;
+  }
+  void set_savetime(uint32_t time, char type) {
+    lock(type);
+    head.savetime = time;
+    unlock(type);
+  }
+  void init() {
+    data.clear();
+  }
+};
+
+typedef data_template<db::globaldata_t> globaldata_t;
 
 }; //namespace sharememory
 

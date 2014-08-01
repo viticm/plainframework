@@ -13,6 +13,7 @@
 
 #include "pf/base/config.h"
 #include "common/define/macros.h"
+#include "application/config.h"
 
 #define DB_TABLE_USER "users"
 

@@ -22,12 +22,16 @@ extern char script_modulename[FILENAME_MAX];
 extern char performance_modulename[FILENAME_MAX];
 extern char db_modulename[FILENAME_MAX];
 extern char engine_modulename[FILENAME_MAX];
+extern char applicationname[FILENAME_MAX]; //应用全局名称
+extern uint8_t applicationtype; //应用的类型 0 服务器 1 客户端
 
 PF_API const char *get_net_modulename();
 PF_API const char *get_script_modulename();
 PF_API const char *get_performanace_modulename();
 PF_API const char *get_db_modulename();
 PF_API const char *get_engine_modulename();
+PF_API const char *get_applicationname();
+PF_API uint8_t get_applicationtype();
 
 }; //namespace global
 
@@ -38,5 +42,7 @@ PF_API const char *get_engine_modulename();
 #define PERFORMANCE_MODULENAME pf_base::global::get_performanace_modulename()
 #define DB_MODULENAME pf_base::global::get_db_modulename()
 #define ENGINE_MODULENAME pf_base::global::get_engine_modulename()
+#define APPLICATION_NAME pf_base::global::get_applicationname()
+#define APPLICATION_TYPE pf_base::global::get_applicationtype()
 
 #endif //PF_BASE_GLOBAL_H_

@@ -243,7 +243,7 @@ class UnitPool {
        Assert(delete_index < position_);
        if (delete_index >= position_) return;
        --position_;
-       T* _delete_obj = obj_[delete_index];
+       T *_delete_obj = obj_[delete_index];
        obj_[delete_index] = obj_[position_];
        obj_[position_] = _delete_obj;
        obj_[delete_index]->set_pool_id(delete_index);

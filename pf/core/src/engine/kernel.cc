@@ -9,9 +9,6 @@
 #include "pf/sys/util.h"
 #include "pf/engine/kernel.h"
 
-char g_applicationname[FILENAME_MAX] = {0};
-uint8_t g_applicationtype = 0;
-
 namespace pf_engine {
 
 Kernel::Kernel() {
@@ -70,21 +67,23 @@ bool Kernel::init() {
     //base
     bool hasinit = getconfig_boolvalue(ENGINE_CONFIG_BASEMODULE_HAS_INIT);
     if (!hasinit) 
-      DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
+      DEBUGPRINTF("(###) engine for (%s) start...", APPLICATION_NAME);
     if (!hasinit && !init_base()) {
       SLOW_ERRORLOG(ENGINE_MODULENAME, 
                     "[engine] (Kernel::init) base module failed");
       return false;
     }
     if (!hasinit) 
-      SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) base module success");
+      SLOW_LOG(ENGINE_MODULENAME, 
+               "[engine] (Kernel::init) base module success");
     //DEBUGPRINTF("base"); 
     //SYS_PROCESS_CURRENT_INFO_PRINT();
     //db
     if (getconfig_boolvalue(ENGINE_CONFIG_DB_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) start db module");
       if (!init_db()) { 
-        SLOW_ERRORLOG(ENGINE_MODULENAME, "[engine] (Kernel::init) db module failed");
+        SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                      "[engine] (Kernel::init) db module failed");
         return false;
       }
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) db module success");
@@ -95,7 +94,8 @@ bool Kernel::init() {
     if (getconfig_boolvalue(ENGINE_CONFIG_NET_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) start net module");
       if (!init_net()) {
-        SLOW_ERRORLOG(ENGINE_MODULENAME, "[engine] (Kernel::init) net module failed");
+        SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                      "[engine] (Kernel::init) net module failed");
         return false;
       }
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) net module success");
@@ -104,24 +104,29 @@ bool Kernel::init() {
     //SYS_PROCESS_CURRENT_INFO_PRINT();
     //script
     if (getconfig_boolvalue(ENGINE_CONFIG_SCRIPT_ISACTIVE)) { 
-      SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) start script module"); 
+      SLOW_LOG(ENGINE_MODULENAME, 
+               "[engine] (Kernel::init) start script module"); 
       if (!init_script()) {
-        SLOW_ERRORLOG(ENGINE_MODULENAME, "[engine] (Kernel::init) script module failed");
+        SLOW_ERRORLOG(ENGINE_MODULENAME, 
+                      "[engine] (Kernel::init) script module failed");
         return false;
       }
-      SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) script module success");
+      SLOW_LOG(ENGINE_MODULENAME, 
+               "[engine] (Kernel::init) script module success");
     }
     //DEBUGPRINTF("script");
     //SYS_PROCESS_CURRENT_INFO_PRINT();
     //performance
     if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE)) {
-      SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) start performance module");
+      SLOW_LOG(ENGINE_MODULENAME, 
+               "[engine] (Kernel::init) start performance module");
       if (!init_performance()) {
         SLOW_ERRORLOG(ENGINE_MODULENAME,
                       "[engine] (Kernel::init) performance module failed");
         return false;
       }
-      SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::init) performance module success"); 
+      SLOW_LOG(ENGINE_MODULENAME, 
+               "[engine] (Kernel::init) performance module success"); 
     }
     //DEBUGPRINTF("performance");
     //SYS_PROCESS_CURRENT_INFO_PRINT();
@@ -281,17 +286,6 @@ void Kernel::set_base_logactive(bool flag) {
   __ENTER_FUNCTION
     pf_base::g_command_logactive = flag;
   __LEAVE_FUNCTION
-}
-
-void Kernel::set_applicationname(const char *name) {
-  __ENTER_FUNCTION
-    pf_base::string::safecopy(
-        g_applicationname, name, sizeof(g_applicationname));
-  __LEAVE_FUNCTION
-}
-
-void Kernel::set_applicationtype(uint8_t type) {
-  g_applicationtype = type;
 }
 
 void Kernel::set_net_stream_usepacket(bool flag) {

@@ -19,6 +19,7 @@ enum {
   kErrorLogFile = 1,
   kNetLogFile = 2,
   kFunctionLogFile = 3,
+  kEngineLogFile = 4,
   kApplicationLogFile, //应用的日志记录ID
   kLogFileCount,
 };
@@ -142,9 +143,6 @@ enum {
 //基本数据类型定义
 //typedef unsigned char ubyte; //0~255 --use uint8_t
 //typedef char byte; //-128~127 --use int8_t
-
-PF_API extern char g_applicationname[FILENAME_MAX]; //应用全局名称
-PF_API extern uint8_t g_applicationtype; //应用的类型 0 服务器 1 客户端
 
 #include "pf/base/global.h" //全局定义
 
@@ -280,16 +278,18 @@ PF_API extern uint8_t g_applicationtype; //应用的类型 0 服务器 1 客户�
 #if __WINDOWS__ //normal functions
 #if defined(NDEBUG)
 #define __ENTER_FUNCTION { try {
-#define __LEAVE_FUNCTION } catch(...){ if (0 == g_applicationtype) AssertSpecial(false,__FUNCTION__); } }
+#define __LEAVE_FUNCTION } catch(...){ \
+  if (0 == APPLICATION_TYPE) AssertSpecial(false,__FUNCTION__); } }
 #else
 #define __ENTER_FUNCTION { try {
-#define __LEAVE_FUNCTION } catch(...){ if (0 == g_applicationtype) AssertSpecial(false,__FUNCTION__); } }
+#define __LEAVE_FUNCTION } catch(...){ \
+  if (0 == APPLICATION_TYPE) AssertSpecial(false,__FUNCTION__); } }
 #endif
 
 #elif __LINUX__    //linux
 #define __ENTER_FUNCTION { try {
 #define __LEAVE_FUNCTION } catch(...) \
-{ if (0 == g_applicationtype) AssertSpecial(false,__PRETTY_FUNCTION__); } }
+  { if (0 == APPLICATION_TYPE) AssertSpecial(false,__PRETTY_FUNCTION__); } }
 #endif
 
 //headers include order: pf/base/config.h -> sys include -> module include

@@ -586,7 +586,7 @@ class GatewayInfo {
    bool is_use();
 
  private:
-   gateway_data_t** info_pool_;
+   gateway_data_t **info_pool_;
    uint16_t number_;
    uint32_t current_gateway_no_;
    bool used_;
@@ -656,9 +656,8 @@ class Setting : public pf_base::Singleton<Setting> {
 
 }; //namespace common
 
-extern common::Setting *g_application_setting; //global variable
+extern common::Setting *g_setting; //global variable
 
-#define APPLICATION_SETTING_POINTER \
-  common::Setting::getsingleton_pointer()
+#define SETTING_POINTER common::Setting::getsingleton_pointer()
 
 #endif //COMMON_SETTING_H_

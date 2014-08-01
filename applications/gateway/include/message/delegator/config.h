@@ -11,6 +11,6 @@
 #ifndef MESSAGE_DELEGATOR_CONFIG_H_
 #define MESSAGE_DELEGATOR_CONFIG_H_
 
-#include "message/config.h"
+#include "application/config.h"
 
 #endif //MESSAGE_DELEGATOR_CONFIG_H_

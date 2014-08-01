@@ -12,14 +12,19 @@
 #define ARCHIVE_NODELOGIC_MANAGER_H_
 
 #include "archive/config.h"
+#include "pf/base/singleton.h"
 
 namespace archive {
 
-class NodeLogicManager {
+class NodeLogicManager : public pf_base::Singleton<NodeLogicManager> {
 
  public:
    NodeLogicManager();
    ~NodeLogicManager();
+
+ public:
+   static NodeLogicManager *getsingleton_pointer();
+   static NodeLogicManager &getsingleton();
 
  public:
    void setnode(int32_t index, void *node);
@@ -36,5 +41,10 @@ class NodeLogicManager {
 };
 
 }; //namespace archive
+
+extern archive::NodeLogicManager *g_archive_nodelogic_manager;
+
+#define ARCHIVE_NODELOGIC_MANAGER_POINTER \
+  archive::NodeLogicManager::getsingleton_pointer()
 
 #endif //ARCHIVE_NODELOGIC_MANAGER_H_

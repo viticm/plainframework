@@ -1,6 +1,4 @@
 #include "pf/base/log.h"
-#include "pf/net/packet/factorymanager.h"
-#include "common/net/packetfactory.h"
 #include "common/setting.h"
 #include "engine/system.h"
 
@@ -44,8 +42,8 @@ pf_db::Manager *System::get_dbmanager() {
 
 bool System::init() {
   __ENTER_FUNCTION
-    pf_base::global::set_applicationname();
-    DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
+    pf_base::global::set_applicationname(_APPLICATION_NAME);
+    DEBUGPRINTF("(###) engine for (%s) start...", APPLICATION_NAME);
     if (!Kernel::init_base()) {
       SLOW_ERRORLOG(ENGINE_MODULENAME, 
                     "[engine] (System::init) base module failed");
@@ -62,36 +60,19 @@ bool System::init() {
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
     setconfig(
         ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME, 
-        SETTING_POINTER->gateway_info_.db_connection_ordbname_);
+        SETTING_POINTER->share_memory_info_.db_connection_ordbname);
     setconfig(
         ENGINE_CONFIG_DB_USERNAME,
-        SETTING_POINTER->gateway_info_.db_user_);
+        SETTING_POINTER->share_memory_info_.db_user);
     setconfig(
         ENGINE_CONFIG_DB_PASSWORD,
-        SETTING_POINTER->gateway_info_.db_password_);
+        SETTING_POINTER->share_memory_info_.db_password);
     setconfig(
         ENGINE_CONFIG_DB_CONNECTOR_TYPE,
-        SETTING_POINTER->gateway_info_.db_connectortype_);
-    setconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
-    setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
-              SETTING_POINTER->gateway_info_.listenip_);
-    setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
-              SETTING_POINTER->gateway_info_.listenport_);
-    setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
-              SETTING_POINTER->gateway_info_.net_connectionmax_);
+        SETTING_POINTER->share_memory_info_.db_connectortype);
     SLOW_LOG(ENGINE_MODULENAME, 
              "[engine] (System::init) setting module success");
-    if (!NET_PACKET_FACTORYMANAGER_POINTER)
-      g_packetfactory_manager = new pf_net::packet::FactoryManager();
-    if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
-    NET_PACKET_FACTORYMANAGER_POINTER->set_function_registerfactories(
-        &common::net::registerfactories);
-    NET_PACKET_FACTORYMANAGER_POINTER->set_function_isvalid_packetid(
-        &common::net::isvalid_packetid);
-    uint16_t factorysize = common::net::get_facctorysize();
-    NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();
-    NET_PACKET_FACTORYMANAGER_POINTER->init();
     return result;
   __LEAVE_FUNCTION
     return false;

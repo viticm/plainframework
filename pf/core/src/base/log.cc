@@ -16,6 +16,7 @@ const char *g_log_filename[] = {
   "error", //kErrorLogFile
   "net", //kNetLogFile
   "function", //kFunctionLogFile
+  "engine", //kEngineLogFile
   '\0',
 };
 
@@ -56,7 +57,8 @@ void Log::get_log_timestr(char *time_str, int32_t length) {
   __ENTER_FUNCTION
     if (g_time_manager) {
         g_time_manager->reset_time();
-        snprintf(time_str, length, 
+        snprintf(time_str, 
+                 length, 
                  "%.2d:%.2d:%.2d (%"PRIu64" %.4f)",
                  g_time_manager->get_hour(),
                  g_time_manager->get_minute(),
@@ -64,9 +66,10 @@ void Log::get_log_timestr(char *time_str, int32_t length) {
                  pf_sys::get_current_thread_id(), 
                  static_cast<float>(g_time_manager->get_run_time())/1000.0);
     } else {
-      snprintf(time_str, length, 
-                 "00:00:00 (%"PRIu64" 0.0000)",
-                 pf_sys::get_current_thread_id());
+      snprintf(time_str,
+               length, 
+               "00:00:00 (%"PRIu64" 0.0000)",
+               pf_sys::get_current_thread_id());
     }
   __LEAVE_FUNCTION
 }
@@ -93,7 +96,8 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
       }
       strncat(buffer, LF, sizeof(LF)); //add wrap
     } catch(...) {
-      if (g_command_logprint) printf("ERROR: SaveLog unknown error!%s", LF); 
+      if (g_command_logprint) 
+        ERRORPRINTF("[base] (Log::disk_log) unknown error!"); 
       return;
     }
 
@@ -139,7 +143,7 @@ void Log::disk_log(const char *file_nameprefix, const char *format, ...) {
 
 bool Log::init(int32_t cache_size) {
   __ENTER_FUNCTION
-    if (1 == g_applicationtype) {
+    if (1 == APPLICATION_TYPE) {
       //初始化时将所有日志目录下的日志清除，防止客户端日志堆积过大
       char command[128] = {0};
 #if __LINUX__
@@ -168,7 +172,7 @@ bool Log::init(int32_t cache_size) {
 void Log::get_log_filename(uint8_t logid, char *save) {
   __ENTER_FUNCTION
     const char *filename_prefix = 
-      logid != kApplicationLogFile ? g_log_filename[logid] : g_applicationname;
+      logid != kApplicationLogFile ? g_log_filename[logid] : APPLICATION_NAME;
     if (g_time_manager) {
       snprintf(save,
                FILENAME_MAX - 1,

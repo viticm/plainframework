@@ -19,6 +19,15 @@ namespace common {
 
 namespace db {
 
+typedef struct globaldata_struct {
+  int32_t poolid;
+  int32_t data;
+  void clear() {
+    poolid = 0;
+    data = 0;
+  }
+} globaldata_t;
+
 }; //namespace db
 
 }; //namespace common

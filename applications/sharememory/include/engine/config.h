@@ -1,16 +1,16 @@
 /**
  * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework )
- * $Id main.h
+ * $Id config.h
  * @link https://github.com/viticm/plainframework for the canonical source repository
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/08/01 10:12
- * @uses the main file of application
+ * @date 2014/07/11 10:37
+ * @uses the engine config file
  */
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef ENGINE_CONFIG_H_
+#define ENGINE_CONFIG_H_
 
-#include "application/config.h"
+#include "config/application.h"
 
-#endif //MAIN_H_
+#endif //ENGINE_CONFIG_H_

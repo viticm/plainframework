@@ -19,7 +19,6 @@
 namespace pf_base {
 
 extern const char *kBaseLogSaveDir; //如果不要外部使用，就别使用宏
-
 PF_API extern bool g_command_logprint; //global if print log to io
 PF_API extern bool g_command_logactive; //global if write log to file
 PF_API extern bool g_log_in_one_file;
@@ -65,10 +64,10 @@ class PF_API Log : public Singleton<Log> {
          va_start(argptr, format);
          vsnprintf(temp, sizeof(temp) - 1, format, argptr);
          va_end(argptr);
-         if (1 == g_applicationtype) { //如果客户端使用了快速日志，则转为慢速
+         if (1 == APPLICATION_TYPE) { //如果客户端使用了快速日志，则转为慢速
            slow_savelog<type>(g_log_filename[logid], temp);
            return;
-          }
+         }
          char time_str[256] = {0};
          memset(time_str, '\0', sizeof(time_str));
          get_log_timestr(time_str, sizeof(time_str) - 1);

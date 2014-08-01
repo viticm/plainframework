@@ -11,6 +11,6 @@
 #ifndef MESSAGE_CONFIG_H_
 #define MESSAGE_CONFIG_H_
 
-#include "config/application.h"
+#include "application/config.h"
 
 #endif
