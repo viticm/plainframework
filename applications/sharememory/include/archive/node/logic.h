@@ -8,27 +8,29 @@
  * @date 2014/07/31 10:41
  * @uses share memory archive node logic class
  */
-#ifndef ARCHIVE_NODELOGIC_H_
-#define ARCHIVE_NODELOGIC_H_
+#ifndef ARCHIVE_NODE_LOGIC_H_
+#define ARCHIVE_NODE_LOGIC_H_
 
-#include "archive/config.h"
+#include "archive/node/config.h"
 #include "pf/base/time_manager.h"
 #include "pf/base/log.h"
 #include "pf/sys/memory/share.h"
 
 namespace archive {
 
+namespace node {
+
 template <typename T>
-class NodeLogic {
+class Logic {
 
  public:
-   NodeLogic() {
+   Logic() {
      pool_ = NULL;
      type_ = common::sharememory::kTypeInvaild;
      final_savetime_ = 0;
    }
    
-   ~NodeLogic() {
+   ~Logic() {
      SAFE_DELETE(pool_);
    }
    
@@ -105,6 +107,8 @@ class NodeLogic {
 
 };
 
+}; //namespace node
+
 }; //namespace archive
 
-#endif //ARCHIVE_NODELOGIC_H_
+#endif //ARCHIVE_NODE_LOGIC_H_

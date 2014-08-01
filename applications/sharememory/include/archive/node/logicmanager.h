@@ -8,23 +8,25 @@
  * @date 2014/07/31 15:41
  * @uses archive node logic manager class
  */
-#ifndef ARCHIVE_NODELOGIC_MANAGER_H_
-#define ARCHIVE_NODELOGIC_MANAGER_H_
+#ifndef ARCHIVE_NODE_LOGIC_MANAGER_H_
+#define ARCHIVE_NODE_LOGIC_MANAGER_H_
 
-#include "archive/config.h"
+#include "archive/node/config.h"
 #include "pf/base/singleton.h"
 
 namespace archive {
 
-class NodeLogicManager : public pf_base::Singleton<NodeLogicManager> {
+namespace node {
+
+class LogicManager : public pf_base::Singleton<LogicManager> {
 
  public:
    NodeLogicManager();
    ~NodeLogicManager();
 
  public:
-   static NodeLogicManager *getsingleton_pointer();
-   static NodeLogicManager &getsingleton();
+   static LogicManager *getsingleton_pointer();
+   static LogicManager &getsingleton();
 
  public:
    void setnode(int32_t index, void *node);
@@ -40,11 +42,13 @@ class NodeLogicManager : public pf_base::Singleton<NodeLogicManager> {
 
 };
 
+}; //namespace node
+
 }; //namespace archive
 
-extern archive::NodeLogicManager *g_archive_nodelogic_manager;
+extern archive::node::LogicManager *g_archive_nodelogic_manager;
 
 #define ARCHIVE_NODELOGIC_MANAGER_POINTER \
-  archive::NodeLogicManager::getsingleton_pointer()
+  archive::node::LogicManager::getsingleton_pointer()
 
-#endif //ARCHIVE_NODELOGIC_MANAGER_H_
+#endif //ARCHIVE_NODE_LOGIC_MANAGER_H_
