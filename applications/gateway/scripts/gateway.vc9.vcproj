@@ -271,10 +271,10 @@
 				>
 			</File>
 			<Filter
-				Name="config"
+				Name="application"
 				>
 				<File
-					RelativePath="..\include\config\application.h"
+					RelativePath="..\include\application\config.h"
 					>
 				</File>
 			</Filter>
