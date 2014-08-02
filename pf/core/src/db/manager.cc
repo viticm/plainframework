@@ -6,6 +6,7 @@ Manager::Manager(dbconnector_type_t connector_type) {
   __ENTER_FUNCTION
     connector_type_ = connector_type;
     odbc_system_ = NULL;
+    isready_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -26,6 +27,7 @@ bool Manager::init(const char *connection_or_dbname,
         Assert(odbc_system_);
         result = 
           odbc_system_->init(connection_or_dbname, username, password);
+        isready_ = odbc_system_->getinterface()->is_prepare();
         break;
       }
       default:
@@ -119,6 +121,10 @@ bool Manager::check_db_connect() {
     return result;
   __LEAVE_FUNCTION
     return false;
+}
+
+bool Manager::isready() const {
+  return isready_;
 }
 
 float Manager::get_float(int32_t column_index, int32_t &error_code) {

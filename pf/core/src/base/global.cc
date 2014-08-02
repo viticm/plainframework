@@ -86,7 +86,7 @@ const char *get_applicationname() {
     return NULL;
 }
 
-void set_applicationtname(const char *name) {
+void set_applicationname(const char *name) {
   string::safecopy(applicationname, name, sizeof(applicationname));  
 }
 

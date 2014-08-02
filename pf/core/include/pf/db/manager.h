@@ -32,6 +32,7 @@ class PF_API Manager {
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    int32_t get_affectcount() const;
    bool check_db_connect();
+   bool isready() const;
 
  public:
    float get_float(int32_t column_index, int32_t &error_code);
@@ -63,6 +64,7 @@ class PF_API Manager {
  protected:
    dbconnector_type_t connector_type_;
    odbc::System *odbc_system_;
+   bool isready_;
 
 };
 

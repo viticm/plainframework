@@ -63,8 +63,8 @@ SET (SOURCEFILES_LIST
 	../src/gateway.cc
 )
 
-SET (HEADERFILES_CONFIG_LIST
-	../include/config/application.h
+SET (HEADERFILES_APPLICATION_LIST
+	../include/application/config.h
 )
 
 SET (HEADERFILES_DB_LIST
@@ -187,7 +187,7 @@ if (WIN32)
 	source_group(SourceFiles\\db FILES ${SOURCEFILES_DB_LIST})
 	source_group(SourceFiles\\engine FILES ${SOURCEFILES_ENGINE_LIST})
 	source_group(SourceFiles FILES ${SOURCEFILES_LIST})
-	source_group(HeaderFiles\\config FILES ${HEADERFILES_CONFIG_LIST})
+	source_group(HeaderFiles\\application FILES ${HEADERFILES_APPLICATION_LIST})
 	source_group(HeaderFiles\\db FILES ${HEADERFILES_DB_LIST})
 	source_group(HeaderFiles\\engine FILES ${HEADERFILES_ENGINE_LIST})
 	source_group(HeaderFiles\\message\\delegator FILES ${HEADERFILES_MESSAGE_DELEGATOR_LIST})
@@ -224,7 +224,7 @@ ADD_EXECUTABLE(gateway
 	${SOURCEFILES_DB_LIST}
 	${SOURCEFILES_ENGINE_LIST}
 	${SOURCEFILES_LIST}
-	${HEADERFILES_CONFIG_LIST}
+	${HEADERFILES_APPLICATION_LIST}
 	${HEADERFILES_DB_LIST}
 	${HEADERFILES_ENGINE_LIST}
 	${HEADERFILES_MESSAGE_DELEGATOR_LIST}

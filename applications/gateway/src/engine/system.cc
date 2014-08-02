@@ -44,8 +44,8 @@ pf_db::Manager *System::get_dbmanager() {
 
 bool System::init() {
   __ENTER_FUNCTION
-    pf_base::global::set_applicationname();
-    DEBUGPRINTF("(###) engine for (%s) start...", g_applicationname);
+    pf_base::global::set_applicationname(_APPLICATION_NAME);
+    DEBUGPRINTF("(###) engine for (%s) start...", APPLICATION_NAME);
     if (!Kernel::init_base()) {
       SLOW_ERRORLOG(ENGINE_MODULENAME, 
                     "[engine] (System::init) base module failed");

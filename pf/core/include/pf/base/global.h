@@ -31,7 +31,9 @@ PF_API const char *get_performanace_modulename();
 PF_API const char *get_db_modulename();
 PF_API const char *get_engine_modulename();
 PF_API const char *get_applicationname();
+PF_API void set_applicationname(const char *name);
 PF_API uint8_t get_applicationtype();
+PF_API void set_applicationtype(uint8_t type);
 
 }; //namespace global
 

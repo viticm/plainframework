@@ -6,6 +6,7 @@ namespace data {
 
 Interface::Interface() {
   db_manager_ = NULL;
+  db_type_ = common::db::kTypeCharacter; //默认为角色数据库
 }
 
 bool Interface::load() {

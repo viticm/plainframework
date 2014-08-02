@@ -28,6 +28,17 @@ typedef struct globaldata_struct {
   }
 } globaldata_t;
 
+typedef enum {
+  kTypeUser = 0,
+  kTypeCharacter,
+} type_t;
+
+typedef enum {
+  kSqlSelectGlobalData,
+} sql_t;
+
+extern const char *kSqls[];
+
 }; //namespace db
 
 }; //namespace common

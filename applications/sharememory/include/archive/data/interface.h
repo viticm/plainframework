@@ -45,6 +45,7 @@ class Interface {
  protected:
    db_optiontype_t db_optiontype_;
    pf_db::Manager *db_manager_;
+   common::db::type_t db_type_; //数据库类型 具体查看相关的定义
 
 };
 

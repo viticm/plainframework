@@ -12,16 +12,28 @@
 #define ARCHIVE_DATA_GLOBALDATA_H_
 
 #include "archive/data/config.h"
+#include "archive/data/interface.h"
 
 namespace archive {
 
 namespace data {
 
-class GlobalData {
+class GlobalData : public Interface {
 
  public:
-   GlobalData();
+   GlobalData(pf_db::Manager *db_manager);
    ~GlobalData();
+
+ public:
+   virtual bool load();
+   virtual bool add();
+   virtual bool erase();
+   virtual bool save(void *source);
+   virtual bool fetch(void *source);
+
+ public:
+   void set_serverid(int32_t id);
+   void get_serverid() const;
 
 };
 
