@@ -19,6 +19,12 @@ namespace common {
 
 namespace db {
 
+typedef enum {
+  kTypeUser = 0,
+  kTypeCharacter,
+} type_t;
+
+/* structs { */
 typedef struct globaldata_struct {
   int32_t poolid;
   int32_t data;
@@ -27,17 +33,16 @@ typedef struct globaldata_struct {
     data = 0;
   }
 } globaldata_t;
+/* } structs */
 
-typedef enum {
-  kTypeUser = 0,
-  kTypeCharacter,
-} type_t;
+/* tables { */
+extern const char *kTableNameGloablData;
+/* } tables */
 
-typedef enum {
-  kSqlSelectGlobalData,
-} sql_t;
-
-extern const char *kSqls[];
+/* sqls { */
+extern const char *kSqlSelectGlobalData;
+extern const char *kSqlSaveGlobalData;
+/* } sqls */
 
 }; //namespace db
 

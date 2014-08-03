@@ -26,7 +26,6 @@ class GlobalData : public Interface {
 
  public:
    virtual bool load();
-   virtual bool add();
    virtual bool erase();
    virtual bool save(void *source);
    virtual bool fetch(void *source);
