@@ -68,6 +68,13 @@ bool NodeLogic<globaldata_t>::empty() {
 template <>
 bool NodeLogic<globaldata_t>::fullflush(bool force, bool servercrash) {
   __ENTER_FUNCTION
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t savetime_interval = 
+      SETTING_POINTER->share_memory_info_.center_data_save_interval;
+    if (currenttime > final_savetime_ + savetime_interval) {
+      if (isready_) fullflush(false);
+      final_savetime_ = currenttime;
+    }
     return true;
   __LEAVE_FUNCTION
     return false;

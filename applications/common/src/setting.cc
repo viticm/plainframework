@@ -1321,9 +1321,9 @@ void Setting::load_share_memory_info_only() {
                                      sizeof(share_memory_info_.db_password) - 1);
     share_memory_info_.db_connectortype = 
       share_memory_info_ini.read_int8("System", "DBConnectorType");
-    share_memory_info_.world_data_save_interval = 
+    share_memory_info_.center_data_save_interval = 
       share_memory_info_ini.read_uint32("System", "WorldDataSaveInterval");
-    share_memory_info_.human_data_save_interval = 
+    share_memory_info_.player_data_save_interval = 
       share_memory_info_ini.read_uint32("System", "HumanDataSaveInterval");
     share_memory_info_.encrypt_dbpassword = 
       share_memory_info_ini.read_bool("System", "EncryptDBPassword");

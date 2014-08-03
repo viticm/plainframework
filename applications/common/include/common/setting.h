@@ -434,8 +434,8 @@ struct share_memory_info_t {
   char db_password[DB_PASSWORD_LENGTH]; //database password
   bool encrypt_dbpassword; //if encrypt database password
   dbconnector_type_t db_connectortype; //数据库类型 0 odbc 1 mysql 2 sqlserver 3 mongodb
-  uint32_t world_data_save_interval;
-  uint32_t human_data_save_interval;
+  uint32_t center_data_save_interval;
+  uint32_t player_data_save_interval;
   share_memory_info_t();
   ~share_memory_info_t();
 };
