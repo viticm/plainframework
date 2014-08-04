@@ -258,20 +258,20 @@ world_info_t::~world_info_t() {
   //do nothing
 }
 
-share_memory_key_data_t::share_memory_key_data_t() {
+share_memory_data_struct::share_memory_data_struct() {
   __ENTER_FUNCTION
     key = 0;
     type = 0;
   __LEAVE_FUNCTION
 }
 
-share_memory_key_data_t::~share_memory_key_data_t() {
+share_memory_data_struct::~share_memory_data_struct() {
   //do nothing
 }
 
 share_memory_info_t::share_memory_info_t() {
   __ENTER_FUNCTION
-    key_data = NULL;
+    data = NULL;
     obj_count = 0;
     memset(db_ip, '\0', sizeof(db_ip));
     db_port = 3306; //default mysql port
@@ -287,7 +287,7 @@ share_memory_info_t::share_memory_info_t() {
 
 share_memory_info_t::~share_memory_info_t() {
   __ENTER_FUNCTION
-    SAFE_DELETE_ARRAY(key_data);
+    SAFE_DELETE_ARRAY(data);
   __LEAVE_FUNCTION
 }
 
@@ -1283,8 +1283,8 @@ void Setting::load_share_memory_info_only() {
     pf_file::Ini share_memory_info_ini(SHARE_MEMORY_INFO_FILE);
     share_memory_info_.obj_count = 
       share_memory_info_ini.read_uint16("Key", "KeyCount");
-    share_memory_info_.key_data = 
-      new share_memory_key_data_t[share_memory_info_.obj_count];
+    share_memory_info_.data = 
+      new share_memory_data_t[share_memory_info_.obj_count];
     uint32_t i;
     for (i = 0; i < share_memory_info_.obj_count; ++i) {
       char key[256];
@@ -1293,9 +1293,9 @@ void Setting::load_share_memory_info_only() {
       memset(type, '\0', sizeof(type));
       snprintf(key, sizeof(key) - 1, "Key%d", i);
       snprintf(type, sizeof(type) - 1, "Type%d", i);
-      share_memory_info_.key_data[i].key = 
+      share_memory_info_.data[i].key = 
         share_memory_info_ini.read_uint32("Key", key);
-      share_memory_info_.key_data[i].type = 
+      share_memory_info_.data[i].type = 
         share_memory_info_ini.read_uint8("Key", type);
     }
     share_memory_info_ini.readstring("System", 

@@ -417,16 +417,16 @@ struct world_info_t {
   ~world_info_t();
 };
 
-struct share_memory_key_data_t {
+typedef struct share_memory_data_struct {
   uint32_t key;
   uint8_t type;
-  share_memory_key_data_t();
-  ~share_memory_key_data_t();
-};
+  share_memory_data_struct();
+  ~share_memory_data_struct();
+} share_memory_data_t;
 
 struct share_memory_info_t {
   uint16_t obj_count;
-  share_memory_key_data_t* key_data;
+  share_memory_data_t *data;
   char db_ip[IP_SIZE];
   uint16_t db_port;
   char db_connection_ordbname[DB_CONNECTION_NAME_LENGTH]; //odbc connection name
@@ -447,7 +447,7 @@ struct machine_data_t {
 };
 
 struct machine_info_t {
-  machine_data_t* data;
+  machine_data_t *data;
   uint16_t count;
   machine_info_t();
   ~machine_info_t();
@@ -501,7 +501,7 @@ typedef struct {
 } server_world_data_t;
 
 struct server_info_t {
-  server_data_t* data;
+  server_data_t *data;
   uint16_t count;
   int16_t current_server_id;
   int16_t hash_server[NET_OVER_SERVER_MAX];

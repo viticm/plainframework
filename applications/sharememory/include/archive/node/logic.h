@@ -77,10 +77,10 @@ class Logic {
    bool tickflush();
 
  public:
-   void setdata(pf_sys::memory::share::headerdata_t &data) {
+   void setdata(common::share_memory_key_data_t &data) {
      data_ = data;
    }
-   pf_sys::memory::share::headerdata_t getdata() const {
+   common::share_memory_key_data_t getdata() const {
      return data_;
    }
    void settype(common::sharememory::type_t type) {
@@ -98,7 +98,7 @@ class Logic {
 
  private:
    pf_sys::memory::share::UnitPool<T> *pool_;
-   pf_sys::memory::share::headerdata_t headerdata_;
+   common::share_memory_key_data_t data_;
    common::sharememory::type_t type_;
    uint32_t final_savetime_;
    bool isready_;

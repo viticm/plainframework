@@ -22,7 +22,7 @@ bool NodeLogic<globaldata_t>::init_after() {
     if (g_cmd_model == kCmdModelClearAll) return true;
     final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
     uint32_t poolsize_max = pool_->get_max_size();
-    uint64_t key = pool_->get_key();
+    uint32_t key = pool_->get_key();
     common::sharememory::globaldata_t *globaldata = pool_->get_obj(0);
     if (!globaldata) {
       Assert(globaldata);
@@ -48,7 +48,7 @@ bool NodeLogic<globaldata_t>::init_after() {
     isready_ = true;
     SLOW_LOG(APPLICATION_NAME, 
              "[archive.node.logic] (GlobalData::after_init)"
-             " key: %"PRIu64", poolid: %d, data: %d", 
+             " key: %d, poolid: %d, data: %d", 
              key, 
              globaldata->data.poolid, 
              globaldata->data.data);
@@ -90,7 +90,7 @@ bool NodeLogic<globaldata_t>::tickflush() {
     final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
     uint32_t poolsize_max = pool_->get_max_size();
     Assert(1 == pool_maxsize);
-    uint64_t key = pool_->get_key();
+    uint32_t key = pool_->get_key();
     common::sharememory::globaldata_t *globaldata = pool_->get_obj(0);
     if (!globaldata) {
       Assert(globaldata);
@@ -114,7 +114,7 @@ bool NodeLogic<globaldata_t>::tickflush() {
     }
     SLOW_LOG(APPLICATION_NAME, 
              "[archive.node.logic] (GlobalData::tickflush) success!"
-             " key: %"PRIu64", poolid: %d, data: %d", 
+             " key: %d, poolid: %d, data: %d", 
              key, 
              globaldata->data.poolid, 
              globaldata->data.data);

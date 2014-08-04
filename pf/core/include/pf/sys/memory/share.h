@@ -51,13 +51,13 @@ typedef enum {
 namespace api {
 
 #if __LINUX__
-PF_API int32_t create(uint64_t key, uint32_t size);
-PF_API int32_t open(uint64_t key, uint32_t size);
+PF_API int32_t create(uint32_t key, uint32_t size);
+PF_API int32_t open(uint32_t key, uint32_t size);
 PF_API void close(int32_t handle);
 PF_API char *map(int32_t handle);
 #elif __WINDOWS__
-PF_API HANDLE create(uint64_t key, uint32_t size);
-PF_API HANDLE open(uint64_t key, uint32_t size);
+PF_API HANDLE create(uint32_t key, uint32_t size);
+PF_API HANDLE open(uint32_t key, uint32_t size);
 PF_API void close(HANDLE handle);
 PF_API char *map(HANDLE handle);
 #endif
@@ -73,9 +73,9 @@ class PF_API Base {
    ~Base();
 
  public:
-   bool create(uint64_t key, uint32_t size);
+   bool create(uint32_t key, uint32_t size);
    void destory();
-   bool attach(uint64_t key, uint32_t size);
+   bool attach(uint32_t key, uint32_t size);
    char *get_data_pointer();
    char *get_data(uint32_t size, uint32_t index);
    uint32_t get_size();
@@ -169,7 +169,7 @@ class UnitPool {
        SAFE_DELETE_ARRAY(obj_);
      __LEAVE_FUNCTION
    };
-   bool init(uint32_t max_count, uint64_t key, uint8_t pooltype) {
+   bool init(uint32_t max_count, uint32_t key, uint8_t pooltype) {
      __ENTER_FUNCTION
        ref_obj_pointer_ = new Base();
        Assert(ref_obj_pointer_);
@@ -269,7 +269,7 @@ class UnitPool {
      __LEAVE_FUNCTION
        return -1;
    };
-   uint64_t get_key() {
+   uint32_t get_key() {
      __ENTER_FUNCTION
        return key_;
      __LEAVE_FUNCTION
@@ -312,7 +312,7 @@ class UnitPool {
    uint32_t max_size_;
    int32_t position_;
    Base *ref_obj_pointer_;
-   uint64_t key_;
+   uint32_t key_;
 
 };
 

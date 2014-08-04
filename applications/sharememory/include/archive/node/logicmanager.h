@@ -31,10 +31,11 @@ class LogicManager : public pf_base::Singleton<LogicManager> {
  public:
    void setnode(int32_t index, void *node);
    void *getnode(int32_t index);
-   void clear();
-   void clear(uint64_t key);
+   void clearlog();
+   void createlog(uint32_t key);
    bool allocate();
    bool init();
+   bool tick();
    bool release();
 
  private:

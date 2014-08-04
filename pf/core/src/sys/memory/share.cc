@@ -36,9 +36,9 @@ dataheader_struct::~dataheader_struct() {
 namespace api {
 
 #if __LINUX__
-int32_t create(uint64_t key, uint32_t size) {
+int32_t create(uint32_t key, uint32_t size) {
 #elif __WINDOWS__
-HANDLE create(uint64_t key, uint32_t size) {
+HANDLE create(uint32_t key, uint32_t size) {
 #endif
   __ENTER_FUNCTION
 #if __LINUX__
@@ -47,7 +47,7 @@ HANDLE create(uint64_t key, uint32_t size) {
     SLOW_ERRORLOG(
         "sharememory",
         "[sys.sharememory] (api::create) handle = %d," 
-        " key = %"PRIu64" ,error: %d",
+        " key = %d ,error: %d",
         handle, 
         key, 
         errno);
@@ -55,7 +55,7 @@ HANDLE create(uint64_t key, uint32_t size) {
     HANDLE handle;
     char buffer[65];
     memset(buffer, '\0', sizeof(buffer));
-    snprintf(buffer, sizeof(buffer) - 1, "%"PRIu64, key);
+    snprintf(buffer, sizeof(buffer) - 1, "%d", key);
     handle = (CreateFileMapping(reinterpret_cast<HANDLE>(0xFFFFFFFFFFFFFFFF), 
                                 NULL, 
                                 PAGE_READWRITE, 
@@ -68,9 +68,9 @@ HANDLE create(uint64_t key, uint32_t size) {
     return NULL;
 }
 #if __LINUX__
-int32_t open(uint64_t key, uint32_t size) {
+int32_t open(uint32_t key, uint32_t size) {
 #elif __WINDOWS__
-HANDLE open(uint64_t key, uint32_t size) {
+HANDLE open(uint32_t key, uint32_t size) {
 #endif
   __ENTER_FUNCTION
     USE_PARAM(size);
@@ -80,7 +80,7 @@ HANDLE open(uint64_t key, uint32_t size) {
     SLOW_ERRORLOG(
         "sharememory", 
         "[sys.sharememory] (api::open) handle = %d,"
-        " key = %"PRIu64" ,error: %d", 
+        " key = %d, error: %d", 
         handle, 
         key, 
         errno);
@@ -155,7 +155,7 @@ Base::~Base() {
   //do nothing
 }
 
-bool Base::create(uint64_t key, uint32_t size) {
+bool Base::create(uint32_t key, uint32_t size) {
   __ENTER_FUNCTION
     if (kCmdModelClearAll == cmd_model_) return false;
     handle_ = api::create(key, size);
@@ -163,7 +163,7 @@ bool Base::create(uint64_t key, uint32_t size) {
       SLOW_ERRORLOG(
           "sharememory", 
           "[sys.sharememory] (Base::create)"
-          " failed! handle = %d,key = %"PRIu64"",
+          " failed! handle = %d, key = %d",
           handle_, 
           key);
       return false;
@@ -177,7 +177,7 @@ bool Base::create(uint64_t key, uint32_t size) {
       SLOW_LOG(
           "sharememory", 
           "[sys.sharememory] (Base::create)"
-          " success! handle = %d ,key = %"PRIu64"",
+          " success! handle = %d ,key = %d",
           handle_, 
           key);
       return true;
@@ -209,21 +209,21 @@ void Base::destory() {
   __LEAVE_FUNCTION
 }
 
-bool Base::attach(uint64_t key, uint32_t size) {
+bool Base::attach(uint32_t key, uint32_t size) {
   __ENTER_FUNCTION
     handle_ = api::open(key, size);
     if (kCmdModelClearAll == cmd_model_) {
       destory();
       SLOW_LOG(
           "sharememory",
-          "[sys.sharememory] (Base::attach) close memory, key = %"PRIu64"", 
+          "[sys.sharememory] (Base::attach) close memory, key = %d", 
           key);
       return false;
     }
     if (HANDLE_INVALID == handle_) {
       SLOW_ERRORLOG(
           "sharememory", 
-          "[sys.sharememory] (Base::attach) failed, key = %"PRIu64"", 
+          "[sys.sharememory] (Base::attach) failed, key = %d", 
           key); 
       return false;
     }
