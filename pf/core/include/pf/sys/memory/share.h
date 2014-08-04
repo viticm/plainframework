@@ -23,10 +23,6 @@ namespace share {
 //-- static define
 extern const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
 //extern const uint8_t kObjMax = 20;
-#if __LINUX__
-extern uint32_t lock_times; //内存锁定的时间
-extern bool lock_time_enable; //共享内存是否有时间锁的限制
-#endif
 struct dataheader_struct {
   uint64_t key;
   uint32_t size;
@@ -316,9 +312,8 @@ class UnitPool {
 
 };
 
-PF_API void lock(char &flag, char type);
-PF_API void unlock(char &flag, char type);
-PF_API bool trylock(char &flag, char type);
+PF_API void lock(atword_t *flag, int8_t type);
+PF_API void unlock(atword_t *flag, int8_t type);
 
 }; //namespace share
 

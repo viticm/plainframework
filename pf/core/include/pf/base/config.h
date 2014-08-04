@@ -144,6 +144,7 @@ enum {
 //typedef unsigned char ubyte; //0~255 --use uint8_t
 //typedef char byte; //-128~127 --use int8_t
 
+#include "pf/base/atomic.h"
 #include "pf/base/global.h" //全局定义
 
 #define IP_SIZE 24 //max ip size

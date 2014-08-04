@@ -16,9 +16,6 @@ namespace memory {
 
 namespace share {
 
-uint32_t lock_times = 0;
-bool lock_time_enable = false;
-
 //-- struct start
 dataheader_struct::dataheader_struct() {
   __ENTER_FUNCTION
@@ -321,79 +318,60 @@ uint32_t Base::get_head_version() {
 
 //-- functions start
 
-void lock(char &flag, char type) {
+void lock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
-    _loop:
-    if (kUseFree == flag) {
-      flag = type;
-      if (flag != type) {
-        pf_base::util::sleep(1);
+    if (kCmdModelRecover == g_cmd_model) return;
+    int32_t count = 0;
 #if __LINUX__
-        ++lock_times;
-        printf("[sys.sharememory] (lock) fail %s, %d, %s", 
-               __FILE__, 
-               __LINE__, 
-               __PRETTY_FUNCTION__);
-        if (lock_times < 100 && lock_time_enable) {
-          lock_times = 0;
-          return;
-        }
-#endif
-        goto _loop;
+    while (!atomic_inc_and_test(flag)) {
+      int32_t count1 = 0;
+      ++count;
+      ++count1;
+      atomic_dec(flag);
+      pf_base::util::sleep(0);
+      if (count > 1000) {
+        SLOW_ERRORLOG(APPLICATION_NAME, 
+                      "[sys.memory] (share::lock) error, flag: %d, count: %d",
+                      *flag,
+                      count1);
+        count = 0;
       }
     }
-    else {
-      goto _loop;
+#elif __WINDOWS__
+    while (InterlockedCompareExchange(
+            const_cast<LPLONG>(flag), 0, kUseFree) != kUseFree) {
+      ++count;
+      pf_base::util::sleep(0);
+      if (count > 10) {
+        char time_str[256] = {0};
+        pf_base::Log::get_log_timestr(time_str, sizeof(time_str) - 1);
+        ERRORPRINTF("%s[sys.memory] (share::lock) failed", time_str);
+        count = 0;
+      }
     }
+#endif
   __LEAVE_FUNCTION
 }
 
-bool trylock(char &flag, char type) {
+void unlock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
-    uint32_t _lock_times = 0;
-    _loop:
-    if (kUseFree == flag) {
-      flag = type;
-      if (flag != type) {
-        ++_lock_times;
-        pf_base::util::sleep(1);
-        if (_lock_times > 10) {
-          return false;
-        }
-        goto _loop;
-      }
-    } else {
-      ++_lock_times;
-      pf_base::util::sleep(1);
-      if (_lock_times > 10) {
-        return false;
-      }
-      goto _loop;
-    }
-  __LEAVE_FUNCTION
-    return false;
-}
-
-void unlock(char &flag, char type) {
-  __ENTER_FUNCTION
-    USE_PARAM(type);
-    _loop:
-      if (kUseFree == flag) return;
-      flag = kUseFree;
-      if (kUseFree != flag) {
-        pf_base::util::sleep(1);
+    if (kCmdModelRecover == g_cmd_model) return;
 #if __LINUX__
-        printf("[sys.sharememory] (unlock) failed %s, %d, %s", 
-               __FILE__, 
-               __LINE__, 
-               __PRETTY_FUNCTION__);
-        if (lock_times > 100 && lock_time_enable) {
-          lock_times = 0;
-          return;
-        }
-#endif
-        goto _loop;
+    if ((int32_t)(int64_t)((int32_t*)flag) != kUseFree) atomic_dec(flag);
+#elif __WINDOWS__
+    while (InterlockedCompareExchange(
+            const_cast<LPLONG>(flag), kUseFree, 0) != 0) {
+      char time_str[256] = {0};
+      pf_base::Log::get_log_timestr(time_str, sizeof(time_str) - 1);
+      ERRORPRINTF("%s[sys.memory] (share::unlock) failed", time_str);
+      pf_base::util::sleep(0);
+      ++count;
+      if (count > 100) {
+        InterlockedExchange(const_cast<LPLONG>(flag), kUseFree);
+        throw;
       }
+    }
+#endif
   __LEAVE_FUNCTION
 }
 
