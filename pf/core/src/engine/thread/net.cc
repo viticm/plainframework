@@ -24,12 +24,13 @@ bool Net::init(uint16_t connectionmax,
 void Net::run() {
   __ENTER_FUNCTION
     using namespace pf_net;
-    while (isactive()) Manager::loop();
+    if (isactive()) Manager::loop();
   __LEAVE_FUNCTION
 }
 
 void Net::stop() {
   isactive_ = false;
+  Manager::setactive(false);
 }
 
 void Net::quit() {

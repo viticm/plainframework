@@ -105,7 +105,7 @@ void Eyes::tick_forFPS() {
     if (difftime != currenttime) looptime += difftime;
     last_ticktime = currenttime;
     if (looptime > kCalculateFPS) {
-      FPF_ = static_cast<float>((loopcount * 1000) / looptime);
+      FPS_ = static_cast<float>((loopcount * 1000) / looptime);
       looptime = loopcount = 0;
     }
     ++loopcount;
@@ -173,5 +173,5 @@ void Eyes::set_connectioncount(uint32_t count) {
 }
 
 void Eyes::set_fps(float value) {
-  FPF_ = value;
+  FPS_ = value;
 }

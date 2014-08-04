@@ -15,6 +15,7 @@
 
 #define NET_OVER_SERVER_MAX 256
 #define NET_ONESTEP_ACCEPT_DEFAULT 50 //每帧接受新连接的默认值
+#define NET_MANAGER_FRAME 100 //网络帧率，只在epoll下生效
 
 extern bool g_net_stream_usepacket; //true 使用包对象处理 false不使用
 
@@ -33,9 +34,9 @@ class Pool;
 
 namespace manager {
 class Base;
-#if __LINUX__ && defined(_NET_EPOLL) /* { */
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
 class Epoll;
-#elif __WINDOWS__ && defined(_NET_IOCP) /* }{ */
+#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
 class Iocp;
 #else /* }{ */
 class Select;

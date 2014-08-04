@@ -436,6 +436,7 @@ struct share_memory_info_t {
   dbconnector_type_t db_connectortype; //数据库类型 0 odbc 1 mysql 2 sqlserver 3 mongodb
   uint32_t center_data_save_interval;
   uint32_t player_data_save_interval;
+  uint8_t type; //0 center 1 server
   share_memory_info_t();
   ~share_memory_info_t();
 };

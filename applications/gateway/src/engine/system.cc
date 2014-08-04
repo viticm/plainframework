@@ -60,6 +60,7 @@ bool System::init() {
       return false;
     }
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
+    //setconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, true);
     setconfig(
         ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME, 
         SETTING_POINTER->gateway_info_.db_connection_ordbname_);

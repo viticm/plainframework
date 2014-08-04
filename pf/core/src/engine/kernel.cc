@@ -42,6 +42,7 @@ Kernel::Kernel() {
     net_manager_ = NULL;
     performance_thread_ = NULL;
     script_thread_ = NULL;
+    isactive_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -137,6 +138,7 @@ bool Kernel::init() {
 
 void Kernel::run() {
   __ENTER_FUNCTION
+    isactive_ = true;
     //base
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::run) base module");
     run_base();
@@ -160,11 +162,22 @@ void Kernel::run() {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::run) net module");
       run_net();
     }
+    while (isactive_) {
+      uint32_t runtime = TIME_MANAGER_POINTER->get_current_time();
+      loop_handle();
+      uint32_t waittime = 
+        runtime + 
+        static_cast<uint32_t>(1000/ENGINE_KERNEL_FRAME) - 
+        TIME_MANAGER_POINTER->get_current_time();
+      calculate_FPS();
+      if (waittime > 0) pf_base::util::sleep(waittime);
+    }
   __LEAVE_FUNCTION
 }
 
 void Kernel::stop() {
   __ENTER_FUNCTION
+    isactive_ = false;
     //performance
     if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) performance module");
@@ -564,6 +577,35 @@ bool Kernel::init_net_connectionpool() {
     return true;
   __LEAVE_FUNCTION
     return false;
+}
+
+bool Kernel::loop_handle() {
+  __ENTER_FUNCTION
+    bool db_is_usethread = getconfig_boolvalue(ENGINE_CONFIG_DB_RUN_ASTHREAD);
+    if (!db_is_usethread)
+      db_manager_->check_db_connect();
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+void Kernel::calculate_FPS() {
+  __ENTER_FUNCTION
+    static uint32_t last_ticktime = 0;
+    static uint32_t looptime = 0; //时间累计数
+    static uint32_t loopcount = 0;
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t difftime = currenttime - last_ticktime;
+    //计算帧率
+    const uint32_t kCalculateFPS = 1000; //每一秒计算一次
+    if (difftime != currenttime) looptime += difftime;
+    last_ticktime = currenttime;
+    if (looptime > kCalculateFPS) {
+      FPS_ = static_cast<float>((loopcount * 1000) / looptime);
+      looptime = loopcount = 0;
+    }
+    ++loopcount;
+  __LEAVE_FUNCTION
 }
 
 } //namespace pf_engine

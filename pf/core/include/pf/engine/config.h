@@ -13,6 +13,8 @@
 
 #include "pf/base/config.h"
 
+#define ENGINE_KERNEL_FRAME 100 //引擎核心的帧率
+
 /* bool config { */
 #define ENGINE_CONFIG_DB_ISACTIVE 1
 #define ENGINE_CONFIG_NET_ISACTIVE 2

@@ -280,8 +280,9 @@ share_memory_info_t::share_memory_info_t() {
     memset(db_password, '\0', sizeof(db_password));
     db_connectortype = kDBConnectorTypeODBC;
     encrypt_dbpassword = false;
-    world_data_save_interval = 1200000;
-    human_data_save_interval = 900000;
+    center_data_save_interval = 1200000;
+    player_data_save_interval = 900000;
+    type = 0;
   __LEAVE_FUNCTION
 }
 
@@ -1325,6 +1326,8 @@ void Setting::load_share_memory_info_only() {
       share_memory_info_ini.read_uint32("System", "WorldDataSaveInterval");
     share_memory_info_.player_data_save_interval = 
       share_memory_info_ini.read_uint32("System", "HumanDataSaveInterval");
+    share_memory_info_.type = 
+      share_memory_info_ini.read_uint8("System", "Type");
     share_memory_info_.encrypt_dbpassword = 
       share_memory_info_ini.read_bool("System", "EncryptDBPassword");
     SLOW_LOG("setting", 

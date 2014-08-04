@@ -30,12 +30,15 @@ class System : public pf_engine::Kernel,
 
  public:
    bool init();
+   void stop();
 
  public:
    pf_db::Manager *get_dbmanager();
 
  private:
    bool init_setting();
+   bool init_archive();
+   void stop_archive();
 
 };
 

@@ -57,12 +57,15 @@ class PF_API Kernel {
    thread::Net *net_thread_;
    thread::Performance *performance_thread_;
    thread::Script *script_thread_;
+   bool isactive_;
+   uint32_t FPS_; //帧率
 
  protected:
    //子类重载此方法以实现初始化不同类型的网络连接池，
    //引擎默认连接的socket未初始化，只在接受新连接时才初始化，
    //如需服务器启动就初始化可以重写此方法来实现（启动时需要足够的内存）。
    virtual bool init_net_connectionpool();
+   virtual bool loop_handle(); //引擎循环处理的逻辑，受帧率控制
 
  protected:
    bool init_base();
@@ -80,6 +83,9 @@ class PF_API Kernel {
    void stop_net();
    void stop_script();
    void stop_performance();
+
+ private:
+   void calculate_FPS(); //计算帧率
 
 };
 

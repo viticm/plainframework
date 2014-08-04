@@ -75,7 +75,7 @@ int32_t main(int32_t argc, char *argv[]) {
     return 1;
   }
 #endif  
-  ENGINE_SYSTEM_POINTER->run(); //网络线程是来阻塞主线程的，所以不要轻易设置其独立线程模式
+  ENGINE_SYSTEM_POINTER->run(); //网络线程可以阻塞主线程，则主线程的帧率控制无效
   SAFE_DELETE(g_engine_system);
   remove(PROCESS_ID_FILE);
   //engine_kernel.stop();
