@@ -16,7 +16,7 @@ bool GlobalData::load() {
     Assert(db_manager_);
     db_manager_->
       get_internal_query()->
-      parse(kSqlSelectGlobalData, kTableNameGlobalData);
+      parse(kSqlSelectGlobalData, kTableNameGloablData);
     bool result = Interface::load();
     return result;
   __LEAVE_FUNCTION
@@ -46,7 +46,7 @@ bool GlobalData::save(void *source) {
     }
     globaldata->lock(kFlagSelfRead);
     common::db::globaldata_t db_globaldata;
-    common::db::globaldata_t *_db_globaldata = globaldata->data;
+    common::db::globaldata_t *_db_globaldata = &globaldata->data;
     if (NULL == _db_globaldata) {
       Assert(false);
       return false;
@@ -56,8 +56,8 @@ bool GlobalData::save(void *source) {
     globaldata->unlock(kFlagSelfRead);
     db_manager_
       ->get_internal_query()
-      ->parse(kSqlSaveGlobalData, 
-              kTableNameGloablData, 
+      ->parse(common::db::kSqlSaveGlobalData, 
+              common::db::kTableNameGloablData, 
               db_globaldata.poolid, 
               db_globaldata.data);
     bool result = Interface::save(source);

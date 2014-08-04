@@ -31,8 +31,11 @@ class GlobalData : public Interface {
    virtual bool fetch(void *source);
 
  public:
-   void set_serverid(int32_t id);
-   void get_serverid() const;
+   void set_serverid(int16_t id);
+   int16_t get_serverid() const;
+
+protected:
+  int16_t serverid_;
 
 };
 
