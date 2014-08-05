@@ -215,7 +215,7 @@ bool OutputStream::write_uint64(uint64_t value) {
 bool OutputStream::write_string(const char *value) {
   __ENTER_FUNCTION
     uint32_t count = 0;
-    uint32_t length = strlen(value);
+    uint32_t length = static_cast<uint32_t>(strlen(value));
     bool result = false;
     if (!write_uint32(length)) return false;
     count = write(value, length);

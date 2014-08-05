@@ -86,9 +86,9 @@ bool System::init() {
       g_packetfactory_manager = new pf_net::packet::FactoryManager();
     if (!NET_PACKET_FACTORYMANAGER_POINTER) return false;
     NET_PACKET_FACTORYMANAGER_POINTER->set_function_registerfactories(
-        &common::net::registerfactories);
+        common::net::registerfactories);
     NET_PACKET_FACTORYMANAGER_POINTER->set_function_isvalid_packetid(
-        &common::net::isvalid_packetid);
+        common::net::isvalid_packetid);
     uint16_t factorysize = common::net::get_facctorysize();
     NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();

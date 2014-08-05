@@ -1048,7 +1048,7 @@ void Setting::load_login_info() {
 }
 
 void Setting::load_login_info_only() {
-#ifdef _VLOGIN
+#ifdef _LOGIN
   __ENTER_FUNCTION
     pf_file::Ini login_info_ini(LOGIN_INFO_FILE);
     login_info_.id = login_info_ini.read_int16("System", "ID");
@@ -1099,7 +1099,7 @@ void Setting::load_login_info_only() {
 }
 
 void Setting::load_login_info_reload() {
-#ifdef _VLOGIN
+#ifdef _LOGIN
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 
@@ -1120,7 +1120,7 @@ void Setting::load_world_info_only() {
   __ENTER_FUNCTION
     pf_file::Ini world_info_ini(WORLD_INFO_FILE);
     world_info_.id = world_info_ini.read_int16("System", "ID");
-    world_info_.zone_id = world_info_ini.read_int16("System", "ZoneId");
+    world_info_.zone_id = world_info_ini.read_int16("System", "ZoneID");
     world_info_.share_memory_key.guild = 
       world_info_ini.read_uint32("System", "GuildShareMemoryKey");
     world_info_.share_memory_key.mail = 
@@ -1204,8 +1204,8 @@ void Setting::load_gateway_info_only() {
       pf_base::string::safecopy(temp, gateway_info_.db_password_, sizeof(temp));
       memset(gateway_info_.db_password_, 0, sizeof(gateway_info_.db_password_));
       pf_base::string::decrypt(temp, 
-                                      gateway_info_.db_password_, 
-                                      sizeof(gateway_info_.db_password_) - 1);
+                               gateway_info_.db_password_, 
+                               sizeof(gateway_info_.db_password_) - 1);
     }
     gateway_info_ini.readstring("System",
                                 "NetListenIP",
@@ -1279,7 +1279,7 @@ void Setting::load_share_memory_info() {
 }
 
 void Setting::load_share_memory_info_only() {
-#if defined(_PF_SHAREMEMORY)
+#if defined(_SHAREMEMORY)
   __ENTER_FUNCTION
     pf_file::Ini share_memory_info_ini(SHARE_MEMORY_INFO_FILE);
     share_memory_info_.obj_count = 
@@ -1306,12 +1306,9 @@ void Setting::load_share_memory_info_only() {
     share_memory_info_.db_port = 
       share_memory_info_ini.read_uint16("System", "DBPort");
     share_memory_info_ini.readstring("System", 
-                                     "DBName", 
-                                     share_memory_info_.db_name, 
-                                     sizeof(share_memory_info_.db_name) - 1);
-    share_memory_info_ini.readstring(
-        "System", "DBConnectionName", share_memory_info_.db_connection_name, 
-        sizeof(share_memory_info_.db_connection_name) - 1);
+                                     "DBConnectionOrDBName", 
+                                     share_memory_info_.db_connection_ordbname, 
+                                     sizeof(share_memory_info_.db_connection_ordbname) - 1);
     share_memory_info_ini.readstring("System",
                                      "DBUser", 
                                      share_memory_info_.db_user, 
@@ -1320,8 +1317,8 @@ void Setting::load_share_memory_info_only() {
                                      "DBPassword",
                                      share_memory_info_.db_password,
                                      sizeof(share_memory_info_.db_password) - 1);
-    share_memory_info_.db_connectortype = 
-      share_memory_info_ini.read_int8("System", "DBConnectorType");
+    share_memory_info_.db_connectortype = static_cast<dbconnector_type_t>(
+      share_memory_info_ini.read_int8("System", "DBConnectorType"));
     share_memory_info_.center_data_save_interval = 
       share_memory_info_ini.read_uint32("System", "WorldDataSaveInterval");
     share_memory_info_.player_data_save_interval = 
@@ -1330,6 +1327,14 @@ void Setting::load_share_memory_info_only() {
       share_memory_info_ini.read_uint8("System", "Type");
     share_memory_info_.encrypt_dbpassword = 
       share_memory_info_ini.read_bool("System", "EncryptDBPassword");
+    if (share_memory_info_.encrypt_dbpassword) {
+      char temp[DB_PASSWORD_LENGTH] = {0};
+      pf_base::string::safecopy(temp, share_memory_info_.db_password, sizeof(temp));
+      memset(share_memory_info_.db_password, 0, sizeof(share_memory_info_.db_password));
+      pf_base::string::decrypt(temp, 
+                               share_memory_info_.db_password, 
+                               sizeof(share_memory_info_.db_password) - 1);
+    }
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s only ... ok!", 
              SHARE_MEMORY_INFO_FILE);
@@ -1338,7 +1343,7 @@ void Setting::load_share_memory_info_only() {
 }
 
 void Setting::load_share_memory_info_reload() {
-#if defined(_PF_SHAREMEMORY)
+#if defined(_SHAREMEMORY)
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[application] (Setting::load) %s reload ... ok!", 

@@ -3,9 +3,26 @@
 #include "archive/node/logic.h"
 #include "archive/node/logicmanager.h"
 
-int32_t g_cmd_model = 0;
+archive::node::LogicManager *g_archive_nodelogic_manager = NULL;
+
+template <>
+archive::node::LogicManager 
+  *pf_base::Singleton<archive::node::LogicManager>::singleton_ = NULL;
 
 using namespace archive::node;
+
+LogicManager::LogicManager() {
+  memset(logicdata_, 0, sizeof(logicdata_));
+}
+
+LogicManager *LogicManager::getsingleton_pointer() {
+  return singleton_;
+}
+
+LogicManager &LogicManager::getsingleton() {
+  Assert(singleton_);
+  return *singleton_;
+}
 
 void LogicManager::clearlog() {
   __ENTER_FUNCTION
@@ -22,6 +39,7 @@ void LogicManager::clearlog() {
 
 void LogicManager::createlog(uint32_t key) {
   __ENTER_FUNCTION
+    USE_PARAM(key);
 #if __LINUX__
     FILE *fp = fopen("./clearsmu.sh", "a+");
     if (fp) {
@@ -34,6 +52,21 @@ void LogicManager::createlog(uint32_t key) {
   __LEAVE_FUNCTION
 }
 
+void LogicManager::setnode(int32_t index, void *node) {
+  __ENTER_FUNCTION
+    Assert(index >= 0 && index <= ARCHIVE_OBJMAX);
+    logicdata_[index] = node;
+  __LEAVE_FUNCTION
+}
+
+void *LogicManager::getnode(int32_t index) {
+  __ENTER_FUNCTION
+    Assert(index >= 0 && index <= ARCHIVE_OBJMAX);
+    return logicdata_[index];
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
 bool LogicManager::allocate() {
   __ENTER_FUNCTION
     using namespace common::sharememory;
@@ -44,13 +77,16 @@ bool LogicManager::allocate() {
     uint16_t i = 0;
     for (i = 0; i < obj_count; ++i) {
       void *node = NULL;
-      type_t type = data[i].type;
+      type_t type = static_cast<type_t>(data[i].type);
       switch (type) {
         case kTypeGlobal: {
           node = new Logic<globaldata_t>;
-          node->setpool(new pf_sys::memory::share::UnitPool<globaldata_t>);
-          node->setdata(data[i]);
-          node->settype(type);
+          (reinterpret_cast<Logic<globaldata_t> *>(node))
+            ->setpool(new pf_sys::memory::share::UnitPool<globaldata_t>);
+          (reinterpret_cast<Logic<globaldata_t> *>(node))
+            ->setdata(data[i]);
+          (reinterpret_cast<Logic<globaldata_t> *>(node))
+            ->settype(type);
           break;
         }
         default:
@@ -72,7 +108,7 @@ bool LogicManager::init() {
       SETTING_POINTER->share_memory_info_.data;
     uint16_t i = 0;
     for (i = 0; i < obj_count; ++i) {
-      type_t type = data[i].type;
+      type_t type = static_cast<type_t>(data[i].type);
       switch (type) {
         case kTypeGlobal: {
           Logic<globaldata_t>* node = 
@@ -98,7 +134,7 @@ bool LogicManager::release() {
       SETTING_POINTER->share_memory_info_.data;
     uint16_t i = 0;
     for (i = 0; i < obj_count; ++i) {
-      type_t type = data[i].type;
+      type_t type = static_cast<type_t>(data[i].type);
       switch (type) {
         case kTypeGlobal: {
           Logic<globaldata_t>* node = 
@@ -123,7 +159,7 @@ bool LogicManager::tick() {
       SETTING_POINTER->share_memory_info_.data;
     uint16_t i = 0;
     for (i = 0; i < obj_count; ++i) {
-      type_t type = data[i].type;
+      type_t type = static_cast<type_t>(data[i].type);
       switch (type) {
         case kTypeGlobal: {
           Logic<globaldata_t>* node = 

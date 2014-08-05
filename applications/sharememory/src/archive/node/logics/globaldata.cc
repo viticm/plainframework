@@ -7,13 +7,12 @@
 
 //这里是共享内存节点（单元）模板逻辑函数相应实现的文件，没有其自己的命名空间
 
-namespace archive {
-
-namespace node {
+using namespace archive::node;
+using namespace common::sharememory;
 
 /* global { */
 template <>
-bool NodeLogic<globaldata_t>::init_after() {
+bool Logic<globaldata_t>::init_after() {
   __ENTER_FUNCTION
     if (!pool_) {
       Assert(pool_);
@@ -22,13 +21,15 @@ bool NodeLogic<globaldata_t>::init_after() {
     if (g_cmd_model == kCmdModelClearAll) return true;
     final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
     uint32_t poolsize_max = pool_->get_max_size();
+    USE_PARAM(poolsize_max);
+    Assert(1 == poolsize_max);
     uint32_t key = pool_->get_key();
     common::sharememory::globaldata_t *globaldata = pool_->get_obj(0);
     if (!globaldata) {
       Assert(globaldata);
       return false;
     }
-    globaldata->clear();
+    globaldata->headclear();
     int16_t serverid = SETTING_POINTER->get_server_id_by_share_memory_key(key);
     if (ID_INVALID == serverid) {
       AssertEx(false, "check server if open share memory");
@@ -58,7 +59,7 @@ bool NodeLogic<globaldata_t>::init_after() {
 }
 
 template <>
-bool NodeLogic<globaldata_t>::empty() {
+bool Logic<globaldata_t>::empty() {
   __ENTER_FUNCTION
     return true;
   __LEAVE_FUNCTION
@@ -66,8 +67,10 @@ bool NodeLogic<globaldata_t>::empty() {
 }
 
 template <>
-bool NodeLogic<globaldata_t>::fullflush(bool force, bool servercrash) {
+bool Logic<globaldata_t>::fullflush(bool force, bool servercrash) {
   __ENTER_FUNCTION
+    USE_PARAM(servercrash);
+    USE_PARAM(force);
     uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
     uint32_t savetime_interval = 
       SETTING_POINTER->share_memory_info_.center_data_save_interval;
@@ -81,7 +84,7 @@ bool NodeLogic<globaldata_t>::fullflush(bool force, bool servercrash) {
 }
 
 template <>
-bool NodeLogic<globaldata_t>::tickflush() {
+bool Logic<globaldata_t>::tickflush() {
   __ENTER_FUNCTION
     if (!pool_) {
       Assert(pool_);
@@ -89,7 +92,8 @@ bool NodeLogic<globaldata_t>::tickflush() {
     }
     final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
     uint32_t poolsize_max = pool_->get_max_size();
-    Assert(1 == pool_maxsize);
+    USE_PARAM(poolsize_max);
+    Assert(1 == poolsize_max);
     uint32_t key = pool_->get_key();
     common::sharememory::globaldata_t *globaldata = pool_->get_obj(0);
     if (!globaldata) {
@@ -105,9 +109,9 @@ bool NodeLogic<globaldata_t>::tickflush() {
     archive::data::GlobalData 
       globaldata_obj(ENGINE_SYSTEM_POINTER->get_dbmanager());
     globaldata_obj.set_serverid(serverid);
-    common::db::globaldata_t db_globaldata;
+    common::db::globaldata_t db_globaldata = globaldata->data;
     int32_t result = 0;
-    if (globaldata_obj.save(&globaldata.data)) {
+    if (globaldata_obj.save(&db_globaldata.data)) {
       globaldata_obj.fetch(&result);
     } else {
       Assert(false);
@@ -116,14 +120,10 @@ bool NodeLogic<globaldata_t>::tickflush() {
              "[archive.node.logic] (GlobalData::tickflush) success!"
              " key: %d, poolid: %d, data: %d", 
              key, 
-             globaldata->data.poolid, 
-             globaldata->data.data);
+             db_globaldata.poolid, 
+             db_globaldata.data);
     return true;
   __LEAVE_FUNCTION
     return false;
 }
 /* } global */
-
-} //namespace node
-
-} //namespace archive

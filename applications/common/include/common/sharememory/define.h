@@ -15,23 +15,11 @@
 #include "common/db/define.h"
 #include "pf/sys/memory/share.h"
 
-extern bool g_commond_exit = false;
+extern bool g_commond_exit;
 
 namespace common {
 
 namespace sharememory { //共享内存存储数据结构体
-
-//-- static define
-extern const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
-extern const uint8_t kObjMax = 20;
-
-typedef struct dataheader_struct {
-  uint64_t key;
-  uint32_t size;
-  uint32_t version;
-  dataheader_struct();
-  ~dataheader_struct();
-} dataheader_t;
 
 typedef enum {
   kSmptShareMemory,
@@ -119,6 +107,9 @@ struct data_template {
   }
   void init() {
     data.clear();
+  }
+  void headclear() {
+    head.cleanup();
   }
 };
 

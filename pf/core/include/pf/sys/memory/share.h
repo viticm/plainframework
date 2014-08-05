@@ -14,16 +14,16 @@
 #include "pf/sys/memory/config.h"
 #include "pf/base/log.h"
 
+#define SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX 5000
+#define SYS_MEMORY_SHARE_OBJECT_MAX 20
+
 namespace pf_sys {
 
 namespace memory {
 
 namespace share {
 
-//-- static define
-extern const uint32_t kManagerUnitDataMax = 5000; //如果不需要引入外部，就不要使用宏
-//extern const uint8_t kObjMax = 20;
-struct dataheader_struct {
+typedef struct dataheader_struct {
   uint64_t key;
   uint32_t size;
   uint32_t version;
@@ -95,7 +95,7 @@ template <typename T> //template class must be in one file
 class UnitManager {
  
  public:
-   T* data_[kManagerUnitDataMax];
+   T* data_[SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX];
    int32_t count_;
 
  public:

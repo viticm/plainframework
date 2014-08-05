@@ -37,8 +37,9 @@ bool GlobalData::save(void *source) {
     if (!db_manager_) return false;
     UnitPool<globaldata_t> *pool = 
       static_cast<UnitPool<globaldata_t> *>(source);
-    uint32_t pool_maxsize = pool->get_max_size();
-    Assert(pool_maxsize == 1);
+    uint32_t poolsize_max = pool->get_max_size();
+    USE_PARAM(poolsize_max);
+    Assert(poolsize_max == 1);
     globaldata_t *globaldata = pool->get_obj(0);
     if (!globaldata) {
       Assert(false);

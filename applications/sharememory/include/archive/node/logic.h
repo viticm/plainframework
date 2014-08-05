@@ -37,7 +37,7 @@ class Logic {
  public:
    bool init(int32_t sizemax) {
      pool_->init(sizemax, 
-                 headerdata_.key, 
+                 data_.key, 
                  pf_sys::memory::share::kSmptShareMemory);
      pool_->set_head_version(0);
      last_checktime_ = TIME_MANAGER_POINTER->get_current_time();
@@ -77,10 +77,10 @@ class Logic {
    bool tickflush();
 
  public:
-   void setdata(common::share_memory_key_data_t &data) {
+   void setdata(common::share_memory_data_t &data) {
      data_ = data;
    }
-   common::share_memory_key_data_t getdata() const {
+   common::share_memory_data_t getdata() const {
      return data_;
    }
    void settype(common::sharememory::type_t type) {
@@ -98,7 +98,7 @@ class Logic {
 
  private:
    pf_sys::memory::share::UnitPool<T> *pool_;
-   common::share_memory_key_data_t data_;
+   common::share_memory_data_t data_;
    common::sharememory::type_t type_;
    uint32_t final_savetime_;
    bool isready_;

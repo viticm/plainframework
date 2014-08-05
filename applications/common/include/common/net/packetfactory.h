@@ -17,8 +17,8 @@ namespace common {
 
 namespace net {
 
-bool registerfactories();
-bool isvalid_packetid(uint16_t id);
+bool __stdcall registerfactories();
+bool __stdcall isvalid_packetid(uint16_t id);
 uint16_t get_facctorysize();
 
 }; //namespace net

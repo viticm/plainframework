@@ -21,8 +21,8 @@ namespace node {
 class LogicManager : public pf_base::Singleton<LogicManager> {
 
  public:
-   NodeLogicManager();
-   ~NodeLogicManager();
+   LogicManager();
+   ~LogicManager();
 
  public:
    static LogicManager *getsingleton_pointer();

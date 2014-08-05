@@ -47,8 +47,7 @@ bool Ini::open(const char *file_name) {
     fp = fopen(file_name_, "rb");
     if (!fp) {
       data_length_ = -1;
-    }
-    else {
+    } else {
       fseek(fp, 0L, SEEK_END);
       data_length_ = ftell(fp);
       fclose(fp);

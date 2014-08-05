@@ -18,6 +18,6 @@ typedef enum {
   kCmdModelLoadDump = 2,
   kCmdModelRecover = 3,
 } cmd_model_t; //命令行模式
-extern int32_t g_cmd_model;
+PF_API extern int32_t g_cmd_model;
 
 #endif //PF_SYS_MEMORY_CONFIG_H_

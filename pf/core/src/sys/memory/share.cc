@@ -10,6 +10,8 @@
 #endif
 #include "pf/sys/memory/share.h"
 
+int32_t g_cmd_model = 0;
+
 namespace pf_sys {
 
 namespace memory { 
@@ -320,6 +322,7 @@ uint32_t Base::get_head_version() {
 
 void lock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
+    USE_PARAM(type);
     if (kCmdModelRecover == g_cmd_model) return;
     int32_t count = 0;
 #if __LINUX__
@@ -355,10 +358,12 @@ void lock(atword_t *flag, int8_t type) {
 
 void unlock(atword_t *flag, int8_t type) {
   __ENTER_FUNCTION
+    USE_PARAM(type);
     if (kCmdModelRecover == g_cmd_model) return;
 #if __LINUX__
     if ((int32_t)(int64_t)((int32_t*)flag) != kUseFree) atomic_dec(flag);
 #elif __WINDOWS__
+    uint32_t count = 0;
     while (InterlockedCompareExchange(
             const_cast<LPLONG>(flag), kUseFree, 0) != 0) {
       char time_str[256] = {0};

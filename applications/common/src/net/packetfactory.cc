@@ -58,7 +58,7 @@ uint16_t get_facctorysize() {
     return size;
 }
 
-bool registerfactories() {
+bool __stdcall registerfactories() {
   __ENTER_FUNCTION
     using namespace common::net::packet;
     SLOW_LOG(NET_MODULENAME, "[common.net] (registerfactories) start");
@@ -99,7 +99,7 @@ bool registerfactories() {
     return false;
 }
 
-bool isvalid_packetid(uint16_t id) {
+bool __stdcall isvalid_packetid(uint16_t id) {
   __ENTER_FUNCTION
     bool result = true;
     using namespace common::define::net::packet::id;
