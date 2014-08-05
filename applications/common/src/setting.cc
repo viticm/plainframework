@@ -602,7 +602,7 @@ void Setting::load_config_info_only() { //this params just read once
     config_info_.localization.language = 
       config_info_ini.read_uint8("Localization", "Language");
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              CONFIG_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1034,7 +1034,7 @@ void Setting::load_config_info_reload() { //this params can reload again
     }
     //loop read --
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              CONFIG_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1092,7 +1092,7 @@ void Setting::load_login_info_only() {
     login_info_.notify_safe_sign = 
       login_info_ini.read_bool("System", "NotifySafeSign");
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              LOGIN_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1102,7 +1102,7 @@ void Setting::load_login_info_reload() {
 #ifdef _LOGIN
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              LOGIN_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1138,7 +1138,7 @@ void Setting::load_world_info_only() {
     world_info_.enable_share_memory = 
       world_info_ini.read_bool("System", "EnableShareMemory");
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              WORLD_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1148,7 +1148,7 @@ void Setting::load_world_info_reload() {
 #ifndef _GATEWAY
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              WORLD_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1256,19 +1256,17 @@ void Setting::load_gateway_info_only() {
     }
     gateway_info_.begin_use();
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              GATEWAY_INFO_FILE);
   __LEAVE_FUNCTION
 }
 
 void Setting::load_gateway_info_reload() {
-#if defined(_GATEWAY)
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              GATEWAY_INFO_FILE);
   __LEAVE_FUNCTION
-#endif
 }
 
 void Setting::load_share_memory_info() {
@@ -1305,10 +1303,11 @@ void Setting::load_share_memory_info_only() {
                                      sizeof(share_memory_info_.db_ip) - 1);
     share_memory_info_.db_port = 
       share_memory_info_ini.read_uint16("System", "DBPort");
-    share_memory_info_ini.readstring("System", 
-                                     "DBConnectionOrDBName", 
-                                     share_memory_info_.db_connection_ordbname, 
-                                     sizeof(share_memory_info_.db_connection_ordbname) - 1);
+    share_memory_info_ini.readstring(
+        "System", 
+        "DBConnectionOrDBName", 
+        share_memory_info_.db_connection_ordbname, 
+        sizeof(share_memory_info_.db_connection_ordbname) - 1);
     share_memory_info_ini.readstring("System",
                                      "DBUser", 
                                      share_memory_info_.db_user, 
@@ -1336,7 +1335,7 @@ void Setting::load_share_memory_info_only() {
                                sizeof(share_memory_info_.db_password) - 1);
     }
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              SHARE_MEMORY_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1346,7 +1345,7 @@ void Setting::load_share_memory_info_reload() {
 #if defined(_SHAREMEMORY)
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              SHARE_MEMORY_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1377,7 +1376,7 @@ void Setting::load_machine_info_only() {
                                     "MachineID");
     }
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              MACHINE_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1387,7 +1386,7 @@ void Setting::load_machine_info_reload() {
 #ifdef _SERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              MACHINE_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1454,7 +1453,7 @@ void Setting::load_server_info_only() {
       server_info_.hash_server[server_id] = static_cast<int16_t>(i);
     }
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              SERVER_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1464,7 +1463,7 @@ void Setting::load_server_info_reload() {
 #ifdef _SERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              SERVER_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1523,7 +1522,7 @@ void Setting::load_scene_info_only() {
       scene_info_.scene_hash[scene_id] = static_cast<int16_t>(i);
     }
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s only ... ok!", 
+             "[common] (Setting::load) %s only ... ok!", 
              SCENE_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
@@ -1533,7 +1532,7 @@ void Setting::load_scene_info_reload() {
 #if _SERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
-             "[application] (Setting::load) %s reload ... ok!", 
+             "[common] (Setting::load) %s reload ... ok!", 
              SCENE_INFO_FILE);
   __LEAVE_FUNCTION
 #endif

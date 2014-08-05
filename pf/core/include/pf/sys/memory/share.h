@@ -102,7 +102,7 @@ class UnitManager {
    UnitManager() {
      __ENTER_FUNCTION
        count_ = 0;
-       memset(data_, 0, sizeof(T*) * kManagerUnitDataMax);
+       memset(data_, 0, sizeof(T *) * SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX);
      __LEAVE_FUNCTION
    };
    ~UnitManager() {
@@ -116,8 +116,8 @@ class UnitManager {
    bool heartbeat(uint32_t time = 0);
    bool add_data(T *data) {
      __ENTER_FUNCTION
-       Assert(count_ < kManagerUnitDataMax);
-       if (count_ >= kManagerUnitDataMax) return false;
+       Assert(count_ < SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX);
+       if (count_ >= SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX) return false;
        data_[count_] = data;
        ++count_;
        data_->set_id(count_);

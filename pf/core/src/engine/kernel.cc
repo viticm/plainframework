@@ -17,7 +17,7 @@ Kernel::Kernel() {
     config_string_.init(100);
     config_bool_.init(100);
     registerconfig(ENGINE_CONFIG_DB_ISACTIVE, false);
-    registerconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
+    registerconfig(ENGINE_CONFIG_NET_ISACTIVE, false);
     registerconfig(ENGINE_CONFIG_SCRIPT_ISACTIVE, false);
     registerconfig(ENGINE_CONFIG_PERFORMANCE_ISACTIVE, false);
     registerconfig(ENGINE_CONFIG_DB_CONNECTOR_TYPE, kDBConnectorTypeODBC);

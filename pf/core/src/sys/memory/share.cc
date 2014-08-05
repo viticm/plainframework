@@ -46,7 +46,7 @@ HANDLE create(uint32_t key, uint32_t size) {
     SLOW_ERRORLOG(
         "sharememory",
         "[sys.sharememory] (api::create) handle = %d," 
-        " key = %d ,error: %d",
+        " key = %d, error: %d",
         handle, 
         key, 
         errno);
@@ -176,16 +176,15 @@ bool Base::create(uint32_t key, uint32_t size) {
       SLOW_LOG(
           "sharememory", 
           "[sys.sharememory] (Base::create)"
-          " success! handle = %d ,key = %d",
+          " success! handle = %d, key = %d",
           handle_, 
           key);
       return true;
-    }
-    else {
+    } else {
       SLOW_ERRORLOG(
           "sharememory", 
           "[sys.sharememory] (Base::create)"
-          "map failed! handle = %d ,key = %"PRIu64"", 
+          "map failed! handle = %d, key = %d", 
           handle_, 
           key);
       return false;
@@ -234,14 +233,13 @@ bool Base::attach(uint32_t key, uint32_t size) {
       size_ = size;
       SLOW_LOG(
           "sharememory", 
-          "[sys.sharememory] (Base::attach) success, key = %"PRIu64"", 
+          "[sys.sharememory] (Base::attach) success, key = %d", 
           key); 
       return true;
-    }
-    else {
+    } else {
       SLOW_ERRORLOG(
           "sharememory", 
-          "[sys.sharememory] (Base::attach) map failed, key = %"PRIu64"", 
+          "[sys.sharememory] (Base::attach) map failed, key = %d", 
           key); 
       return false;
     }

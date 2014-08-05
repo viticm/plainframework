@@ -24,7 +24,7 @@ void head_struct::cleanup() {
     id = -1;
     playerid = -1;
     usestatus = kUseStatusFree;
-    flag = kFlagFree;
+    initword(flag, kFlagFree);
     savetime = 0;
   __LEAVE_FUNCTION
 }

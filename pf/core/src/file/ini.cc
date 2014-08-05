@@ -63,8 +63,7 @@ bool Ini::open(const char *file_name) {
       fclose(fp);
       init_section();
       result = true;
-    }
-    else {
+    } else {
       data_length_ = 1;
       data_info_ = 
         static_cast<char*>(malloc(static_cast<size_t>(data_length_)));
@@ -137,7 +136,7 @@ void Ini::init_section() { //初始化节点数据
     section_number_ = 0;
     int32_t i;
     for (i = 0; i < data_length_; ++i) {
-      if('[' == data_info_[i] && ('\n' == data_info_[i - 1] || 0 == i)) {
+      if('[' == data_info_[i] && (0 == i || '\n' == data_info_[i - 1])) {
         ++section_number_;
       }
     }
@@ -145,7 +144,7 @@ void Ini::init_section() { //初始化节点数据
     if (section_number_ > 0) section_indexlist_ = new int32_t[section_number_];
     int32_t n = 0;
     for (i = 0; i < data_length_; ++i) {
-      if('[' == data_info_[i] && ('\n' == data_info_[i - 1] || 0 == i)) {
+      if('[' == data_info_[i] && (0 == i || '\n' == data_info_[i - 1])) {
         section_indexlist_[n] = i + 1;
         ++n;
       }
@@ -157,7 +156,6 @@ int32_t Ini::find_section_index(const char *section) {
   __ENTER_FUNCTION
     int32_t i;
     int32_t index = -1;
-
     for (i = 0; i < section_number_; ++i) {
       char *find_str = readstring(section_indexlist_[i]);
       if (0 == strcmp(section, find_str)) {

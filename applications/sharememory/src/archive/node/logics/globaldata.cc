@@ -7,7 +7,10 @@
 
 //这里是共享内存节点（单元）模板逻辑函数相应实现的文件，没有其自己的命名空间
 
-using namespace archive::node;
+namespace archive {
+
+namespace node {
+
 using namespace common::sharememory;
 
 /* global { */
@@ -24,21 +27,23 @@ bool Logic<globaldata_t>::init_after() {
     USE_PARAM(poolsize_max);
     Assert(1 == poolsize_max);
     uint32_t key = pool_->get_key();
-    common::sharememory::globaldata_t *globaldata = pool_->get_obj(0);
+    globaldata_t *globaldata = pool_->get_obj(0);
     if (!globaldata) {
       Assert(globaldata);
       return false;
     }
     globaldata->headclear();
+    /**
     int16_t serverid = SETTING_POINTER->get_server_id_by_share_memory_key(key);
     if (ID_INVALID == serverid) {
       AssertEx(false, "check server if open share memory");
     }
+    **/
     if (!ENGINE_SYSTEM_POINTER || !ENGINE_SYSTEM_POINTER->get_dbmanager())
       return false;
     archive::data::GlobalData 
       globaldata_obj(ENGINE_SYSTEM_POINTER->get_dbmanager());
-    globaldata_obj.set_serverid(serverid);
+    globaldata_obj.set_serverid(0); //serverid);
     common::db::globaldata_t db_globaldata;
     if (globaldata_obj.load()) {
       globaldata_obj.fetch(&db_globaldata);
@@ -127,3 +132,7 @@ bool Logic<globaldata_t>::tickflush() {
     return false;
 }
 /* } global */
+
+} //namespace node
+
+} //namespace archive
