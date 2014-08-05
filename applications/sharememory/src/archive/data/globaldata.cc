@@ -39,7 +39,7 @@ bool GlobalData::save(void *source) {
       static_cast<UnitPool<globaldata_t> *>(source);
     uint32_t poolsize_max = pool->get_max_size();
     USE_PARAM(poolsize_max);
-    Assert(poolsize_max == 1);
+    Assert(1 == poolsize_max);
     globaldata_t *globaldata = pool->get_obj(0);
     if (!globaldata) {
       Assert(false);

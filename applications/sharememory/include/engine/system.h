@@ -32,6 +32,9 @@ class System : public pf_engine::Kernel,
    bool init();
    void stop();
 
+ protected:
+   virtual bool loop_handle();
+
  public:
    pf_db::Manager *get_dbmanager();
 

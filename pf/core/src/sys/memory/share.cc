@@ -44,8 +44,8 @@ HANDLE create(uint32_t key, uint32_t size) {
     int32_t handle;
     handle = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);
     SLOW_ERRORLOG(
-        "sharememory",
-        "[sys.sharememory] (api::create) handle = %d," 
+        APPLICATION_NAME,
+        "[sys.memory.share] (api::create) handle = %d," 
         " key = %d, error: %d",
         handle, 
         key, 
@@ -77,8 +77,8 @@ HANDLE open(uint32_t key, uint32_t size) {
     int32_t handle;
     handle = shmget(key, size, 0);
     SLOW_ERRORLOG(
-        "sharememory", 
-        "[sys.sharememory] (api::open) handle = %d,"
+        APPLICATION_NAME, 
+        "[sys.memory.share] (api::open) handle = %d,"
         " key = %d, error: %d", 
         handle, 
         key, 
@@ -160,8 +160,8 @@ bool Base::create(uint32_t key, uint32_t size) {
     handle_ = api::create(key, size);
     if (HANDLE_INVALID == handle_) {
       SLOW_ERRORLOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::create)"
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::create)"
           " failed! handle = %d, key = %d",
           handle_, 
           key);
@@ -174,16 +174,16 @@ bool Base::create(uint32_t key, uint32_t size) {
       (reinterpret_cast<dataheader_struct *>(header_))->size = size;
       size_ = size;
       SLOW_LOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::create)"
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::create)"
           " success! handle = %d, key = %d",
           handle_, 
           key);
       return true;
     } else {
       SLOW_ERRORLOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::create)"
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::create)"
           "map failed! handle = %d, key = %d", 
           handle_, 
           key);
@@ -213,15 +213,15 @@ bool Base::attach(uint32_t key, uint32_t size) {
     if (kCmdModelClearAll == cmd_model_) {
       destory();
       SLOW_LOG(
-          "sharememory",
-          "[sys.sharememory] (Base::attach) close memory, key = %d", 
+          APPLICATION_NAME,
+          "[sys.memory.share] (Base::attach) close memory, key = %d", 
           key);
       return false;
     }
     if (HANDLE_INVALID == handle_) {
       SLOW_ERRORLOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::attach) failed, key = %d", 
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::attach) failed, key = %d", 
           key); 
       return false;
     }
@@ -232,14 +232,14 @@ bool Base::attach(uint32_t key, uint32_t size) {
       Assert((reinterpret_cast<dataheader_struct *>(header_))->size == size);
       size_ = size;
       SLOW_LOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::attach) success, key = %d", 
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::attach) success, key = %d", 
           key); 
       return true;
     } else {
       SLOW_ERRORLOG(
-          "sharememory", 
-          "[sys.sharememory] (Base::attach) map failed, key = %d", 
+          APPLICATION_NAME, 
+          "[sys.memory.share] (Base::attach) map failed, key = %d", 
           key); 
       return false;
     }

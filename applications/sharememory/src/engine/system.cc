@@ -72,8 +72,6 @@ bool System::init() {
     setconfig(
         ENGINE_CONFIG_DB_CONNECTOR_TYPE,
         SETTING_POINTER->share_memory_info_.db_connectortype);
-    SLOW_LOG(ENGINE_MODULENAME, 
-             "[engine] (System::init) setting module success");
     if (!Kernel::init()) return false;
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (System::init) start archive module");
     if (!init_archive()) {
@@ -123,6 +121,16 @@ void System::stop_archive() {
     if (!ARCHIVE_NODELOGIC_MANAGER_POINTER) return;
     ARCHIVE_NODELOGIC_MANAGER_POINTER->release();
   __LEAVE_FUNCTION
+}
+
+bool System::loop_handle() {
+  __ENTER_FUNCTION
+    if (!Kernel::loop_handle()) return false; //核心优先
+    if (ARCHIVE_NODELOGIC_MANAGER_POINTER)
+      ARCHIVE_NODELOGIC_MANAGER_POINTER->tick();
+    return true;
+  __LEAVE_FUNCTION
+    return false;
 }
 
 } //namespace engine

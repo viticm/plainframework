@@ -95,6 +95,8 @@ bool LogicManager::allocate() {
       setnode(i, node);
       createlog(data[i].key);
     }
+    SLOW_LOG(APPLICATION_NAME, 
+             "[archive.node] (LogicManager::allocate) success");
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -121,6 +123,8 @@ bool LogicManager::init() {
           break;
       }
     }
+    SLOW_LOG(APPLICATION_NAME, 
+             "[archive.node] (LogicManager::init) success");
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -146,6 +150,8 @@ bool LogicManager::release() {
           break;
       }
     }
+    SLOW_LOG(APPLICATION_NAME, 
+             "[archive.node] (LogicManager::release) success");
     return true;
   __LEAVE_FUNCTION
     return false;

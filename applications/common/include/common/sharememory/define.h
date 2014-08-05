@@ -35,7 +35,7 @@ typedef enum {
 } usestatus_t; //共享内存的使用状态
 
 typedef enum {
-  kFlagFree = 0x00, //共享内存空闲
+  kFlagFree = -1, //共享内存空闲 -- 旧的为0x00，因为采取的新的锁方式，所以改为-1
   kFlagSelfRead = 0x01, //共享内存自己读取
   kFlagSelfWrite = 0x02, //共享内存自己写
   kFlagServerRead = 0x03, //游戏服务器读

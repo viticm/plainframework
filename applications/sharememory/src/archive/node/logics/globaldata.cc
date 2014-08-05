@@ -95,7 +95,13 @@ bool Logic<globaldata_t>::tickflush() {
       Assert(pool_);
       return false;
     }
-    final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
+    if (!SETTING_POINTER) return false;
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    if (fabs(static_cast<double>(currenttime - final_savetime_)) < 
+        SETTING_POINTER->share_memory_info_.center_data_save_interval) {
+      return true; //如果时间不到保存，则直接返回
+    }
+    final_savetime_ = currenttime;
     uint32_t poolsize_max = pool_->get_max_size();
     USE_PARAM(poolsize_max);
     Assert(1 == poolsize_max);
@@ -105,18 +111,20 @@ bool Logic<globaldata_t>::tickflush() {
       Assert(globaldata);
       return false;
     }
+    /**
     int16_t serverid = SETTING_POINTER->get_server_id_by_share_memory_key(key);
     if (ID_INVALID == serverid) {
       AssertEx(false, "check server if open share memory");
     }
+    **/
     if (!ENGINE_SYSTEM_POINTER || !ENGINE_SYSTEM_POINTER->get_dbmanager())
       return false;
     archive::data::GlobalData 
       globaldata_obj(ENGINE_SYSTEM_POINTER->get_dbmanager());
-    globaldata_obj.set_serverid(serverid);
+    globaldata_obj.set_serverid(0); //serverid);
     common::db::globaldata_t db_globaldata = globaldata->data;
     int32_t result = 0;
-    if (globaldata_obj.save(&db_globaldata.data)) {
+    if (globaldata_obj.save(pool_)) {
       globaldata_obj.fetch(&result);
     } else {
       Assert(false);
