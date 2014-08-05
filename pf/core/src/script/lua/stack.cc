@@ -53,7 +53,7 @@ bool Stack::stepenter(const char *functionname, int32_t scriptid) {
     using namespace pf_base;
     if (currentstep_ >= SCRIPT_LUA_STACK_STEP_MAX) {
       SLOW_ERRORLOG(SCRIPT_MODULENAME,
-                    "[script][lua] (Stack::stepenter)"
+                    "[script.lua] (Stack::stepenter)"
                     " out of stack: %s %d",
                     functionname,
                     scriptid);
@@ -72,8 +72,8 @@ bool Stack::stepenter(const char *functionname, int32_t scriptid) {
 bool Stack::stepleave() {
   __ENTER_FUNCTION
     if (currentstep_ <= 0) {
-      SLOW_ERRORLOG("luaerror",
-                    "[script][lua] (Stack::stepleave) low stack");
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                    "[script.lua] (Stack::stepleave) low stack");
       return false;
     }
     --currentstep_;
