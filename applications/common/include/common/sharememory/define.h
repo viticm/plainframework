@@ -69,7 +69,7 @@ typedef struct head_struct {
   uint32_t poolid;
   int32_t id;
   int32_t usestatus;
-  char flag;
+  atword_t flag;
   int16_t playerid;
   uint32_t savetime;
   head_struct();
