@@ -45,7 +45,7 @@ class PF_API Base {
    ~Base();
 
  public:
-   bool init(); //初始化，主要是socket
+   virtual bool init(); //初始化，主要是socket
 
  public:
    virtual bool processinput();
@@ -86,6 +86,8 @@ class PF_API Base {
    uint8_t get_execute_count_pretick() const;
    void set_execute_count_pretick(uint8_t count);
    bool isinit() const;
+   void setstatus(uint32_t status);
+   uint32_t getstatus() const;
 
  public:
    uint32_t get_receive_bytes(); //获取流中接收的字节数，获取一次则重新计数
@@ -95,11 +97,12 @@ class PF_API Base {
    int16_t id_;
    int16_t userid_;
    int16_t managerid_;
-   socket::Base* socket_;
-   socket::InputStream* socket_inputstream_;
-   socket::OutputStream* socket_outputstream_;
+   socket::Base *socket_;
+   socket::InputStream *socket_inputstream_;
+   socket::OutputStream *socket_outputstream_;
    int8_t packetindex_;
    uint8_t execute_count_pretick_;
+   uint32_t status_;
 
  private:
    bool isempty_;

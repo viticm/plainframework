@@ -26,7 +26,7 @@ class PF_API Server : public Base {
    ~Server();
 
  public:
-   bool init();
+   virtual bool init();
    virtual bool processinput();
    virtual bool processoutput();
    virtual bool processcommand(bool option = true);
@@ -39,12 +39,8 @@ class PF_API Server : public Base {
    virtual bool isplayer();
    virtual bool islogin();
    virtual bool isbilling();
-   void setstatus(uint32_t status);
    virtual bool isvalid();
-   virtual bool sendpacket(packet::Base* packet);
-
- private:
-   uint32_t status_;
+   virtual bool sendpacket(packet::Base *packet);
 
 };
 

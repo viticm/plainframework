@@ -5,12 +5,13 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/08/06 10:24
- * @uses your description
+ * @date 2014/08/06 10:22
+ * @uses the application config
  */
-#ifndef CONNECTION_CONFIG_H_
-#define CONNECTION_CONFIG_H_
+#ifndef APPLICATION_CONFIG_H_
+#define APPLICATION_CONFIG_H_
 
-#include "application/config.h"
+#include "common/config.h"
+#define _APPLICATION_NAME "login"
 
-#endif //CONNECTION_CONFIG_H_
+#endif //APPLICATION_CONFIG_H_

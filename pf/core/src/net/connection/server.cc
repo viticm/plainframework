@@ -80,10 +80,6 @@ bool Server::islogin() {
   return false;
 }
 
-void Server::setstatus(uint32_t status) {
-  status_ = status;
-}
-
 bool Server::isvalid() {
   __ENTER_FUNCTION
     bool result = false;
@@ -93,7 +89,7 @@ bool Server::isvalid() {
     return false;
 }
 
-bool Server::sendpacket(packet::Base* packet) {
+bool Server::sendpacket(packet::Base *packet) {
   __ENTER_FUNCTION
     bool result = false;
     result = Base::sendpacket(packet);

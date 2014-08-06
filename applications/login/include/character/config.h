@@ -5,12 +5,13 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/08/06 10:24
- * @uses your description
+ * @date 2014/08/06 11:28
+ * @uses character config file
  */
-#ifndef CONNECTION_CONFIG_H_
-#define CONNECTION_CONFIG_H_
+#ifndef CHARACTER_CONFIG_H_
+#define CHARACTER_CONFIG_H_
 
 #include "application/config.h"
+#include "common/define/macros.h"
 
-#endif //CONNECTION_CONFIG_H_
+#endif //CHARACTER_CONFIG_H_

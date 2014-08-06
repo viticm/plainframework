@@ -372,6 +372,14 @@ bool Base::isinit() const {
   return isinit_;
 }
 
+void Base::setstatus(uint32_t status) {
+  status_ = status;
+}
+
+uint32_t Base::getstatus() const {
+  return status_;
+}
+
 } //namespace connection
 
 } //namespace pf_net
