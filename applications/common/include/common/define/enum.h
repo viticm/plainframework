@@ -12,7 +12,10 @@
 #define COMMON_DEFINE_ENUM_H_
 
 typedef enum {
-  kPlayerStatusLoginProcessTurn, //登陆排队中
+  kPlayerStatusLoginProcessTurn = 1, //登陆排队中
+  kPlayerStatusLoginConnect, //登陆连接中
+  kPlayerStatusLoginServerReady, //登陆服务器已准备
+  kPlayerStatusLoginNoram, //登陆正常
 } playerstatus_t;
 
 #endif //COMMON_DEFINE_ENUM_H_

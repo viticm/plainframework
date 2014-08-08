@@ -26,11 +26,4 @@ typedef enum {
   kPacketFlagRemove,
 } packetflag_enum;
 
-typedef enum {
-  kConnectionStatusGatewayEmpty = 400,
-  kConnectionStatusGatewayConnect,
-  kConnectionStatusCenterConnect,
-  kConnectionStatusCenterNormal,
-} connection_status_enum;
-
 #endif //PF_NET_CONNECTION_CONFIG_H_

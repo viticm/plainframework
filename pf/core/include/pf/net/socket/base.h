@@ -26,7 +26,7 @@ class PF_API Base {
 
  public:
    int32_t socketid_;
-   char host_[IP_SIZE];
+   char host_[IP_SIZE]; //两层含义，连接时则为目的IP，接受时为客户IP
    uint16_t port_;
 
  public: //socket base operate functions
@@ -64,7 +64,7 @@ class PF_API Base {
    uint32_t getsend_buffersize() const;
    bool setsend_buffersize(uint32_t size);
    uint16_t getport() const;
-   uint64_t getu64host() const;
+   uint64_t getuint64host() const;
    bool isvalid() const;
    int32_t getid() const;
 

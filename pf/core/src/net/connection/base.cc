@@ -74,13 +74,11 @@ bool Base::processinput() {
                       fillresult,
                       errormessage);
         result = false;
-      }
-      else {
+      } else {
         result = true;
         receive_bytes_ += static_cast<uint32_t>(fillresult); //网络流量
       }
-    }
-    catch(...) {
+    } catch(...) {
       SaveErrorLog();
     }
     return result;
@@ -107,13 +105,11 @@ bool Base::processoutput() {
                       flushresult,
                       errormessage);
         result = false;
-      }
-      else {
+      } else {
         result = true;
         send_bytes_ += static_cast<uint32_t>(flushresult);
       }
-    }
-    catch(...) {
+    } catch(...) {
       SaveErrorLog();
     }
     return result;
@@ -181,47 +177,38 @@ bool Base::processcommand(bool option) {
             resetkick();
             try {
               executestatus = packet->execute(this);
-            }
-            catch(...) {
+            } catch(...) {
               SaveErrorLog();
               executestatus = kPacketExecuteStatusError;
             }
             if (kPacketExecuteStatusError == executestatus) {
               if (packet) g_packetfactory_manager->removepacket(packet);
               return false;
-            }
-            else if (kPacketExecuteStatusBreak == executestatus) {
+            } else if (kPacketExecuteStatusBreak == executestatus) {
               if (packet) g_packetfactory_manager->removepacket(packet);
               break;
-            }
-            else if (kPacketExecuteStatusContinue == executestatus) {
+            } else if (kPacketExecuteStatusContinue == executestatus) {
               //continue read last packet
-            }
-            else if (kPacketExecuteStatusNotRemove == executestatus) {
+            } else if (kPacketExecuteStatusNotRemove == executestatus) {
               needremove = false;
-            }
-            else if (kPacketExecuteStatusNotRemoveError == executestatus) {
+            } else if (kPacketExecuteStatusNotRemoveError == executestatus) {
               return false;
-            }
-            else {
+            } else {
               //unknown status
             }
-          }
-          catch(...) {
+          } catch(...) {
             SaveErrorLog();
             exception = true;
           }
           if (packet && needremove) 
             g_packetfactory_manager->removepacket(packet);
           if (exception) return false;
-        }
-        catch(...) {
+        } catch(...) {
           SaveErrorLog();
           return false;
         }
       }
-    }
-    catch(...) {
+    } catch(...) {
       SaveErrorLog();
       return false;
     }

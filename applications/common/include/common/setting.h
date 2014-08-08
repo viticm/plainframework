@@ -384,6 +384,8 @@ struct login_info_t {
   bool relogin_stop; //重登是否停止
   uint32_t relogin_stop_time; //重新登陆停止的时间
   bool notify_safe_sign; //是否进行安全提醒 
+  uint16_t net_connectionmax; //最大网络连接数量
+  int8_t clientin_sameip_max; //同一IP可以拥有的最大玩家数量
   login_info_t();
   ~login_info_t();
 };

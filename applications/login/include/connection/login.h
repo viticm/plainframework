@@ -44,6 +44,10 @@ class Login : public pf_net::connection::Base {
    void set_characternumber(uint8_t number);
    const char *getaccount();
    void setaccount(const char *account);
+   uint32_t get_connecttime() const;
+   void set_connecttime(uint32_t time);
+   uint32_t get_readykick_count() const;
+   void set_readykick_count(uint32_t count);
 
  private:
    char account_[ACCOUNT_LENGTH_MAX];
@@ -52,6 +56,7 @@ class Login : public pf_net::connection::Base {
    uint32_t connecttime_;
    uint32_t gatewaytime_;
    uint32_t last_sendmessage_turntime_;
+   uint32_t readykick_count_;
 
 };
 

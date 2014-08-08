@@ -33,6 +33,12 @@ void Login::resetkick() {
 void Login::clear() {
   __ENTER_FUNCTION
     memset(account_, 0, sizeof(account_));
+    characternumber_ = 0;
+    kicktime_ = 0;
+    connecttime_ = 0;
+    gatewaytime_ = 0;
+    last_sendmessage_turntime_ = 0;
+    readykick_count_ = 0;
   __LEAVE_FUNCTION
 }
 
@@ -78,12 +84,34 @@ bool Login::senddirectly(pf_net::packet::Base *packet) {
     bool result = Base::sendpacket(packet);
     if (result) {
       int8_t count = 0;
-      result = Base::processoutput();
-      ++count;
+      while (outputstream_->reallength() > 0) {
+        Base::processoutput();
+        ++count;
+        if (count > 3) {
+          result = false;
+          break;
+        }
+      }
     }
     return result;
   __LEAVE_FUNCTION
     return false;
+}
+
+uint32_t Login::get_connecttime() const {
+  return connecttime_;
+}
+
+void Login::set_connecttime(uint32_t time) {
+  connecttime_ = time;
+}
+
+uint32_t Login::get_readykick_count() const {
+  return readykick_count_;
+}
+
+void Login::set_readykick_count(uint32_t count) {
+  readykick_count_ = count;
 }
 
 } //namespace connection

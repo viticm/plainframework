@@ -137,6 +137,10 @@ int32_t Base::accept(uint16_t port, const char *ip) {
         socketid_, 
         reinterpret_cast<struct sockaddr *>(&accept_sockaddr_in),
         &addrlength);
+    port_ = ntohs(accept_sockaddr_in.sin_port);
+    pf_base::string::safecopy(host_, 
+                              inet_ntoa(accept_sockaddr_in.sin_addr), 
+                              sizeof(host_)); //接受的时候host变为客户端IP
     return result;
   __LEAVE_FUNCTION
     return SOCKET_ERROR;
@@ -373,7 +377,7 @@ uint16_t Base::getport() const {
     return port_;
 }
 
-uint64_t Base::getu64host() const {
+uint64_t Base::getuint64host() const {
   __ENTER_FUNCTION
     uint64_t result = 0;
     if (0 == strlen(host_)) {

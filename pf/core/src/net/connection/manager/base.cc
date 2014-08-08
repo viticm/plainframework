@@ -192,7 +192,7 @@ bool Base::destroy() {
     return false;
 }
 
-bool Base::accept() {
+connection::Base *Base::accept() {
   __ENTER_FUNCTION
     uint32_t step = 0;
     bool result = false;
@@ -256,13 +256,13 @@ bool Base::accept() {
     FAST_LOG(kNetLogFile,
              "[net.connection.manager] (Base::accept) socketid: %d",
              newconnection->getsocket()->getid());
-    return true;
+    return newconnection;
 EXCEPTION:
     newconnection->cleanup();
     pool_.remove(newconnection->getid());
-    return false;
+    return NULL;
   __LEAVE_FUNCTION
-    return false;
+    return NULL;;
 }
 
 connection::Base *Base::get(int16_t id) {

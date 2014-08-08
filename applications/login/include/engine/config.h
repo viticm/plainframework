@@ -5,12 +5,12 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/08/08 15:23
- * @uses connection manager config file
+ * @date 2014/07/11 10:37
+ * @uses the engine config file
  */
-#ifndef CONNECTION_MANAGER_CONFIG_H_
-#define CONNECTION_MANAGER_CONFIG_H_
+#ifndef ENGINE_CONFIG_H_
+#define ENGINE_CONFIG_H_
 
-#include "connection/config.h"
+#include "application/config.h"
 
-#endif //CONNECTION_MANAGER_CONFIG_H_
+#endif //ENGINE_CONFIG_H_

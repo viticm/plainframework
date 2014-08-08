@@ -68,8 +68,7 @@ bool Server::accept(pf_net::socket::Base* socket) {
     socket->close();
     if (0 == socket->port_) {
       socket->socketid_ = socket_->fastaccept();
-    }
-    else {
+    } else {
       socket->socketid_ = socket_->accept(socket->port_);
     }
     if (SOCKET_INVALID == socket->socketid_) return false;

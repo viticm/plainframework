@@ -42,7 +42,7 @@ class PF_API Base {
    bool add(connection::Base *connection);
    bool add(int16_t id);
    connection::Base *get(int16_t id);
-   bool accept(); //新连接接受处理
+   virtual connection::Base *accept(); //新连接接受处理
    virtual bool heartbeat(uint32_t time = 0);
    //从管理器中移除连接
    virtual bool remove(int16_t id);
