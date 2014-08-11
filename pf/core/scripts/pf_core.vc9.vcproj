@@ -380,6 +380,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\base\tinytimer.cc"
+					>
+				</File>
+				<File
 					RelativePath="..\src\base\util.cc"
 					>
 				</File>
@@ -723,6 +727,10 @@
 				</File>
 				<File
 					RelativePath="..\include\pf\base\time_manager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\pf\base\tinytimer.h"
 					>
 				</File>
 				<File
