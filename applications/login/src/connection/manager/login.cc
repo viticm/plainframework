@@ -2,7 +2,12 @@
 #include "pf/base/util.h"
 #include "common/setting.h"
 #include "common/define/enum.h"
+#include "common/net/packet/login_togateway/playerleave.h"
+#include "common/define/net/packet/id/gatewaylogin.h"
+#include "engine/system.h"
+#include "pf/net/packet/factorymanager.h"
 #include "connection/login.h"
+#include "connection/manager/server.h"
 #include "connection/manager/login.h"
 
 #define READY_HEARTBEAT_MAX 100
@@ -134,6 +139,71 @@ bool Login::processinput() {
     return false;
 }
 #endif /* } */
+
+bool Login::init_pool() {
+  __ENTER_FUNCTION
+    pf_net::connection::Pool *connectionpool = 
+      ENGINE_SYSTEM_POINTER->get_netmanager()->getpool();
+    Assert(connectionpool); //需要引擎核心先初始化
+    pool_ = connectionpool;
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Login::remove(pf_net::connection::Base *connection) {
+  __ENTER_FUNCTION
+    using namespace common::net::packet::login_togateway;
+    using namespace common::define::packet;
+    connection::Login *loginconnection = 
+      dynamic_cast<connection::Login *>(connection);
+    Assert(loginconnection);
+    bool result = false;
+    if (kPlayerStatusLoginNormal == loginconnection->getstatus()) {
+      PlayerLeave *message = dynamic_cast<PlayerLeave *>(
+          NET_PACKET_FACTORYMANAGER_POINTER->createpacket(kPlayerLeave));
+      if (message) {
+        message->setaccount(loginconnection->getaccount());
+        message->setguid(ID_INVALID);
+        message->set_centerid(SETTING_POINTER->center_info_.id);
+        CONNECTION_MANAGER_SERVER_POINTER->syncpacket(message, 
+                                                      kServerTypeGateway);
+      }
+    }
+    if (kPlayerStatusLoginNormal == loginconnection->getstatus() ||
+        kPlayerStatusLoginServerReady == loginconnection->getstatus()) {
+      dec_normalcount();
+    }
+    SLOW_LOG(NET_MODULENAME,
+             "[connection.manager] (Login::remove)"
+             " account: %s ... success",
+             loginconnection->getaccount());
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Login::remove(const char *account, int16_t id) {
+  __ENTER_FUNCTION
+    Assert(account);
+    uint16_t count = getcount();
+    uint16_t i;
+    for (i = 0; i < count; ++i) {
+      connection::Login *loginconnection = 
+        dynamic_cast<connection::Login *>(get(connection_idset_[i]));
+      if (loginconnection) {
+        if (kPlayerStatusLoginNormal == loginconnection->getstatus() &&
+            loginconnection->getid() != id && //自身连接不删除
+            0 == strcmp(loginconnection->getaccount(), account)) {
+          remove(loginconnection);
+          break;
+        }
+      }
+    }
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
 
 } //namespace manager
 

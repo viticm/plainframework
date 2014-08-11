@@ -239,7 +239,7 @@ gateway_data_t::~gateway_data_t() {
   //do nothing
 }
 
-world_info_t::world_info_t() {
+center_info_t::center_info_t() {
   __ENTER_FUNCTION
     id = ID_INVALID;
     zone_id = ID_INVALID;
@@ -254,7 +254,7 @@ world_info_t::world_info_t() {
   __LEAVE_FUNCTION
 }
 
-world_info_t::~world_info_t() {
+center_info_t::~center_info_t() {
   //do nothing
 }
 
@@ -544,7 +544,7 @@ bool Setting::init() {
   __ENTER_FUNCTION
     load_config_info();
     load_login_info();
-    load_world_info();
+    load_center_info();
     load_gateway_info();
     load_share_memory_info();
     load_machine_info();
@@ -560,7 +560,7 @@ void Setting::reload() {
   __ENTER_FUNCTION
     load_config_info_reload();
     load_login_info_reload();
-    load_world_info_reload();
+    load_center_info_reload();
     load_gateway_info_reload();
     load_share_memory_info_reload();
     load_machine_info_reload();
@@ -1112,48 +1112,48 @@ void Setting::load_login_info_reload() {
 #endif
 }
 
-void Setting::load_world_info() {
+void Setting::load_center_info() {
   __ENTER_FUNCTION
-    load_world_info_only();
-    load_world_info_reload();
+    load_center_info_only();
+    load_center_info_reload();
   __LEAVE_FUNCTION
 }
 
-void Setting::load_world_info_only() {
+void Setting::load_center_info_only() {
 #ifndef _GATEWAY
   __ENTER_FUNCTION
-    pf_file::Ini world_info_ini(WORLD_INFO_FILE);
-    world_info_.id = world_info_ini.read_int16("System", "ID");
-    world_info_.zone_id = world_info_ini.read_int16("System", "ZoneID");
-    world_info_.share_memory_key.guild = 
-      world_info_ini.read_uint32("System", "GuildShareMemoryKey");
-    world_info_.share_memory_key.mail = 
-      world_info_ini.read_uint32("System", "MailShareMemoryKey");
-    world_info_.share_memory_key.pet = 
-      world_info_ini.read_uint32("System", "PetShareMemoryKey");
-    world_info_.share_memory_key.city = 
-      world_info_ini.read_uint32("System", "CityShareMemoryKey");
-    world_info_.share_memory_key.global_data = 
-      world_info_ini.read_uint32("System", "GlobalDataShareMemoryKey");
-    world_info_.share_memory_key.league = 
-      world_info_ini.read_uint32("System", "LeagueShareMemoryKey");
-    world_info_.share_memory_key.find_friend = 
-      world_info_ini.read_uint32("System", "FindFriendShareMemoryKey");
-    world_info_.enable_share_memory = 
-      world_info_ini.read_bool("System", "EnableShareMemory");
+    pf_file::Ini center_info_ini(CENTER_INFO_FILE);
+    center_info_.id = center_info_ini.read_int16("System", "ID");
+    center_info_.zone_id = center_info_ini.read_int16("System", "ZoneID");
+    center_info_.share_memory_key.guild = 
+      center_info_ini.read_uint32("System", "GuildShareMemoryKey");
+    center_info_.share_memory_key.mail = 
+      center_info_ini.read_uint32("System", "MailShareMemoryKey");
+    center_info_.share_memory_key.pet = 
+      center_info_ini.read_uint32("System", "PetShareMemoryKey");
+    center_info_.share_memory_key.city = 
+      center_info_ini.read_uint32("System", "CityShareMemoryKey");
+    center_info_.share_memory_key.global_data = 
+      center_info_ini.read_uint32("System", "GlobalDataShareMemoryKey");
+    center_info_.share_memory_key.league = 
+      center_info_ini.read_uint32("System", "LeagueShareMemoryKey");
+    center_info_.share_memory_key.find_friend = 
+      center_info_ini.read_uint32("System", "FindFriendShareMemoryKey");
+    center_info_.enable_share_memory = 
+      center_info_ini.read_bool("System", "EnableShareMemory");
     SLOW_LOG("setting", 
              "[common] (Setting::load) %s only ... ok!", 
-             WORLD_INFO_FILE);
+             CENTER_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
 }
 
-void Setting::load_world_info_reload() {
+void Setting::load_center_info_reload() {
 #ifndef _GATEWAY
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[common] (Setting::load) %s reload ... ok!", 
-             WORLD_INFO_FILE);
+             CENTER_INFO_FILE);
   __LEAVE_FUNCTION
 #endif
 }

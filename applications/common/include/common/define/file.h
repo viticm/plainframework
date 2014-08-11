@@ -14,7 +14,7 @@
 #define CONFIG_INFO_FILE "./config/config_info.ini"
 #define GATEWAY_INFO_FILE "./config/gateway_info.ini"
 #define LOGIN_INFO_FILE "./config/login_info.ini"
-#define WORLD_INFO_FILE "./config/world_info.ini"
+#define CENTER_INFO_FILE "./config/center_info.ini"
 #define SHARE_MEMORY_INFO_FILE "./config/share_memory_info.ini"
 #define MACHINE_INFO_FILE "./config/machine_info.ini"
 #define SERVER_INFO_FILE "./config/server_info.ini"

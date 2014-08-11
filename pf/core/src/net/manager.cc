@@ -19,6 +19,23 @@ Manager::~Manager() {
   //do nothing
 }
 
+bool Manager::init(uint16_t connectionmax,
+                   uint16_t listenport,
+                   const char *listenip) {
+  __ENTER_FUNCTION
+    bool result = false;
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
+    result = Epoll::init(connectionmax, listenport, listenip);
+#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
+
+#else /* }{ */
+    result = Select::init(connectionmax, listenport, listenip); 
+#endif /* } */
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
 bool Manager::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
     uint32_t _time = 0 == time ? g_time_manager->get_current_time() : time;
@@ -27,7 +44,7 @@ bool Manager::heartbeat(uint32_t time) {
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
-      connection = pool_.get(connection_idset_[i]);
+      connection = pool_->get(connection_idset_[i]);
       if (NULL == connection) {
         Assert(false);
         return false;
@@ -42,19 +59,8 @@ bool Manager::heartbeat(uint32_t time) {
     return false;
 }
 
-void Manager::loop() {
+void Manager::tick() {
   __ENTER_FUNCTION
-    while (isactive()) {
-#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
-      //这里有个问题，就是当网络管理器以线程模式运行时会大肆的消耗CPU，
-      //如果是不是线程模式则不会出现，所以临时使用了帧率控制的方式解决此问题
-      //主要的原因是epoll不是以阻塞的方式来select的
-      uint32_t runtime = TIME_MANAGER_POINTER->get_current_time();
-      uint32_t waittime = 
-        runtime + 
-        static_cast<uint32_t>(1000/NET_MANAGER_FRAME) - 
-        TIME_MANAGER_POINTER->get_current_time();
-#endif /* } */
       bool result = false;
       try {
         result = select();
@@ -80,7 +86,6 @@ void Manager::loop() {
       try {
         result = processcommand();
         Assert(result);
-        //ERRORPRINTF("processcommand");
       } catch(...) {
         
       }
@@ -91,6 +96,23 @@ void Manager::loop() {
       } catch(...) {
 
       }
+  __LEAVE_FUNCTION
+}
+
+void Manager::loop() {
+  __ENTER_FUNCTION
+    while (isactive()) {
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
+      //这里有个问题，就是当网络管理器以线程模式运行时会大肆的消耗CPU，
+      //如果是不是线程模式则不会出现，所以临时使用了帧率控制的方式解决此问题
+      //主要的原因是epoll不是以阻塞的方式来select的
+      uint32_t runtime = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t waittime = 
+        runtime + 
+        static_cast<uint32_t>(1000/NET_MANAGER_FRAME) - 
+        TIME_MANAGER_POINTER->get_current_time();
+#endif /* } */
+      tick(); //循环逻辑
 #if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
       if (waittime > 0) pf_base::util::sleep(waittime);
 #endif /* } */
@@ -113,7 +135,7 @@ void Manager::broadcast(packet::Base *packet) {
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
-      connection = pool_.get(connection_idset_[i]);
+      connection = pool_->get(connection_idset_[i]);
       if (NULL == connection) {
         Assert(false); 
         continue;

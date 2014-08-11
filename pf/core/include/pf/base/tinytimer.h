@@ -15,7 +15,7 @@
 
 namespace pf_base {
 
-class TinyTimer {
+class PF_API TinyTimer {
 
  public:
    TinyTimer();

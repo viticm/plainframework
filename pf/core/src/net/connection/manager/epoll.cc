@@ -174,7 +174,7 @@ bool Epoll::processoutput() {
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
-      connection = pool_.get(connection_idset_[i]);
+      connection = pool_->get(connection_idset_[i]);
       Assert(connection);
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;
@@ -211,7 +211,7 @@ bool Epoll::processcommand() {
     for (i = 0; i < connectioncount; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;
       connection::Base* connection = NULL;
-      connection = pool_.get(connection_idset_[i]);
+      connection = pool_->get(connection_idset_[i]);
       Assert(connection);
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;

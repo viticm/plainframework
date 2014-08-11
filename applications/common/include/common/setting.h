@@ -407,16 +407,16 @@ typedef struct {
   uint32_t global_data;
   uint32_t league;
   uint32_t find_friend;
-} world_share_memory_key_t;
+} center_share_memory_key_t;
 
 //world info
-struct world_info_t {
+struct center_info_t {
   int16_t id;
   int16_t zone_id; //定义一个World的标示,防止不同World之间的数据库链接
-  world_share_memory_key_t share_memory_key;
+  center_share_memory_key_t share_memory_key;
   bool enable_share_memory;
-  world_info_t();
-  ~world_info_t();
+  center_info_t();
+  ~center_info_t();
 };
 
 typedef struct share_memory_data_struct {
@@ -501,14 +501,14 @@ struct server_data_t {
 typedef struct {
   char ip[IP_SIZE];
   uint16_t port;
-} server_world_data_t;
+} server_center_data_t;
 
 struct server_info_t {
   server_data_t *data;
   uint16_t count;
   int16_t current_server_id;
   int16_t hash_server[NET_OVER_SERVER_MAX];
-  server_world_data_t world_data;
+  server_center_data_t world_data;
   server_info_t();
   ~server_info_t();
 };
@@ -607,7 +607,7 @@ class Setting : public pf_base::Singleton<Setting> {
 #endif
    GatewayInfo gateway_info_;
    login_info_t login_info_;
-   world_info_t world_info_;
+   center_info_t center_info_;
    machine_info_t machine_info_;
    server_info_t server_info_;
    share_memory_info_t share_memory_info_;
@@ -624,7 +624,7 @@ class Setting : public pf_base::Singleton<Setting> {
    void reload();
    void load_config_info();
    void load_login_info();
-   void load_world_info();
+   void load_center_info();
    void load_gateway_info();
    void load_share_memory_info();
    void load_machine_info();
@@ -639,8 +639,8 @@ class Setting : public pf_base::Singleton<Setting> {
    void load_config_info_reload();
    void load_login_info_only();
    void load_login_info_reload();
-   void load_world_info_only();
-   void load_world_info_reload();
+   void load_center_info_only();
+   void load_center_info_reload();
    void load_gateway_info_only();
    void load_gateway_info_reload();
    void load_share_memory_info_only();

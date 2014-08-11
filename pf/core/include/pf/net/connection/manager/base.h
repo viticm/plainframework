@@ -38,7 +38,7 @@ class PF_API Base {
              uint16_t listenport = 0,
              const char *listenip = NULL);
    bool init_pool(uint16_t connectionmax = NET_CONNECTION_MAX);
-   void init_pool(connection::Pool pool);
+   void init_pool(connection::Pool *pool);
    bool add(connection::Base *connection);
    bool add(int16_t id);
    connection::Base *get(int16_t id);
@@ -89,7 +89,7 @@ class PF_API Base {
    uint64_t send_bytes_; //发送字节数
    uint64_t receive_bytes_; //接收字节数
    int32_t onestep_accept_; //一帧内接受的新连接数量, -1无限制
-   connection::Pool pool_;   
+   connection::Pool *pool_;   
 
 };
 

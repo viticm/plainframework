@@ -46,6 +46,7 @@ SET (SOURCEFILES_BASE_LIST
 	../src/base/md5.cc
 	../src/base/string.cc
 	../src/base/time_manager.cc
+	../src/base/tinytimer.cc
 	../src/base/util.cc
 )
 
@@ -178,6 +179,7 @@ SET (HEADERFILES_BASE_LIST
 	../include/pf/base/singleton.h
 	../include/pf/base/string.h
 	../include/pf/base/time_manager.h
+	../include/pf/base/tinytimer.h
 	../include/pf/base/util.h
 )
 

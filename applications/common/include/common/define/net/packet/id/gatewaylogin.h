@@ -41,7 +41,8 @@ namespace login_togateway { //登陆服务器发送给验证服务器
 typedef enum {
   /*begin {*/
   kFirst = LOGIN_TOGATEWAY_PACKETID_MIN,
-  kAskAuth,
+  kAskAuth, //请求验证账号
+  kPlayerLeave, //玩家退出
   kLast, /* the last packetid */
   kMax = LOGIN_TOGATEWAY_PACKETID_MAX,
   /*end }*/

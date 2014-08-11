@@ -41,7 +41,13 @@ class PF_API Manager : public connection::manager::Select {
    ~Manager();
 
  public:
+   virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,
+                     uint16_t listenport = 0,
+                     const char *listenip = NULL);
    virtual bool heartbeat(uint32_t time = 0);
+   virtual void tick(); //外部可能会重写此方法，网络循环处理方法
+
+ public:
    void loop();
    bool isactive();
    void setactive(bool active);

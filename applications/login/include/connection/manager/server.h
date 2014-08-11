@@ -37,7 +37,11 @@ class Server : public pf_base::Singleton<Server>, public pf_net::Manager {
    static Server &getsingleton();
 
  public:
-   virtual bool loop();
+   //重写初始化操作，现在只留接口，以后可能会有其他操作如加密等
+   virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,
+                     uint16_t listenport = 0,
+                     const char *listenip = NULL);
+   virtual void tick();
    virtual bool heartbeat(uint32_t time = 0);
 
  public:
@@ -49,11 +53,11 @@ class Server : public pf_base::Singleton<Server>, public pf_net::Manager {
    bool is_serverconnected(uint8_t servertype) const;
    bool is_allserver_connected() const;
    bool connectserver(uint8_t servertype);
-   bool send_queue_toworld();
+   bool send_queue_tocenter();
    void notify_totalcount_togateway();
    
  private:
-   int16_t servertype_[kServerTypeNumber];
+   int8_t servertype_[kServerTypeNumber];
    pf_base::TinyTimer usercount_timer_;
 
 };

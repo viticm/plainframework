@@ -25,11 +25,13 @@ Base::Base() {
     receive_bytes_ = 0;
     onestep_accept_ = NET_ONESTEP_ACCEPT_DEFAULT;
     isinit_ = false;
+    pool_ = NULL;
   __LEAVE_FUNCTION
 }
 
 Base::~Base() {
   __ENTER_FUNCTION
+    SAFE_DELETE(pool_);
     SAFE_DELETE(serversocket_);
     SAFE_DELETE_ARRAY(connection_idset_);
   __LEAVE_FUNCTION
@@ -68,13 +70,19 @@ bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
 bool Base::init_pool(uint16_t connectionmax) {
   __ENTER_FUNCTION
     connectionmax_ = connectionmax;
-    if (!pool_.init(connectionmax_)) return false;
+    if (!pool_->init(connectionmax_)) return false;
     return true;
   __LEAVE_FUNCTION
     return false;
 }
 
-void Base::init_pool(connection::Pool pool) {
+void Base::init_pool(connection::Pool *pool) {
+  if (pool_) {
+    SLOW_WARNINGLOG(NET_MODULENAME,
+                    "[connection.manager] (Base::init_pool)"
+                    " the class pool is init, now will delete it first");
+    SAFE_DELETE(pool_);
+  }
   pool_ = pool;
 }
 
@@ -120,7 +128,7 @@ bool Base::remove(int16_t id) {
   __ENTER_FUNCTION
     Assert(count_ > 0);
     connection::Base* connection = NULL;
-    connection = pool_.get(id);
+    connection = pool_->get(id);
     if (NULL == connection) {
       Assert(false);
       return false;
@@ -130,7 +138,7 @@ bool Base::remove(int16_t id) {
       Assert(false);
       return false;
     }
-    connection = pool_.get(connection_idset_[count_ - 1]);
+    connection = pool_->get(connection_idset_[count_ - 1]);
     if (NULL == connection) {
       Assert(false);
       return false;
@@ -163,7 +171,7 @@ bool Base::erase(connection::Base* connection) {
 bool Base::remove(connection::Base *connection) {
   __ENTER_FUNCTION
     if (!erase(connection)) return false; 
-    pool_.remove(connection->getid());
+    pool_->remove(connection->getid());
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -200,7 +208,7 @@ connection::Base *Base::accept() {
     uint32_t step = 0;
     bool result = false;
     connection::Base *newconnection = NULL;
-    newconnection = pool_.create();
+    newconnection = pool_->create();
     if (NULL == newconnection) return false;
     step = 5;
     newconnection->init();
@@ -262,7 +270,7 @@ connection::Base *Base::accept() {
     return newconnection;
 EXCEPTION:
     newconnection->cleanup();
-    pool_.remove(newconnection->getid());
+    pool_->remove(newconnection->getid());
     return NULL;
   __LEAVE_FUNCTION
     return NULL;;
@@ -272,7 +280,7 @@ connection::Base *Base::get(int16_t id) {
   __ENTER_FUNCTION 
     Assert(id >= 0 && id < maxcount_);
     connection::Base *connection = NULL;
-    connection = pool_.get(id);
+    connection = pool_->get(id);
     Assert(connection);
     return connection;
   __LEAVE_FUNCTION
@@ -309,7 +317,9 @@ uint64_t Base::get_receive_bytes() const {
 }
 
 connection::Pool *Base::getpool() {
-  return &pool_;
+  if (!pool_) pool_ = new connection::Pool();
+  Assert(pool_);
+  return pool_;
 }
 
 uint16_t Base::get_listenport() const {
@@ -320,7 +330,7 @@ connection::Base *Base::get(uint16_t id) {
   __ENTER_FUNCTION 
     Assert(id >= 0 && id < NET_OVER_SERVER_MAX);
     connection::Base *connection = NULL;
-    connection = pool_.get(id);
+    connection = pool_->get(id);
     Assert(connection);
     return connection;
   __LEAVE_FUNCTION
