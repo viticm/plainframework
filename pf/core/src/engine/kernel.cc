@@ -377,7 +377,7 @@ bool Kernel::init_net() {
       uint16_t connectionmax = static_cast<uint16_t>(_connectionmax);
       bool result = true;
       if (is_usethread) {
-        net_thread_ = new thread::Net();
+        if (!net_thread_) net_thread_ = new thread::Net();
         if (NULL == net_thread_) return false;
         //在linux环境下epoll初始化的优先级需要高于管理器的优先级
         result = net_thread_->set_poll_maxcount(connectionmax);
@@ -385,7 +385,7 @@ bool Kernel::init_net() {
         result = net_thread_->init(connectionmax, listenport, listenip);
         if (!result) return false;
       } else {
-        net_manager_ = new Manager();
+        if (!net_manager_) net_manager_ = new Manager();
         if (NULL == net_manager_) return false;
         result = net_manager_->set_poll_maxcount(connectionmax);
         if (!result) return false;

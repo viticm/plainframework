@@ -36,7 +36,7 @@ class PF_API Pool {
    uint32_t get_maxcount() const { return maxcount_; }   
 
  private:
-   Base **connections_; //注意，这是一个指向Server对象的数组指针
+   Base **connections_; //注意，这是一个指向Base对象的数组指针
    uint32_t position_;
    pf_sys::ThreadLock lock_;
    uint32_t count_;

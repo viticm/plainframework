@@ -13,9 +13,9 @@
 
 #include "pf/sys/thread.h"
 #include "pf/base/singleton.h"
+#include "pf/base/hashmap/template.h"
 #include "pf/net/config.h"
 #include "pf/net/packet/factory.h"
-#include "pf/base/hashmap/template.h"
 
 namespace pf_net {
 

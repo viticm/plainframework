@@ -277,9 +277,9 @@ bool Select::set_poll_maxcount(uint16_t maxcount) {
   return true;
 }
 
-bool Select::heartbeat() {
+bool Select::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
-    bool result = Base::heartbeat();
+    bool result = Base::heartbeat(time);
     return result;
   __LEAVE_FUNCTION
     return false;

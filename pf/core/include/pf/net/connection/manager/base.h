@@ -68,6 +68,7 @@ class PF_API Base {
    void set_onestep_accept(int32_t count);
    uint64_t get_send_bytes() const;
    uint64_t get_receive_bytes() const;
+   bool isinit() const;
 
  protected:
    uint16_t listenport_;
@@ -79,6 +80,7 @@ class PF_API Base {
    int32_t socketid_;
    int32_t fdsize_; //实际的网络连接数量，正在连接的，
                     //其实和count_一样，不过此值只用于轮询模式
+   bool isinit_; //是否初始化，防止再次初始化
 
  protected:
    int16_t *connection_idset_; //连接的ID数组

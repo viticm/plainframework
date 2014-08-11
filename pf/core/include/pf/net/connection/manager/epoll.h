@@ -38,7 +38,7 @@ class PF_API Epoll : public Base {
    virtual bool processexception(); //异常连接处理
    virtual bool processcommand(); //消息执行
    virtual bool set_poll_maxcount(uint16_t maxcount);
-   virtual bool heartbeat();
+   virtual bool heartbeat(uint32_t time = 0);
 
  public:
    virtual bool addsocket(int32_t socketid, int16_t connectionid);

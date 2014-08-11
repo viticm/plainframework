@@ -12,5 +12,44 @@
 #define CONNECTION_QUEUE_CENTER_H_
 
 #include "connection/queue/config.h"
+#include "pf/sys/thread.h"
+
+namespace connection {
+
+namespace queue {
+
+class Center {
+
+ public:
+   Center();
+   ~Center();
+
+ public:
+   bool init();
+   bool addin(int16_t id, 
+              const char *name, 
+              int64_t guid, 
+              uint16_t &queueposition);
+   bool getout(uint16_t queueposition);
+   bool findhead(uint16_t &queueposition);
+   CenterInfo &get(uint16_t queueposition);
+
+ public:
+   bool isempty() const;
+   uint16_t getcount() const;
+   uint16_t gethead() const;
+
+ private:
+   CenterInfo *queue_;
+   uint16_t size_;
+   uint16_t head_;
+   uint16_t tail_;
+   pf_sys::ThreadLock lock_;
+
+};
+
+}; //namespace queue
+
+}; //namespace connection
 
 #endif //CONNECTION_QUEUE_CENTER_H_

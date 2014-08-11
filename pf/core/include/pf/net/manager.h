@@ -41,7 +41,7 @@ class PF_API Manager : public connection::manager::Select {
    ~Manager();
 
  public:
-   virtual bool heartbeat();
+   virtual bool heartbeat(uint32_t time = 0);
    void loop();
    bool isactive();
    void setactive(bool active);

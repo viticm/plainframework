@@ -115,14 +115,6 @@ bool Incoming::remove(pf_net::connection::Base *connection) {
     return false;
 }
 
-bool Incoming::init_pool() {
-  __ENTER_FUNCTION
-    pool_ = *(ENGINE_SYSTEM_POINTER->get_netmanager()->getpool());
-    return true;
-  __LEAVE_FUNCTION
-    return false;
-}
-
 void Incoming::dec_clientin_sameip(uint32_t uint32host, const char *host) {
   __ENTER_FUNCTION
     Assert(host);

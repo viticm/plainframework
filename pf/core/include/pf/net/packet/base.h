@@ -35,8 +35,12 @@ typedef enum {
   kPacketExecuteStatusNotRemove, //表示继续在当前循环里执行剩下的消息,
                                   //但是不回收当前消息
   kPacketExecuteStatusNotRemoveError,
-} packet_executestatus_enum;
+} packet_executestatus_t;
 
+typedef enum {
+  kPacketFlagNone = 0,
+  kPacketFlagRemove,
+} packetflag_t;
 
 namespace pf_net {
 

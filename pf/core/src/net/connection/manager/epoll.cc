@@ -231,9 +231,9 @@ bool Epoll::processcommand() {
     return false;
 }
 
-bool Epoll::heartbeat() {
+bool Epoll::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
-    bool result = Base::heartbeat();
+    bool result = Base::heartbeat(time);
     return result;
   __LEAVE_FUNCTION
     return false;

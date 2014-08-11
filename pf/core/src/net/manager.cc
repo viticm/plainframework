@@ -19,9 +19,9 @@ Manager::~Manager() {
   //do nothing
 }
 
-bool Manager::heartbeat() {
+bool Manager::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
-    uint32_t currenttime = g_time_manager->get_current_time();
+    uint32_t _time = 0 == time ? g_time_manager->get_current_time() : time;
     uint16_t connectioncount = getcount();
     uint16_t i;
     for (i = 0; i < connectioncount; ++i) {
@@ -32,7 +32,7 @@ bool Manager::heartbeat() {
         Assert(false);
         return false;
       }
-      if (!connection->heartbeat(currenttime)) {
+      if (!connection->heartbeat(_time)) {
         remove(connection);
         Assert(false);
       }
@@ -106,7 +106,7 @@ void Manager::setactive(bool active) {
   active_ = active;
 }
 
-void Manager::broadcast(packet::Base* packet) {
+void Manager::broadcast(packet::Base *packet) {
   __ENTER_FUNCTION
     uint16_t connectioncount = getcount();
     uint16_t i;

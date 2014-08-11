@@ -71,7 +71,7 @@ class PF_API Base {
    int16_t get_managerid();
    void set_managerid(int16_t id);
    //读取当前连接的socket对象
-   socket::Base* getsocket();
+   socket::Base *getsocket();
    //断开网络连接
    virtual void disconnect();
    //当前连接是否有效

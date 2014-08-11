@@ -21,9 +21,4 @@
 #define NET_CONNECTION_INCOME_KICKTIME 60000
 #define NET_CONNECTION_POOL_SIZE_DEFAULT 1280 //连接池默认大小
 
-typedef enum {
-  kPacketFlagNone = 0,
-  kPacketFlagRemove,
-} packetflag_enum;
-
 #endif //PF_NET_CONNECTION_CONFIG_H_

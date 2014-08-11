@@ -76,6 +76,24 @@ PF_API uint64_t get_current_thread_id();
 //global variable
 extern uint16_t g_thread_quit_count;
 
+template <typename Mutex>
+class lock_guard {
+
+ public:
+   explicit lock_guard(Mutex &m) : m_(m) {
+     m_.lock();
+   }
+   ~lock_guard() {
+     m_.unlock();
+   }
+
+ private:
+   Mutex &m_;
+   explicit lock_guard(lock_guard &);
+   lock_guard &operator = (lock_guard &);
+
+};
+
 }; //namespace pf_sys
 
 //thread lock

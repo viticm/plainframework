@@ -24,6 +24,7 @@ Base::Base() {
     send_bytes_ = 0;
     receive_bytes_ = 0;
     onestep_accept_ = NET_ONESTEP_ACCEPT_DEFAULT;
+    isinit_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -36,6 +37,7 @@ Base::~Base() {
 
 bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
   __ENTER_FUNCTION
+    if (isinit()) return true; //有内存分配的请参考此方式避免再次分配内存
     count_ = 0;
     maxcount_ = maxcount;
     connection_idset_ = new int16_t[maxcount_];
@@ -57,6 +59,7 @@ bool Base::init(uint16_t maxcount, uint16_t listenport, const char *listenip) {
       }
     }
     threadid_ = pf_sys::get_current_thread_id();
+    isinit_ = true;
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -322,6 +325,10 @@ connection::Base *Base::get(uint16_t id) {
     return connection;
   __LEAVE_FUNCTION
     return NULL;
+}
+
+bool Base::isinit() const {
+  return isinit_;
 }
 
 } //namespace manager

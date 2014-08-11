@@ -33,6 +33,7 @@ class System : public pf_engine::Kernel, public pf_base::Singleton<System> {
  public:
    pf_db::Manager *get_dbmanager();
    pf_net::Manager *get_netmanager();
+   void set_netmanager(pf_net::Manager *netmanager);
 
  private:
    bool init_setting();

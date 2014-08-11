@@ -7,7 +7,7 @@
  * @user viticm<viticm.ti@gmail.com>
  * @date 2014/08/08 15:27
  * @uses connection manager incoming class
- *       cn: 客户端连接接受管理器，客户端的连接由此进入
+ *       cn: 客户端连接接受管理器，客户端的连接由此进入，此管理器将替换主管理器
  */
 #ifndef CONNECTION_MANAGER_INCOMING_H_
 #define CONNECTION_MANAGER_INCOMING_H_
@@ -36,9 +36,6 @@ class Incoming : public pf_base::Singleton<Incoming>, public pf_net::Manager {
    virtual bool heartbeat(uint32_t time = 0);
    virtual bool erase(pf_net::connection::Base *connection);
    virtual bool remove(pf_net::connection::Base *connection);
-
- public:
-   bool init_pool();
 
  protected:
    typedef hash_map<uint32_t, int32_t> ipcount_t;

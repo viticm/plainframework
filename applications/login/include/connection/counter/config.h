@@ -8,12 +8,9 @@
  * @date 2014/08/08 19:25
  * @uses connection queue config file
  */
-#ifndef CONNECTION_QUEUE_CONFIG_H_
-#define CONNECTION_QUEUE_CONFIG_H_
+#ifndef CONNECTION_COUNTER_CONFIG_H_
+#define CONNECTION_COUNTER_CONFIG_H_
 
 #include "connection/config.h"
 
-#define CONNECTION_QUEUE_TURN_MAX 10240
-#define CONNECTION_QUEUE_CENTER_TURN_MAX 1024
-
-#endif //CONNECTION_QUEUE_CONFIG_H_
+#endif //CONNECTION_COUNTER_CONFIG_H_

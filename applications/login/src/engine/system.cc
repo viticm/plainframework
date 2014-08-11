@@ -42,6 +42,17 @@ pf_db::Manager *System::get_dbmanager() {
     return NULL;
 }
 
+void System::set_netmanager(pf_net::Manager *netmanager) {
+  __ENTER_FUNCTION
+    bool is_usethread = getconfig_boolvalue(ENGINE_CONFIG_NET_RUN_ASTHREAD); 
+    if (is_usethread) {
+      net_thread_ = dynamic_cast<pf_engine::thread::Net *>(netmanager);
+    } else {
+      net_manager_ = netmanager;
+    }
+  __LEAVE_FUNCTION
+}
+
 pf_net::Manager *System::get_netmanager() {
   __ENTER_FUNCTION
     pf_net::Manager *netmanager = NULL;
