@@ -522,10 +522,6 @@
 						RelativePath="..\src\net\connection\pool.cc"
 						>
 					</File>
-					<File
-						RelativePath="..\src\net\connection\server.cc"
-						>
-					</File>
 					<Filter
 						Name="manager"
 						>
@@ -922,10 +918,6 @@
 					</File>
 					<File
 						RelativePath="..\include\pf\net\connection\pool.h"
-						>
-					</File>
-					<File
-						RelativePath="..\include\pf\net\connection\server.h"
 						>
 					</File>
 					<Filter

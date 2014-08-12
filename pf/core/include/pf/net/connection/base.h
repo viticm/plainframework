@@ -55,8 +55,10 @@ class PF_API Base {
    virtual bool sendpacket(packet::Base* packet);
 
  public:
-   virtual bool isserver() = 0;
-   virtual bool isplayer() = 0;
+   //以下两个方法用来区分连接是服务器还是客户端的，
+   //框架在设计上只留此扩展，在内部这两个方法其实毫无意义的
+   virtual bool isserver() const;
+   virtual bool isclient() const;
    //读取设置玩家连接ID的接口，该ID是由connection::Pool类分配出来的索引值
    //用于标识一个客户端连接在整个系统中的数据位置信息
    int16_t getid();

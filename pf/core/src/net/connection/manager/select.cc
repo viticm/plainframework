@@ -229,7 +229,7 @@ bool Select::removesocket(int32_t socketid) {
       uint16_t connectioncount = Base::getcount();
       for (i = 0; i < connectioncount; ++i) {
         if (ID_INVALID == connection_idset_[i]) continue;
-        connection = pool_.get(connection_idset_[i]);
+        connection = pool_->get(connection_idset_[i]);
         Assert(connection);
         if (NULL == connection) continue;
         int32_t _socketid = connection->getsocket()->getid();
@@ -246,7 +246,7 @@ bool Select::removesocket(int32_t socketid) {
       uint16_t connectioncount = Base::getcount();
       for (i = 0; i < connectioncount; ++i) {
         if (ID_INVALID == connection_idset_[i]) continue;
-        connection = pool_.get(connection_idset_[i]);
+        connection = pool_->get(connection_idset_[i]);
         Assert(connection);
         if (NULL == connection) continue;
         int32_t _socketid = connection->getsocket()->getid();

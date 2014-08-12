@@ -1,7 +1,6 @@
 #include "pf/base/time_manager.h"
 #include "pf/base/log.h"
 #include "pf/base/util.h"
-#include "pf/net/connection/server.h"
 #include "pf/script/lua/system.h"
 #include "pf/performance/eyes.h"
 #include "pf/base/string.h"
@@ -566,7 +565,7 @@ bool Kernel::init_net_connectionpool() {
     }
     uint16_t i = 0;
     for (i = 0; i < connectionmax; ++i) {
-      connection::Server *connection = new connection::Server();
+      connection::Base *connection = new connection::Base();
       Assert(connection);
       if (is_usethread) {
         net_thread_->getpool()->init_data(i, connection);

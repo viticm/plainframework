@@ -368,6 +368,14 @@ uint32_t Base::getstatus() const {
   return status_;
 }
 
+bool Base::isserver() const {
+  return false;
+}
+
+bool Base::isclient() const {
+  return true;
+}
+
 } //namespace connection
 
 } //namespace pf_net
