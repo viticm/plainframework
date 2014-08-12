@@ -22,6 +22,7 @@ Base::Base() {
     execute_count_pretick_ = NET_CONNECTION_EXECUTE_COUNT_PRE_TICK_DEFAULT;
     receive_bytes_ = 0;
     send_bytes_ = 0;
+    status_ = 0;
   __LEAVE_FUNCTION
 }
 
@@ -35,7 +36,7 @@ Base::~Base() {
 
 bool Base::init() {
   __ENTER_FUNCTION
-    if (isinit()) return true; //放置再次初始化，会出错
+    if (isinit()) return true; //防止再次初始化，会出错
     socket_ = new socket::Base();
     Assert(socket_);
     socket_inputstream_ = new socket::InputStream(

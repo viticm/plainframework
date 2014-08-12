@@ -28,7 +28,7 @@ class PF_API Pool {
  public:
    bool init(uint32_t maxcount = NET_CONNECTION_POOL_SIZE_DEFAULT);
    Base *get(int16_t id);
-   Base *create(); //new
+   Base *create(bool clear = true); //new
    bool init_data(uint16_t index, Base* connection);
    void remove(int16_t id); //delete
    void lock();

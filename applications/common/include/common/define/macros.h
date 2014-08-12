@@ -28,4 +28,9 @@
 #define SCENE_MAX 1024
 /* } scene about */
 
+/* server about { */
+#define OVER_SERVER_MAX 256 //一组（区）服务器最大的服务器数量
+#define GROUP_SERVER_MAX 24 //一组（组）服务器最大的服务器数量
+/* } server about */
+
 #endif //COMMON_DEFINE_MACROS_H_

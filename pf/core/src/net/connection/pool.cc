@@ -37,7 +37,6 @@ bool Pool::init(uint32_t maxcount) {
     return false;
 }
 
-
 bool Pool::init_data(uint16_t index, Base *connection) {
   __ENTER_FUNCTION
     Assert(connection);
@@ -59,7 +58,7 @@ Base *Pool::get(int16_t id) {
     return NULL;
 }
 
-Base *Pool::create() {
+Base *Pool::create(bool clear) {
   __ENTER_FUNCTION
     Base *connection = NULL;
     lock();
@@ -67,6 +66,7 @@ Base *Pool::create() {
     for (i = 0; i < maxcount_; i++) {
       if (connections_[position_]->isempty()) { //找出空闲位置
         result = static_cast<uint16_t>(position_);
+        if (clear) connection->cleanup(); //清除连接信息
         connections_[position_]->setempty(false);
         ++position_;
         if (position_ >= maxcount_) position_ = 0;

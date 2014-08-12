@@ -41,13 +41,13 @@ class Connect : public pf_net::packet::Base {
    int16_t get_serverid();
    void set_serverid(int16_t serverid);
    int16_t get_worldid();
-   void set_worldid(int16_t worldid);
+   void set_centerid(int16_t centerid);
    int16_t get_zoneid();
    void set_zoneid(int16_t zoneid);
 
  private:
    int16_t serverid_; //服务器ID
-   int16_t worldid_; //世界ID
+   int16_t centerid_; //中心服务器ID
    int16_t zoneid_; //区域ID
 
 };

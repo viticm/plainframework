@@ -10,16 +10,20 @@
  *       cn: 服务器连接模块，用于服务器之间的连接，因为各个服务器都会用到，
  *           所以挪到此处，消费（网关）服务器与世界（中心）服务器需重写
  */
-#ifndef PF_NET_CONNECTION_SERVER_H_
-#define PF_NET_CONNECTION_SERVER_H_
+#ifndef COMMON_NET_CONNECTION_SERVER_H_
+#define COMMON_NET_CONNECTION_SERVER_H_
 
+#include "common/net/connection/config.h"
 #include "pf/net/connection/base.h"
+#include "common/setting.h"
 
-namespace pf_net {
+namespace common {
+
+namespace net {
 
 namespace connection {
 
-class PF_API Server : public Base {
+class Server : public pf_net::connection::Base {
 
  public:
    Server();
@@ -37,15 +41,22 @@ class PF_API Server : public Base {
  public:
    virtual bool isserver();
    virtual bool isplayer();
-   virtual bool islogin();
-   virtual bool isbilling();
-   virtual bool isvalid();
    virtual bool sendpacket(packet::Base *packet);
+
+ public:
+   server_data_t *get_serverdata();
+   void set_serverdata(server_data_t *data);
+   int16_t get_serverid() const;
+
+ private:
+   server_data_t *serverdata_;
 
 };
 
 }; //namespace connection
 
-}; //namespace pf_net
+}; //namespace net
 
-#endif //PF_NET_CONNECTION_SERVER_H_
+}; //namespace common
+
+#endif //COMMON_NET_CONNECTION_SERVER_H_

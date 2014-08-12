@@ -11,11 +11,24 @@
 #ifndef COMMON_DEFINE_ENUM_H_
 #define COMMON_DEFINE_ENUM_H_
 
+#ifdef __SERVER__
+
 typedef enum {
   kPlayerStatusLoginProcessTurn = 1, //登陆排队中
   kPlayerStatusLoginConnect, //登陆连接中
   kPlayerStatusLoginServerReady, //登陆服务器已准备
   kPlayerStatusLoginNoram, //登陆正常
 } playerstatus_t;
+
+typedef enum {
+  kServerTypeServer = 0, //游戏服务器
+  kServerTypeLogin, //登陆服务器
+  kServerTypeShareMemory, //共享内存
+  kServerTypeCenter, //中心服务器
+  kServerTypeGateway, //网关服务器
+  kServerTypeNumber,
+} servertype_t;
+
+#endif
 
 #endif //COMMON_DEFINE_ENUM_H_

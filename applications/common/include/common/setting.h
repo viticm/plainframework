@@ -15,10 +15,11 @@
 #include "common/define/macros.h"
 #include "pf/base/singleton.h"
 #include "pf/db/config.h"
-#include "pf/net/config.h"
 
 namespace common {
-  
+
+#ifdef __SERVER__ /* __SERVER__ { */
+
 #ifdef _SERVER
 //--struct start
 //武侠世界设计的并不好，我相信天龙已经改正了这些问题(我这里将各个设置分开，并非直接塞在一个结构体内)
@@ -483,20 +484,18 @@ typedef struct {
 } server_share_memroy_key_t;
 
 //server
-struct server_data_t {
+typedef struct server_data_struct {
   int16_t id;
   int16_t machine_id;
-  char ip0[IP_SIZE];
-  uint16_t port0;
-  char ip1[IP_SIZE];
-  uint16_t port1;
+  char ip[IP_SIZE];
+  uint16_t port;
   int8_t type;
   proxy_data_t proxy_data[kIspNumber];
   server_share_memroy_key_t share_memory_key;
   bool enable_share_memory;
-  server_data_t();
-  ~server_data_t();
-};
+  server_data_struct();
+  ~server_data_struct();
+} server_data_t;
 
 typedef struct {
   char ip[IP_SIZE];
@@ -507,8 +506,8 @@ struct server_info_t {
   server_data_t *data;
   uint16_t count;
   int16_t current_server_id;
-  int16_t hash_server[NET_OVER_SERVER_MAX];
-  server_center_data_t world_data;
+  int16_t hash_server[OVER_SERVER_MAX];
+  server_center_data_t center_data;
   server_info_t();
   ~server_info_t();
 };
@@ -596,12 +595,17 @@ class GatewayInfo {
   
 };
 
+#endif /* } __SERVER__ */
+
 //config class
 class Setting : public pf_base::Singleton<Setting> {
  
  public:
    Setting();
    ~Setting();
+
+#ifdef __SERVER__ /* __SERVER__ { */
+
 #ifdef _SERVER
    config_info_t config_info_;
 #endif
@@ -615,6 +619,8 @@ class Setting : public pf_base::Singleton<Setting> {
    scene_info_t scene_info_;
 #endif
 
+#endif /* } __SERVER__ */
+
  public:
    static Setting *getsingleton_pointer();
    static Setting &getsingleton();
@@ -622,6 +628,7 @@ class Setting : public pf_base::Singleton<Setting> {
  public:
    bool init();
    void reload();
+#ifdef __SERVER__ /* __SERVER__ { */
    void load_config_info();
    void load_login_info();
    void load_center_info();
@@ -633,8 +640,10 @@ class Setting : public pf_base::Singleton<Setting> {
    void load_copy_scene_info();
    int16_t get_server_id_by_scene_id(int16_t id) const;
    int16_t get_server_id_by_share_memory_key(uint32_t key) const;
+#endif /* } __SERVER__ */
 
  private:
+#ifdef __SERVER__ /* __SERVER__ { */ 
    void load_config_info_only();
    void load_config_info_reload();
    void load_login_info_only();
@@ -653,6 +662,7 @@ class Setting : public pf_base::Singleton<Setting> {
    void load_scene_info_reload();
    void load_copy_scene_info_only();
    void load_copy_scene_info_reload();
+#endif /* } __SERVER__ */
 
 };
 //class end--

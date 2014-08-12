@@ -1,11 +1,15 @@
-#include "pf/net/connection/server.h"
+#include "common/define/enum.h"
+#include "common/net/connection/server.h"
 
-namespace pf_net {
+namespace common {
+
+namespace net {
 
 namespace connection {
 
-Server::Server() {
+Server::Server() { 
   status_ = 0;
+  serverdata_ = NULL;
 }
 
 Server::~Server() {
@@ -72,23 +76,6 @@ bool Server::isplayer() {
   return false;
 }
 
-bool Server::isbilling() {
-  return false;
-}
-
-bool Server::islogin() {
-  return false;
-}
-
-bool Server::isvalid() {
-  __ENTER_FUNCTION
-    bool result = false;
-    result = Base::isvalid();
-    return result;
-  __LEAVE_FUNCTION
-    return false;
-}
-
 bool Server::sendpacket(packet::Base *packet) {
   __ENTER_FUNCTION
     bool result = false;
@@ -98,6 +85,27 @@ bool Server::sendpacket(packet::Base *packet) {
     return false;
 }
 
+server_data_t *Server::get_serverdata() {
+  return serverdata_;
+}
+
+void Server::set_serverdata(server_data_t *serverdata) {
+  serverdata_ = serverdata;
+}
+
+int16_t Server::get_serverid() const {
+  __ENTER_FUNCTION
+    int16_t id = ID_INVALID;
+    if (serverdata_) {
+      id = serverdata_.id;
+    }
+    return id;
+  __LEAVE_FUNCTION
+    return ID_INVALID;
+}
+
 } //namespace connection
 
-} //namespace pap_server_common_net
+} //namespace net
+
+} //namespace common

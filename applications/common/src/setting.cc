@@ -14,6 +14,8 @@ namespace common {
 
 //--struct start
 
+#ifdef __SERVER__ /* __SERVER__ { */
+
 #ifdef _SERVER
 config_info_t::config_info_t() {
   __ENTER_FUNCTION
@@ -329,14 +331,12 @@ proxy_data_t::~proxy_data_t() {
   //do nothing
 }
 
-server_data_t::server_data_t() {
+server_data_struct::server_data_struct() {
   __ENTER_FUNCTION
     id = ID_INVALID;
     machine_id = ID_INVALID;
-    memset(ip0, '\0', sizeof(ip0));
-    port0 = 0;
-    memset(ip1, '\0', sizeof(ip1));
-    port1 = 0;
+    memset(ip, '\0', sizeof(ip));
+    port = 0;
     type = -1;
     share_memory_key.human = 0;
     share_memory_key.player_shop = 0;
@@ -346,7 +346,7 @@ server_data_t::server_data_t() {
   __LEAVE_FUNCTION
 }
 
-server_data_t::~server_data_t() {
+server_data_struct::~server_data_struct() {
   //do nothing
 }
 
@@ -355,8 +355,9 @@ server_info_t::server_info_t() {
     data = NULL;
     count = 0;
     current_server_id = -1;
-    memset(world_data.ip, '\0', sizeof(world_data.ip));
-    memset(hash_server, 0, sizeof(hash_server));
+    memset(center_data.ip, '\0', sizeof(center_data.ip));
+    for (int16_t i = 0; i < OVER_SERVER_MAX; ++i)
+      hash_server[i] = ID_INVALID;
   __LEAVE_FUNCTION
 }
 
@@ -523,6 +524,8 @@ bool GatewayInfo::is_use() {
     return false;
 }
 
+#endif /* } __SERVER__ */
+
 Setting *Setting::getsingleton_pointer() {
   return singleton_;
 }
@@ -542,6 +545,7 @@ Setting::~Setting() {
 
 bool Setting::init() {
   __ENTER_FUNCTION
+#ifdef __SERVER__ /* __SERVER__ { */
     load_config_info();
     load_login_info();
     load_center_info();
@@ -551,6 +555,7 @@ bool Setting::init() {
     load_server_info();
     load_scene_info();
     load_copy_scene_info();
+#endif /* } __SERVER__ */
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -558,6 +563,7 @@ bool Setting::init() {
 
 void Setting::reload() {
   __ENTER_FUNCTION
+#ifdef __SERVER__ /* __SERVER__ { */
     load_config_info_reload();
     load_login_info_reload();
     load_center_info_reload();
@@ -567,8 +573,11 @@ void Setting::reload() {
     load_server_info_reload();
     load_scene_info_reload();
     load_copy_scene_info_reload();
+#endif /* } __SERVER__ */
   __LEAVE_FUNCTION
 }
+
+#ifdef __SERVER__ /* __SERVER__ { */
 
 void Setting::load_config_info() {
   __ENTER_FUNCTION
@@ -1357,13 +1366,14 @@ void Setting::load_share_memory_info_reload() {
 
 void Setting::load_machine_info() {
   __ENTER_FUNCTION
+#ifndef _GATEWAY
     load_machine_info_only();
     load_machine_info_reload();
+#endif
   __LEAVE_FUNCTION
 }
 
 void Setting::load_machine_info_only() {
-#if defined(_SERVER)
   __ENTER_FUNCTION
     pf_file::Ini machine_info_ini(MACHINE_INFO_FILE);
     machine_info_.count = 
@@ -1383,28 +1393,26 @@ void Setting::load_machine_info_only() {
              "[common] (Setting::load) %s only ... ok!", 
              MACHINE_INFO_FILE);
   __LEAVE_FUNCTION
-#endif
 }
 
 void Setting::load_machine_info_reload() {
-#ifdef _SERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[common] (Setting::load) %s reload ... ok!", 
              MACHINE_INFO_FILE);
   __LEAVE_FUNCTION
-#endif
 }
 
 void Setting::load_server_info() {
   __ENTER_FUNCTION
+#ifndef _GATEWAY
     load_server_info_only();
     load_server_info_reload();
+#endif
   __LEAVE_FUNCTION
 }
 
 void Setting::load_server_info_only() {
-#ifdef _SERVER
   __ENTER_FUNCTION
     pf_file::Ini server_info_ini(SERVER_INFO_FILE);
     server_info_.count = server_info_ini.read_uint16("System", "ServerNumber");
@@ -1421,17 +1429,11 @@ void Setting::load_server_info_only() {
       server_info_.data[i].machine_id = 
         server_info_ini.read_int16(kSection, "MachineID");
       server_info_ini.readstring(kSection, 
-                                 "IP0", 
-                                 server_info_.data[i].ip0, 
-                                 sizeof(server_info_.data[i].ip0) - 1);
-      server_info_.data[i].port0 = 
-        server_info_ini.read_uint16(kSection, "Port0");
-      server_info_ini.readstring(kSection, 
-                                 "IP1", 
-                                 server_info_.data[i].ip1, 
-                                 sizeof(server_info_.data[i].ip1) - 1);
-      server_info_.data[i].port1 = 
-        server_info_ini.read_uint16(kSection, "Port1");
+                                 "IP", 
+                                 server_info_.data[i].ip, 
+                                 sizeof(server_info_.data[i].ip) - 1);
+      server_info_.data[i].port = 
+        server_info_ini.read_uint16(kSection, "Port");
       server_info_.data[i].type = server_info_ini.read_int8(kSection, "Type");
       //not active proxy
       server_info_.data[i].share_memory_key.human =  
@@ -1445,14 +1447,14 @@ void Setting::load_server_info_only() {
       server_info_.data[i].enable_share_memory = 
         server_info_ini.read_bool(kSection, "EnableShareMemory");
     }
-    server_info_ini.readstring("World", 
+    server_info_ini.readstring("Center", 
                                "IP", 
-                               server_info_.world_data.ip, 
-                               sizeof(server_info_.world_data.ip) - 1);
-    server_info_.world_data.port = server_info_ini.read_uint16("World", "Port");
+                               server_info_.center_data.ip, 
+                               sizeof(server_info_.center_data.ip) - 1);
+    server_info_.center_data.port = server_info_ini.read_uint16("Center", "Port");
     for (i = 0; i < server_info_.count; ++i) {
       int16_t server_id = server_info_.data[i].id;
-      Assert(server_id != ID_INVALID && server_id <= NET_OVER_SERVER_MAX);
+      Assert(server_id != ID_INVALID && server_id <= OVER_SERVER_MAX);
       Assert(-1 == server_info_.hash_server[server_id]);
       server_info_.hash_server[server_id] = static_cast<int16_t>(i);
     }
@@ -1460,17 +1462,14 @@ void Setting::load_server_info_only() {
              "[common] (Setting::load) %s only ... ok!", 
              SERVER_INFO_FILE);
   __LEAVE_FUNCTION
-#endif
 }
 
 void Setting::load_server_info_reload() {
-#ifdef _SERVER
   __ENTER_FUNCTION
     SLOW_LOG("setting", 
              "[common] (Setting::load) %s reload ... ok!", 
              SERVER_INFO_FILE);
   __LEAVE_FUNCTION
-#endif
 }
 
 void Setting::load_scene_info() {
@@ -1595,6 +1594,9 @@ int16_t Setting::get_server_id_by_share_memory_key(uint32_t key) const {
   __LEAVE_FUNCTION
     return -1;
 }
+
+#endif /* } __SERVER__ */
+
 //class end --
 
 } //namespace common

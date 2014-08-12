@@ -16,12 +16,6 @@
 #include "pf/base/singleton.h"
 #include "pf/net/manager.h"
 
-typedef enum {
-  kServerTypeCenter = 0, //中心服务器
-  kServerTypeGateway, //网关服务器
-  kServerTypeNumber,
-} servertype_t;
-
 namespace connection {
 
 namespace manager {
@@ -57,7 +51,7 @@ class Server : public pf_base::Singleton<Server>, public pf_net::Manager {
    void notify_totalcount_togateway();
    
  private:
-   int8_t servertype_[kServerTypeNumber];
+   int16_t serverids_[kServerTypeNumber];
    pf_base::TinyTimer usercount_timer_;
 
 };

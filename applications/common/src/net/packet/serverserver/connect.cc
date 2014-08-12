@@ -12,7 +12,7 @@ Connect::Connect() {
 bool Connect::read(socket::InputStream& inputstream) {
   __ENTER_FUNCTION
     inputstream.read((char*)(&serverid_), sizeof(serverid_));
-    inputstream.read((char*)(&worldid_), sizeof(worldid_));
+    inputstream.read((char*)(&centerid_), sizeof(centerid_));
     inputstream.read((char*)(&zoneid_), sizeof(zoneid_));
     return true;
   __LEAVE_FUNCTION
@@ -22,7 +22,7 @@ bool Connect::read(socket::InputStream& inputstream) {
 bool Connect::write(socket::OutputStream& outputstream) const {
   __ENTER_FUNCTION
     outputstream.write((char*)(&serverid_), sizeof(serverid_));
-    outputstream.write((char*)(&worldid_), sizeof(worldid_));
+    outputstream.write((char*)(&centerid_), sizeof(centerid_));
     outputstream.write((char*)(&zoneid_), sizeof(zoneid_));
     return true;
   __LEAVE_FUNCTION
@@ -57,11 +57,11 @@ int16_t Connect::get_serverid() {
 void Connect::set_serverid(int16_t serverid) {
   serverid_ = serverid;
 }
-int16_t Connect::get_worldid() {
-  return worldid_;
+int16_t Connect::get_centerid() {
+  return centerid_;
 }
-void Connect::set_worldid(int16_t worldid) {
-  worldid_ = worldid;
+void Connect::set_centerid(int16_t centerid) {
+  centerid_ = centerid;
 }
 int16_t Connect::get_zoneid() {
   return zoneid_;
