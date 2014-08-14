@@ -26,9 +26,9 @@ System::System() {
 }
 
 System::~System() {
-  SAFE_DELETE(server_netmanager_);
   SAFE_DELETE(login_netmanager_);
   SAFE_DELETE(incoming_netmanager_);
+  SAFE_DELETE(server_netmanager_);
   SAFE_DELETE(g_setting);
 }
 
@@ -123,7 +123,9 @@ bool System::init() {
 
 bool System::init_net() {
   __ENTER_FUNCTION
-
+    init_net_server();
+    init_net_incoming();
+    init_net_login();
   __LEAVE_FUNCTION
 }
 
@@ -161,9 +163,9 @@ bool System::init_net_incoming() { //接收管理器将作为主管理器
               SETTING_POINTER->login_info_.net_connectionmax);
     thread::net::Incoming *incoming_netmanager_ = new thread::net::Incoming();
     setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
-      SETTING_POINTER->login_info_.listenip);
+      CONNECTION_MANAGER_SERVER_POINTER->get_serverinfo()->ip);
     setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
-      SETTING_POINTER->login_info_.listenport);
+      CONNECTION_MANAGER_SERVER_POINTER->get_serverinfo()->port);
     if (NULL == incoming_netmanager_) return false;
     pf_net::Manager *netmanager = 
       dynamic_cast<pf_net::Manager *>(incoming_netmanager_);
@@ -196,17 +198,17 @@ bool System::init_net_server() {
 
 void System::run_net() {
   __ENTER_FUNCTION
+    run_net_server();
     run_net_incoming();
     run_net_login();
-    run_net_server();
   __LEAVE_FUNCTION
 }
 
 void System::stop_net() {
   __ENTER_FUNCTION
+    stop_net_server();
     stop_net_incoming();
     stop_net_login();
-    stop_net_server();
   __LEAVE_FUNCTION
 }
 
