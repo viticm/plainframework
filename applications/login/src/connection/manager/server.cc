@@ -1,7 +1,9 @@
+#include "pf/base/log.h"
 #include "common/setting.h"
+#include "engine/system.h"
+#include "connection/login.h"
+#include "connection/queue/center.h"
 #include "connection/manager/server.h"
-
-#define CONNECTION_LOGIN_SERVER_POOLSIZE_MAX 3
 
 bool g_stopservice = false;
 connection::manager::Server *g_connection_manager_server = NULL;
@@ -18,7 +20,7 @@ Server::Server() {
   __ENTER_FUNCTION
     is_servermode_ = false;
     uint16_t i;
-    for (i = 0; i < kServerTypeNumber; ++i) {
+    for (i = 0; i < kConnectServerTypeNumber; ++i) {
       serverids_[i] = ID_INVALID;
     }
     set_poll_maxcount(32);
@@ -52,10 +54,11 @@ Server &Server::getsingleton() {
 bool Server::init_pool() {
   __ENTER_FUNCTION
     //getpool 如果未分配池内存会自动分配
-    getpool()->init(CONNECTION_LOGIN_SERVER_POOLSIZE_MAX);
+    getpool()->init(kConnectServerTypeNumber); //连接的数量
     uint16_t i;
     for (i = 0; i < pool_->get_maxcount(); ++i) {
-      pf_net::connection::Server *connection = new pf_net::connection::Server();
+      common::net::connection::Server *connection = 
+        new common::net::connection::Server();
       getpool()->init_data(i, connection);
     }
     return true;
@@ -89,7 +92,7 @@ bool Server::heartbeat(uint32_t time) {
       return true;
     }
     uint8_t i;
-    for (i = 0; i < kServerTypeNumber; ++i) {
+    for (i = 0; i < kConnectServerTypeNumber; ++i) {
       if (!is_serverconnected(i)) {
         conncetserver(i);
       }
@@ -100,8 +103,12 @@ bool Server::heartbeat(uint32_t time) {
 }
 
 int16_t Server::get_current_serverid() const {
-  if (!SETTING_POINTER) return -1;
-  return SETTING_POINTER->login_info_.id;
+  __ENTER_FUNCTION
+    if (!SETTING_POINTER) return -1;
+    int16_t serverid = SETTING_POINTER->login_info_.id;
+    return serverid;
+  __LEAVE_FUNCTION
+    return ID_INVALID;
 }
 
 bool Server::syncpacket(pf_net::packet::Base *packet,
@@ -109,7 +116,98 @@ bool Server::syncpacket(pf_net::packet::Base *packet,
                         uint8_t flag) {
   __ENTER_FUNCTION
     int16_t serverid = serverids_[servertype];
-    
+    bool result = sendpacket(packet, serverid, flag); 
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+common::net::connection::Server *Server::get_serverconnection(
+    uint8_t servertype) {
+  __ENTER_FUNCTION
+    Assert(servertype >= 0 && servertype <= kConnectServerTypeNumber);
+    int16_t serverid = serverids[servertype];
+    common::net::connection::Server *serverconnction = 
+      dynamic_cast<common::net::connection::Server *>(get(serverid));
+    return serverconnction;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
+bool Server::is_serverconnected(uint8_t type) {
+  __ENTER_FUNCTION
+    int16_t serverid = serverids_[type];
+    common::net::connection::Server *serverconnction = 
+      get_serverconnection(serverid);
+    if (NULL == serverconnection) return false;
+    bool result = serverconnection->isvalid();
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Server::is_allserver_connected() {
+  __ENTER_FUNCTION
+    uint8_t i;
+    for (i = 0; i < kConnectServerTypeNumber; ++i) {
+      if (!is_serverconnected(i)) return false;
+    }
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Server::connectserver(uint8_t type) {
+  __ENTER_FUNCTION
+    bool result = false;
+    switch (type) {
+      case kConnectServerTypeCenter: {
+        result = connect_toserver(
+            ENGINE_SYSTEM_POINTER->server_info_.center_data.ip,
+            ENGINE_SYSTEM_POINTER->server_info_.center_data.port,
+            get_current_serverid(),
+            serverids_[type]);
+        break;
+      }
+      case kConnectServerTypeGateway: {
+        result = connect_toserver(
+            ENGINE_SYSTEM_POINTER->gateway_info_.ip_,
+            ENGINE_SYSTEM_POINTER->geteway_info_.port_,
+            get_current_serverid(),
+            serverids_[type]);
+        break;
+      }
+      default:
+        break;
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return false;
+}
+
+bool Server::send_queue_tocenter() {
+  __ENTER_FUNCTION
+    uint32_t queueposition;
+    while (CONNECTION_QUEUE_CENTER_POINTER->findhead(queueposition)) {
+      centerinfo_t &centerinfo = 
+        CONNECTION_QUEUE_CENTER_POINTER->get(queueposition);  
+      pf_net::connection::Pool *connectionpool = 
+        ENGINE_SYSTEM_POINTER->get_netmanager()->getpool();
+      Login *loginconnection = 
+        dynamic_cast<Login *>(connectionpool->get(centerinfo.id));
+      if (NULL == loginconnection) {
+        SLOW_ERRORLOG(NET_MODULENAME,
+                      "[connection.manager] Server::send_queue_tocenter()"
+                      " NULL == loginconnection."
+                      " queueposition: %d, connection id: %d, account: %s",
+                      queueposition,
+                      centerinfo.id,
+                      centerinfo.name);
+        continue;
+      }
+
+    }
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

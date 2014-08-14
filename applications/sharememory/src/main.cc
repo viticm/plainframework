@@ -56,13 +56,15 @@ int32_t main(int32_t argc, char *argv[]) {
   if (!ENGINE_SYSTEM_POINTER)
     g_engine_system = new engine::System();
   if (!ENGINE_SYSTEM_POINTER)
-    ERRORPRINTF("[gateway] ENGINE_SYSTEM_POINTER is NULL");
+    ERRORPRINTF("[%s] ENGINE_SYSTEM_POINTER is NULL", APPLICATION_NAME);
   if (!ENGINE_SYSTEM_POINTER->init()) {
     return 1;
   }
   //初始化正确后再写入进程ID
   if (!pf_sys::process::writeid(PROCESS_ID_FILE)) {
-    ERRORPRINTF("[gateway] process id file: %s write error", PROCESS_ID_FILE);
+    ERRORPRINTF("[%s] process id file: %s write error", 
+                APPLICATION_NAME,
+                PROCESS_ID_FILE);
     return 1;
   }
 #if __LINUX__  
@@ -71,7 +73,7 @@ int32_t main(int32_t argc, char *argv[]) {
 #elif __WINDOWS__
   pf_base::util::disable_windowclose(); //屏蔽关闭按钮
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)signal_handler, TRUE) != TRUE) {
-    ERRORPRINTF("[gateway] can't install signal handler");
+    ERRORPRINTF("[%s] can't install signal handler", APPLICATION_NAME);
     return 1;
   }
 #endif  
@@ -90,12 +92,14 @@ void signal_handler(int32_t signal) {
   if (signal == SIGINT) {
     if (currenttime - last_signaltime > 10 * 1000) {
       DEBUGPRINTF(
-          "\r[gateway] (signal_handler) got SIGINT[%d] engine will reload!", 
+          "\r[%s] (signal_handler) got SIGINT[%d] engine will reload!",
+          APPLICATION_NAME,
           signal);
       //engine_kernel.stop();
     } else {
       WARNINGPRINTF(
-          "\r[gateway] (signal_handler) got SIGINT[%d] engine will stop!", 
+          "\r[%s] (signal_handler) got SIGINT[%d] engine will stop!",
+          APPLICATION_NAME,
           signal);
       ENGINE_SYSTEM_POINTER->stop(); 
     }
@@ -103,7 +107,8 @@ void signal_handler(int32_t signal) {
   //处理后台模式信号
   if (signal == SIGUSR1) {
     WARNINGPRINTF(
-        "\r[gateway] (signal_handler) got SIGUSR1[%d] engine will stop!", 
+        "\r[%s] (signal_handler) got SIGUSR1[%d] engine will stop!",
+        APPLICATION_NAME,
         signal);
     ENGINE_SYSTEM_POINTER->stop();
   }
@@ -117,10 +122,12 @@ BOOL WINAPI signal_handler(DWORD event) {
     case CTRL_C_EVENT: {
       if (currenttime - last_signaltime > 10 * 1000) {
         DEBUGPRINTF(
-            "[gateway] (signal_handler) CTRL+C received, engine will reload!");
+            "[%s] (signal_handler) CTRL+C received, engine will reload!",
+            APPLICATION_NAME);
       } else {
         WARNINGPRINTF(
-            "[gateway] (signal_handler) CTRL+C received, engine will stop!");
+            "[%s] (signal_handler) CTRL+C received, engine will stop!",
+            APPLICATION_NAME);
         ENGINE_SYSTEM_POINTER->stop();
       }
       break;

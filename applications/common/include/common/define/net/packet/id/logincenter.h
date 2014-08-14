@@ -29,6 +29,7 @@ namespace login_tocenter {
 
 enum packetid_enum {
   kFirst = LOGIN_TOCENTER_PACKETID_MIN,
+  kRequirePlayerLogin,
   kLast,
   kMax = LOGIN_TOCENTER_PACKETID_MAX
 };

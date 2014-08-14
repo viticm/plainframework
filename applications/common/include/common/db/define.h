@@ -37,11 +37,13 @@ typedef struct globaldata_struct {
 
 /* tables { */
 extern const char *kTableNameGloablData;
+extern const char *kTableNameRole;
 /* } tables */
 
 /* sqls { */
 extern const char *kSqlSelectGlobalData;
 extern const char *kSqlSaveGlobalData;
+extern const char *kSqlGetRoleNumber;
 /* } sqls */
 
 }; //namespace db

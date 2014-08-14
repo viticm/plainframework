@@ -30,6 +30,7 @@ namespace client_tologin {
 
 enum packetid_enum {
   kFirst = CLIENT_TOLOGIN_PACKETID_MIN,
+  kAskLogin,
   kLast,
   kMax = CLIENT_TOLOGIN_PACKETID_MAX
 };
@@ -41,6 +42,8 @@ namespace login_toclient {
 enum packetid_enum {
   kFirst = LOGIN_TOCLIENT_PACKETID_MIN,
   kLast,
+  kTurnStatus, //排队状态
+  kResultLogin, //登陆结果
   kMax = LOGIN_TOCLIENT_PACKETID_MAX,
 };
 

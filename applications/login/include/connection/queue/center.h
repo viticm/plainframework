@@ -12,17 +12,22 @@
 #define CONNECTION_QUEUE_CENTER_H_
 
 #include "connection/queue/config.h"
+#include "pf/base/singleton.h"
 #include "pf/sys/thread.h"
 
 namespace connection {
 
 namespace queue {
 
-class Center {
+class Center : public pf_base::Singleton<Center> {
 
  public:
    Center();
    ~Center();
+
+ public:
+   static Center *getsingleton_pointer();
+   static Center &getsingleton();
 
  public:
    bool init();
@@ -32,7 +37,7 @@ class Center {
               uint16_t &queueposition);
    bool getout(uint16_t queueposition);
    bool findhead(uint16_t &queueposition);
-   CenterInfo &get(uint16_t queueposition);
+   centerinfo_t &get(uint16_t queueposition);
 
  public:
    bool isempty() const;
@@ -51,5 +56,10 @@ class Center {
 }; //namespace queue
 
 }; //namespace connection
+
+#define CONNECTION_QUEUE_CENTER_POINTER \
+  connection::queue::Center::getsingleton_pointer()
+
+extern connection::queue::Center *g_connection_queue_center;
 
 #endif //CONNECTION_QUEUE_CENTER_H_

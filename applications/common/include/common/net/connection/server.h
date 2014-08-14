@@ -39,8 +39,8 @@ class Server : public pf_net::connection::Base {
    virtual void freeown() {};
 
  public:
-   virtual bool isserver();
-   virtual bool isplayer();
+   virtual bool isserver() const;
+   virtual bool isplayer() const;
    virtual bool sendpacket(packet::Base *packet);
 
  public:

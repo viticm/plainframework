@@ -49,7 +49,7 @@ class PlayerLeave : public pf_net::packet::Base {
  private:
    char account_[ACCOUNT_LENGTH_MAX];
    int16_t centerid_;
-   int16_t guid_;
+   int64_t guid_;
 
 };
 

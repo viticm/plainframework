@@ -68,11 +68,11 @@ bool Server::heartbeat(uint32_t time) {
     return false;
 }
 
-bool Server::isserver() {
+bool Server::isserver() const {
   return true;
 }
 
-bool Server::isplayer() {
+bool Server::isplayer() const {
   return false;
 }
 

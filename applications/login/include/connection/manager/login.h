@@ -16,6 +16,8 @@
 #include "pf/base/hashmap/config.h"
 #include "pf/net/manager.h"
 
+#define CONNECTION_NORMAL_MAX 2048 //正常连接的数量
+
 namespace connection {
 
 namespace manager {

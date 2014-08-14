@@ -14,10 +14,11 @@
 #ifdef __SERVER__
 
 typedef enum {
-  kPlayerStatusLoginProcessTurn = 1, //登陆排队中
+  kPlayerStatusLoginEmpty = 1,
+  kPlayerStatusLoginProcessTurn, //登陆排队中
   kPlayerStatusLoginConnect, //登陆连接中
   kPlayerStatusLoginServerReady, //登陆服务器已准备
-  kPlayerStatusLoginNoram, //登陆正常
+  kPlayerStatusLoginNormal, //登陆正常
 } playerstatus_t;
 
 typedef enum {
@@ -30,5 +31,10 @@ typedef enum {
 } servertype_t;
 
 #endif
+
+typedef enum {
+  kLoginTurnStatusInTurn = 0, //登陆排队中
+  kLoginTurnStatusNormal
+} login_turnstatus_t;
 
 #endif //COMMON_DEFINE_ENUM_H_

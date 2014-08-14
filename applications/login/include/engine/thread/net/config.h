@@ -1,16 +1,16 @@
 /**
  * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework )
- * $Id turn.h
+ * $Id config.h
  * @link https://github.com/viticm/plainframework for the canonical source repository
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/08/08 19:27
- * @uses connection counter turn class
+ * @date 2014/08/12 21:47
+ * @uses engine thread net module config file
  */
-#ifndef CONNECTION_COUNTER_TURN_H_
-#define CONNECTION_COUNTER_TURN_H_
+#ifndef ENGINE_THREAD_NET_CONFIG_H_
+#define ENGINE_THREAD_NET_CONFIG_H_
 
-#include "connection/queue/config.h"
+#include "engine/thread/config.h"
 
-#endif //CONNECTION_COUNTER_TURN_H_
+#endif //ENGINE_THREAD_NET_CONFIG_H_

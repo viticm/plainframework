@@ -14,17 +14,24 @@
 #include "connection/manager/config.h"
 #include "pf/base/tinytimer.h"
 #include "pf/base/singleton.h"
-#include "pf/net/manager.h"
+#include "common/net/manager/server.h"
+
+typedef enum {
+  kConnectServerTypeCenter = 0,
+  kConnectServerTypeGateway,
+  kConnectServerTypeNumber
+} connect_servertype_t; //连接的服务器类型，区别于servertype_t
 
 namespace connection {
 
 namespace manager {
 
-class Server : public pf_base::Singleton<Server>, public pf_net::Manager {
+class Server : public pf_base::Singleton<Server>, 
+  public common::net::manager::Server {
 
  public:
    Server();
-   ~Server();
+   virtual ~Server();
 
  public:
    static Server *getsingleton_pointer();
@@ -43,15 +50,15 @@ class Server : public pf_base::Singleton<Server>, public pf_net::Manager {
    bool syncpacket(pf_net::packet::Base *packet, 
                    uint8_t servertype, 
                    uint8_t flag = kPacketFlagNone);
-   pf_net::connection::Server *get_serverconnection(uint8_t servertype);
-   bool is_serverconnected(uint8_t servertype) const;
+   common::net::connection::Server *get_serverconnection(uint8_t servertype);
+   bool is_serverconnected(uint8_t type) const;
    bool is_allserver_connected() const;
-   bool connectserver(uint8_t servertype);
+   bool connectserver(uint8_t type);
    bool send_queue_tocenter();
    void notify_totalcount_togateway();
    
  private:
-   int16_t serverids_[kServerTypeNumber];
+   int16_t serverids_[kConnectServerTypeNumber]; //连接服务器ID数组，同连接ID数据一样
    pf_base::TinyTimer usercount_timer_;
 
 };

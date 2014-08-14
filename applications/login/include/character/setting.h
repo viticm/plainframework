@@ -32,6 +32,18 @@ typedef struct new_struct {
   uint8_t getprofession();
 } new_t; //新建玩家数据结构
 
+typedef struct base_struct {
+  uint8_t level;
+  int64_t guid;
+  base_struct() {
+    clear();
+  }
+  void clear() {
+    level = 1;
+    guid = ID_INVALID;
+  }
+} base_t;
+
 }; //namespace character
 
 #endif //CHARACTER_SETTING_H_

@@ -1,5 +1,9 @@
 #include "connection/queue/center.h"
 
+template <>
+connection::queue::Center 
+  *pf_base::Singleton<connection::queue::Center>::singleton_ = NULL;
+
 namespace connection {
 
 namespace queue {
@@ -16,6 +20,15 @@ Center::~Center() {
   __ENTER_FUNCTION
     SAFE_DELETE_ARRAY(queue_);
   __LEAVE_FUNCTION
+}
+
+Center *Center::getsingleton_pointer() {
+  return singleton_;
+}
+
+Center &Center::getsingleton() {
+  Assert(singleton_);
+  return *singleton_;
 }
 
 bool Center::init() {

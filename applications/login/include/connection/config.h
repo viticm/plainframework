@@ -12,10 +12,11 @@
 #define CONNECTION_CONFIG_H_
 
 #include "application/config.h"
+#include "common/define/macros.h"
 
 namespace connection {
 
-typedef turninfo_struct {
+typedef struct turninfo_struct {
   int16_t id;
   char name[ACCOUNT_LENGTH_MAX];
   bool isused;
@@ -28,14 +29,14 @@ typedef turninfo_struct {
   }
 } turninfo_t; //排队连接信息结构
 
-typedef centerinfo_struct {
+typedef struct centerinfo_struct {
   int16_t id;
   char name[ACCOUNT_LENGTH_MAX];
   bool isused;
   int64_t guid;
   int16_t sceneid;
   uint16_t queueposition;
-  centerinfo_struct {
+  centerinfo_struct() {
     id = ID_INVALID;
     memset(name, 0, sizeof(name));
     isused = false;

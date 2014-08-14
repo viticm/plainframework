@@ -77,7 +77,7 @@ int16_t PlayerLeave::get_centerid() const {
 }
 
 void PlayerLeave::set_centerid(int16_t centerid) {
-  centerid_ = centerid_;
+  centerid_ = centerid;
 }
 
 pf_net::packet::Base *PlayerLeaveFactory::createpacket() {

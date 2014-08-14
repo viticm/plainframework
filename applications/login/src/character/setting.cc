@@ -1,5 +1,5 @@
-#include "character/setting.h"
 #include "pf/base/string.h"
+#include "character/setting.h"
 
 namespace character {
 

@@ -33,4 +33,8 @@
 #define GROUP_SERVER_MAX 24 //一组（组）服务器最大的服务器数量
 /* } server about */
 
+/* database about { */
+#define DB_ROLE_MAX 6 //数据库最多的角色数量
+/* } database about */
+
 #endif //COMMON_DEFINE_MACROS_H_
