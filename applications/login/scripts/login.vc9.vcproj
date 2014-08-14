@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="gateway"
+	Name="login"
 	ProjectGUID="{D78A9474-FC59-4C87-B957-022EFD4BEC92}"
-	RootNamespace="gateway"
+	RootNamespace="login"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include;../../common/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_GATEWAY"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_SHAREMEMORY"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
@@ -130,7 +130,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="../../../pf/core/include;../../../pf/dependencies/lua/src;../../../pf/dependencies/iconv/include;../include;../../common/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_GATEWAY;__SERVER__;PF_BUILD_AS_DLL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_LOGIN;__SERVER__;PF_BUILD_AS_DLL"
 				StringPooling="true"
 				ExceptionHandling="2"
 				RuntimeLibrary="2"
@@ -201,28 +201,116 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\gateway.cc"
+				RelativePath="..\src\main.cc"
 				>
 			</File>
+			<Filter
+				Name="character"
+				>
+				<File
+					RelativePath="..\src\character\setting.cc"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="engine"
+				>
+				<File
+					RelativePath="..\src\engine\system.cc"
+					>
+				</File>
+				<Filter
+					Name="thread"
+					>
+					<Filter
+						Name="net"
+						>
+						<File
+							RelativePath="..\src\engine\thread\net\incoming.cc"
+							>
+						</File>
+						<File
+							RelativePath="..\src\engine\thread\net\login.cc"
+							>
+						</File>
+						<File
+							RelativePath="..\src\engine\thread\net\server.cc"
+							>
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="connection"
+				>
+				<File
+					RelativePath="..\src\connection\login.cc"
+					>
+				</File>
+				<Filter
+					Name="counter"
+					>
+					<File
+						RelativePath="..\src\connection\counter\center.cc"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="manager"
+					>
+					<File
+						RelativePath="..\src\connection\manager\incoming.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\src\connection\manager\login.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\src\connection\manager\server.cc"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="queue"
+					>
+					<File
+						RelativePath="..\src\connection\queue\center.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\src\connection\queue\turn.cc"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="db"
+				>
+				<File
+					RelativePath="..\src\db\character.cc"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="message"
 				>
 				<Filter
+					Name="delegator"
+					>
+					<File
+						RelativePath="..\src\message\delegator\auth.cc"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="handler"
 					>
 					<Filter
-						Name="serverserver"
+						Name="client_tologin"
 						>
 						<File
-							RelativePath="..\src\message\handler\serverserver\connect.cc"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="login_togateway"
-						>
-						<File
-							RelativePath="..\src\message\handler\login_togateway\askauth.cc"
+							RelativePath="..\src\message\handler\client_tologin\asklogin.cc"
 							>
 						</File>
 					</Filter>
@@ -234,31 +322,35 @@
 							>
 						</File>
 					</Filter>
-				</Filter>
-				<Filter
-					Name="delegator"
-					>
-					<File
-						RelativePath="..\src\message\delegator\account.cc"
+					<Filter
+						Name="login_tocenter"
 						>
-					</File>
+						<File
+							RelativePath="..\src\message\handler\login_tocenter\require_playerlogin.cc"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="login_toclient"
+						>
+						<File
+							RelativePath="..\src\message\handler\login_toclient\resultlogin.cc"
+							>
+						</File>
+						<File
+							RelativePath="..\src\message\handler\login_toclient\turnstatus.cc"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="login_togateway"
+						>
+						<File
+							RelativePath="..\src\message\handler\login_togateway\askauth.cc"
+							>
+						</File>
+					</Filter>
 				</Filter>
-			</Filter>
-			<Filter
-				Name="db"
-				>
-				<File
-					RelativePath="..\src\db\user.cc"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="engine"
-				>
-				<File
-					RelativePath="..\src\engine\system.cc"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -267,7 +359,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\gateway.h"
+				RelativePath="..\include\main.h"
 				>
 			</File>
 			<Filter
@@ -279,14 +371,14 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="db"
+				Name="character"
 				>
 				<File
-					RelativePath="..\include\db\config.h"
+					RelativePath="..\include\character\config.h"
 					>
 				</File>
 				<File
-					RelativePath="..\include\db\user.h"
+					RelativePath="..\include\character\setting.h"
 					>
 				</File>
 			</Filter>
@@ -301,23 +393,115 @@
 					RelativePath="..\include\engine\system.h"
 					>
 				</File>
+				<Filter
+					Name="thread"
+					>
+					<File
+						RelativePath="..\include\engine\thread\config.h"
+						>
+					</File>
+					<Filter
+						Name="net"
+						>
+						<File
+							RelativePath="..\include\engine\thread\net\config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\include\engine\thread\net\incoming.h"
+							>
+						</File>
+						<File
+							RelativePath="..\include\engine\thread\net\login.h"
+							>
+						</File>
+						<File
+							RelativePath="..\include\engine\thread\net\server.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="connection"
+				>
+				<File
+					RelativePath="..\include\connection\config.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\connection\login.h"
+					>
+				</File>
+				<Filter
+					Name="counter"
+					>
+					<File
+						RelativePath="..\include\connection\counter\center.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\counter\config.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="manager"
+					>
+					<File
+						RelativePath="..\include\connection\manager\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\manager\incoming.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\manager\login.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\manager\server.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="queue"
+					>
+					<File
+						RelativePath="..\include\connection\queue\center.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\queue\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\connection\queue\turn.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="db"
+				>
+				<File
+					RelativePath="..\include\db\character.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\db\config.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="message"
 				>
-				<File
-					RelativePath="..\include\message\config.h"
-					>
-				</File>
 				<Filter
 					Name="delegator"
 					>
 					<File
-						RelativePath="..\include\message\delegator\account.h"
-						>
-					</File>
-					<File
-						RelativePath="..\include\message\delegator\config.h"
+						RelativePath="..\include\message\delegator\auth.h"
 						>
 					</File>
 				</Filter>
@@ -340,6 +524,14 @@
 					>
 				</File>
 				<Filter
+					Name="db"
+					>
+					<File
+						RelativePath="..\..\common\src\db\define.cc"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="net"
 					>
 					<File
@@ -347,13 +539,65 @@
 						>
 					</File>
 					<Filter
+						Name="connection"
+						>
+						<File
+							RelativePath="..\..\common\src\net\connection\server.cc"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="manager"
+						>
+						<File
+							RelativePath="..\..\common\src\net\manager\server.cc"
+							>
+						</File>
+					</Filter>
+					<Filter
 						Name="packet"
 						>
+						<Filter
+							Name="client_tologin"
+							>
+							<File
+								RelativePath="..\..\common\src\net\packet\client_tologin\asklogin.cc"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="login_toclient"
+							>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_toclient\resultlogin.cc"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_toclient\turnstatus.cc"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="login_tocenter"
+							>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_tocenter\require_playerlogin.cc"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="center_tologin"
+							>
+						</Filter>
 						<Filter
 							Name="login_togateway"
 							>
 							<File
 								RelativePath="..\..\common\src\net\packet\login_togateway\askauth.cc"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_togateway\playerleave.cc"
 								>
 							</File>
 						</Filter>
@@ -396,6 +640,10 @@
 					</File>
 					<File
 						RelativePath="..\..\common\include\common\define\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\common\include\common\define\enum.h"
 						>
 					</File>
 					<File
@@ -464,6 +712,18 @@
 					</Filter>
 				</Filter>
 				<Filter
+					Name="db"
+					>
+					<File
+						RelativePath="..\..\common\include\common\db\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\common\include\common\db\define.h"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="net"
 					>
 					<File
@@ -475,12 +735,80 @@
 						>
 					</File>
 					<Filter
+						Name="connection"
+						>
+						<File
+							RelativePath="..\..\common\include\common\net\connection\config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\common\include\common\net\connection\server.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="manager"
+						>
+						<File
+							RelativePath="..\..\common\include\common\net\manager\config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\common\include\common\net\manager\server.h"
+							>
+						</File>
+					</Filter>
+					<Filter
 						Name="packet"
 						>
 						<File
 							RelativePath="..\..\common\include\common\net\packet\config.h"
 							>
 						</File>
+						<Filter
+							Name="client_tologin"
+							>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\client_tologin\asklogin.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\client_tologin\config.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="login_toclient"
+							>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_toclient\config.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_toclient\resultlogin.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_toclient\turnstatus.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="login_tocenter"
+							>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_tocenter\config.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_tocenter\require_playerlogin.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="center_tologin"
+							>
+						</Filter>
 						<Filter
 							Name="login_togateway"
 							>
@@ -490,6 +818,10 @@
 							</File>
 							<File
 								RelativePath="..\..\common\include\common\net\packet\login_togateway\config.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_togateway\playerleave.h"
 								>
 							</File>
 						</Filter>

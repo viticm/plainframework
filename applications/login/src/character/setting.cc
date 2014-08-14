@@ -20,7 +20,7 @@ int64_t new_struct::getguid() {
 }
 
 void new_struct::setname(const char *_name) {
-  pf_base::string::safe_copy(name, _name, sizeof(name));
+  pf_base::string::safecopy(name, _name, sizeof(name));
 }
 
 const char *new_struct::getname() {

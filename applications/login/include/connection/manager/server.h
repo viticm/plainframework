@@ -51,11 +51,12 @@ class Server : public pf_base::Singleton<Server>,
                    uint8_t servertype, 
                    uint8_t flag = kPacketFlagNone);
    common::net::connection::Server *get_serverconnection(uint8_t servertype);
-   bool is_serverconnected(uint8_t type) const;
-   bool is_allserver_connected() const;
+   bool is_serverconnected(uint8_t type);
+   bool is_allserver_connected();
    bool connectserver(uint8_t type);
    bool send_queue_tocenter();
    void notify_totalcount_togateway();
+   bool init_pool();
    
  private:
    int16_t serverids_[kConnectServerTypeNumber]; //连接服务器ID数组，同连接ID数据一样

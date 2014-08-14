@@ -28,7 +28,7 @@ class Login : public pf_sys::Thread, public connection::manager::Login {
    ~Login();
 
   bool init();
-  virtual bool run();
+  virtual void run();
   virtual void stop();
   void quit();
   bool isactive() const;

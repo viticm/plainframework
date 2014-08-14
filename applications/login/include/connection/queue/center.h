@@ -35,7 +35,7 @@ class Center : public pf_base::Singleton<Center> {
               const char *name, 
               int64_t guid, 
               uint16_t &queueposition);
-   bool getout(uint16_t queueposition);
+   bool getout(int16_t &id, char *name);
    bool findhead(uint16_t &queueposition);
    centerinfo_t &get(uint16_t queueposition);
 
@@ -45,7 +45,7 @@ class Center : public pf_base::Singleton<Center> {
    uint16_t gethead() const;
 
  private:
-   CenterInfo *queue_;
+   centerinfo_t *queue_;
    uint16_t size_;
    uint16_t head_;
    uint16_t tail_;

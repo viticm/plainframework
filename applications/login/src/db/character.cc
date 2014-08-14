@@ -8,11 +8,12 @@ namespace character {
 
 uint8_t getnumber(const char *account) {
   __ENTER_FUNCTION
+    using namespace common::db;
     if (!ENGINE_SYSTEM_POINTER || !ENGINE_SYSTEM_POINTER->get_dbmanager())
       return 0;
     enum {
       kDBCount = 1,
-    }
+    };
     ENGINE_SYSTEM_POINTER
       ->get_dbmanager()
       ->get_internal_query()

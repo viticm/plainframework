@@ -140,14 +140,13 @@ bool System::init_setting() {
 
 bool System::init_net_connectionpool() {
   __ENTER_FUNCTION
-    using namespace pf_net;
     if (!get_netmanager()) return false; //网络管理器还未初始化
     uint16_t connectionmax = static_cast<uint16_t>(
         getconfig_int32value(ENGINE_CONFIG_NET_CONNECTION_MAX));
     get_netmanager()->getpool()->init(connectionmax);
     uint16_t i = 0;
     for (i = 0; i < connectionmax; ++i) {
-      connection::Login loginconnection = new connection::Login();
+      connection::Login *loginconnection = new connection::Login();
       Assert(loginconnection);
       get_netmanager()->getpool()->init_data(i, loginconnection);
     }
@@ -158,13 +157,13 @@ bool System::init_net_connectionpool() {
 bool System::init_net_incoming() { //接收管理器将作为主管理器
   __ENTER_FUNCTION
     setconfig(ENGINE_CONFIG_NET_ISACTIVE, true); //所有网络管理器以线程运行
-    setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
-              SETTING_POINTER->login_info_.listenip_);
-    setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
-              SETTING_POINTER->gateway_info_.listenport_);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
-              SETTING_POINTER->gateway_info_.net_connectionmax_);
+              SETTING_POINTER->login_info_.net_connectionmax);
     thread::net::Incoming *incoming_netmanager_ = new thread::net::Incoming();
+    setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
+      SETTING_POINTER->login_info_.listenip);
+    setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
+      SETTING_POINTER->login_info_.listenport);
     if (NULL == incoming_netmanager_) return false;
     pf_net::Manager *netmanager = 
       dynamic_cast<pf_net::Manager *>(incoming_netmanager_);

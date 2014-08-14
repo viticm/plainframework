@@ -76,7 +76,7 @@ bool Server::isplayer() const {
   return false;
 }
 
-bool Server::sendpacket(packet::Base *packet) {
+bool Server::sendpacket(pf_net::packet::Base *packet) {
   __ENTER_FUNCTION
     bool result = false;
     result = Base::sendpacket(packet);
@@ -97,7 +97,7 @@ int16_t Server::get_serverid() const {
   __ENTER_FUNCTION
     int16_t id = ID_INVALID;
     if (serverdata_) {
-      id = serverdata_.id;
+      id = serverdata_->id;
     }
     return id;
   __LEAVE_FUNCTION

@@ -1,6 +1,8 @@
 #include "pf/base/time_manager.h"
 #include "pf/base/log.h"
 #include "common/define/enum.h"
+#include "common/net/packet/login_toclient/turnstatus.h"
+#include "connection/queue/turn.h"
 #include "connection/login.h"
 
 namespace connection {
@@ -53,6 +55,7 @@ bool Login::isserver() const {
 
 bool Login::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
+    using namespace common::net::packet::login_toclient;
     if (time > kicktime_ + CONNECTION_KICKTIME_MAX) {
       SLOW_ERRORLOG(APPLICATION_NAME,
                     "[connection] (Login::heartbeat)"
@@ -63,6 +66,11 @@ bool Login::heartbeat(uint32_t time) {
       if (time > last_sendmessage_turntime_ + CONNECTION_TURNMESSAGE_TIME_MAX) {
         last_sendmessage_turntime_ = time;
         uint32_t turnnumber = 0;
+        turnnumber = CONNECTION_QUEUE_TURN_POINTER->calculate_turnnumber(queueposition_);
+        TurnStatus message;
+        message.set_turnstatus(kPlayerStatusLoginProcessTurn);
+        message.set_turnnumber(turnnumber);
+        sendpacket(&message);
       }
     }
     if (!Base::heartbeat(time)) return false;
@@ -85,7 +93,7 @@ bool Login::senddirectly(pf_net::packet::Base *packet) {
     bool result = Base::sendpacket(packet);
     if (result) {
       int8_t count = 0;
-      while (outputstream_->reallength() > 0) {
+      while (socket_inputstream_->reallength() > 0) {
         Base::processoutput();
         ++count;
         if (count > 3) {

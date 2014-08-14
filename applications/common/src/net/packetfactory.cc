@@ -112,7 +112,7 @@ bool __stdcall isvalid_packetid(uint16_t id) {
     result = (serverserver::kFirst < id && id < serverserver::kLast) ||
              (gatewaylogin::kFirst < id && id < gatewaylogin::kLast) ||
              (gateway_tologin::kFirst < id && id < gateway_tologin::kLast) ||
-             (login_togateway::kFirst < id && id < login_togateway::kLast)
+             (login_togateway::kFirst < id && id < login_togateway::kLast) ||
              (clientlogin::kFirst < id && id < clientlogin::kLast) ||
              (client_tologin::kFirst < id && id < client_tologin::kLast) ||
              (login_tocenter::kFirst < id && id < login_toclient::kLast) ||

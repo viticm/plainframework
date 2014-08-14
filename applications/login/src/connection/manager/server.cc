@@ -94,7 +94,7 @@ bool Server::heartbeat(uint32_t time) {
     uint8_t i;
     for (i = 0; i < kConnectServerTypeNumber; ++i) {
       if (!is_serverconnected(i)) {
-        conncetserver(i);
+        connectserver(i);
       }
     }
     return true;
@@ -115,8 +115,9 @@ bool Server::syncpacket(pf_net::packet::Base *packet,
                         uint8_t servertype,
                         uint8_t flag) {
   __ENTER_FUNCTION
-    int16_t serverid = serverids_[servertype];
-    bool result = sendpacket(packet, serverid, flag); 
+    USE_PARAM(flag); //now not useit
+    common::net::connection::Server *serverconnection = get_serverconnection(servertype);
+    bool result = serverconnection->sendpacket(packet);
     return result;
   __LEAVE_FUNCTION
     return false;
@@ -126,7 +127,7 @@ common::net::connection::Server *Server::get_serverconnection(
     uint8_t servertype) {
   __ENTER_FUNCTION
     Assert(servertype >= 0 && servertype <= kConnectServerTypeNumber);
-    int16_t serverid = serverids[servertype];
+    int16_t serverid = serverids_[servertype];
     common::net::connection::Server *serverconnction = 
       dynamic_cast<common::net::connection::Server *>(get(serverid));
     return serverconnction;
@@ -136,9 +137,7 @@ common::net::connection::Server *Server::get_serverconnection(
 
 bool Server::is_serverconnected(uint8_t type) {
   __ENTER_FUNCTION
-    int16_t serverid = serverids_[type];
-    common::net::connection::Server *serverconnction = 
-      get_serverconnection(serverid);
+    common::net::connection::Server *serverconnection = get_serverconnection(type);
     if (NULL == serverconnection) return false;
     bool result = serverconnection->isvalid();
     return result;
@@ -163,16 +162,16 @@ bool Server::connectserver(uint8_t type) {
     switch (type) {
       case kConnectServerTypeCenter: {
         result = connect_toserver(
-            ENGINE_SYSTEM_POINTER->server_info_.center_data.ip,
-            ENGINE_SYSTEM_POINTER->server_info_.center_data.port,
+            SETTING_POINTER->server_info_.center_data.ip,
+            SETTING_POINTER->server_info_.center_data.port,
             get_current_serverid(),
             serverids_[type]);
         break;
       }
       case kConnectServerTypeGateway: {
         result = connect_toserver(
-            ENGINE_SYSTEM_POINTER->gateway_info_.ip_,
-            ENGINE_SYSTEM_POINTER->geteway_info_.port_,
+            SETTING_POINTER->gateway_info_.ip_,
+            SETTING_POINTER->gateway_info_.port_,
             get_current_serverid(),
             serverids_[type]);
         break;
@@ -187,7 +186,7 @@ bool Server::connectserver(uint8_t type) {
 
 bool Server::send_queue_tocenter() {
   __ENTER_FUNCTION
-    uint32_t queueposition;
+    uint16_t queueposition;
     while (CONNECTION_QUEUE_CENTER_POINTER->findhead(queueposition)) {
       centerinfo_t &centerinfo = 
         CONNECTION_QUEUE_CENTER_POINTER->get(queueposition);  

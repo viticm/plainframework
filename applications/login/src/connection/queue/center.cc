@@ -1,3 +1,4 @@
+#include "pf/base/string.h"
 #include "connection/queue/center.h"
 
 template <>
@@ -45,9 +46,9 @@ bool Center::addin(int16_t id,
     if (queue_[queueposition].isused) return false;
     queue_[queueposition].isused = true;
     queue_[queueposition].id = id;
-    pf_base::safecopy(queue_[queueposition].name, 
-                      name, 
-                      sizeof(queue_[queueposition].name));
+    pf_base::string::safecopy(queue_[queueposition].name, 
+                              name, 
+                              sizeof(queue_[queueposition].name));
     queue_[queueposition].guid = guid;
     queue_[queueposition].queueposition = tail_;
     ++tail_;
@@ -57,12 +58,12 @@ bool Center::addin(int16_t id,
     return false;
 }
 
-bool Turn::getout(int16_t &id, char *name) {
+bool Center::getout(int16_t &id, char *name) {
   __ENTER_FUNCTION
     using namespace pf_sys;
     if (false == queue_[head_].isused) return false;
     Assert(name);
-    pf_base::safecopy(name, queue_[head_].name, ACCOUNT_LENGTH_MAX);
+    pf_base::string::safecopy(name, queue_[head_].name, ACCOUNT_LENGTH_MAX);
     id = queue_[head_].id;
     queue_[head_].isused = false;
     ++head_;

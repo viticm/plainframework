@@ -122,7 +122,7 @@ bool Login::processinput() {
                       " error! socket id is invalid ");
         continue;
       }
-      if (FD_ISSET(socketid, readfds_[kSelectUse])) {
+      if (FD_ISSET(socketid, &readfds_[kSelectUse])) {
         if (!loginconnection->getsocket()->iserror()) {
           remove(loginconnection);
         } else {
@@ -154,7 +154,7 @@ bool Login::init_pool() {
 bool Login::remove(pf_net::connection::Base *connection) {
   __ENTER_FUNCTION
     using namespace common::net::packet::login_togateway;
-    using namespace common::define::packet;
+    using namespace common::define::net::packet::id::login_togateway;
     connection::Login *loginconnection = 
       dynamic_cast<connection::Login *>(connection);
     Assert(loginconnection);

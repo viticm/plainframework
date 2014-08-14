@@ -23,7 +23,7 @@ bool RequirePlayerLogin::read(InputStream& inputstream) {
 
 bool RequirePlayerLogin::write(OutputStream& outputstream) const {
   __ENTER_FUNCTION
-    outputstream.write_string(account_, sizeof(account_));
+    outputstream.write_string(account_);
     outputstream.write_int64(guid_);
     outputstream.write_int16(pid_);
   __LEAVE_FUNCTION

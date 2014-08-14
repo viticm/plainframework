@@ -1,6 +1,6 @@
 #include "common/net/packet/login_tocenter/require_playerlogin.h"
 
-using namespace common::net::packet::gateway_tocenter;
+using namespace common::net::packet::login_tocenter;
 
 uint32_t RequirePlayerLoginHandler::execute(
     RequirePlayerLogin *packet,

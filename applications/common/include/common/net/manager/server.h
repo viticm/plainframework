@@ -20,7 +20,7 @@
 #include "common/net/connection/server.h"
 #include "common/setting.h"
 
-typedef centerid_hash_struct {
+typedef struct centerid_hash_struct {
   int16_t connectionid;
   int16_t centerid;
   centerid_hash_struct() {
@@ -47,7 +47,7 @@ class Server : public pf_net::Manager {
  public:
    server_data_t *get_current_serverinfo();
    server_data_t *get_serverinfo(int16_t serverid);
-   pf_net::connection::Server *get_serverconnection(int16_t serverid);
+   common::net::connection::Server *get_serverconnection(int16_t serverid);
    void add_serverconnection(int16_t serverid, int16_t connectionid);
    void remove_serverconenction(int16_t serverid);
    void remove_serverconenction(pf_net::connection::Base *connection);

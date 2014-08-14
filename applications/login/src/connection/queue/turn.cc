@@ -1,8 +1,9 @@
 #include "pf/base/string.h"
+#include "pf/net/connection/pool.h"
+#include "common/define/enum.h"
 #include "engine/system.h"
 #include "connection/manager/login.h"
 #include "connection/login.h"
-#include "connection/pool.h"
 #include "connection/queue/turn.h"
 
 connection::queue::Turn *g_connection_queue_turn = NULL;
@@ -26,7 +27,7 @@ Turn::Turn() {
 
 Turn::~Turn() {
   __ENTER_FUNCTION
-    SAFE_DELETE_ARRAY(turninfo_);
+    SAFE_DELETE_ARRAY(queue_);
   __LEAVE_FUNCTION
 }
 
@@ -43,16 +44,16 @@ bool Turn::init() {
   return true;
 }
 
-bool Turn::addin(int16_t id, const char *name, uint16_t &queueposition);
+bool Turn::addin(int16_t id, const char *name, uint16_t &queueposition) {
   __ENTER_FUNCTION
     using namespace pf_sys;
     lock_guard<ThreadLock> autolock(lock_); //自动锁
     if (queue_[queueposition].isused) return false;
     queue_[queueposition].isused = true;
     queue_[queueposition].id = id;
-    pf_base::safecopy(queue_[queueposition].name, 
-                      name, 
-                      sizeof(queue_[queueposition].name));
+    pf_base::string::safecopy(queue_[queueposition].name, 
+                              name, 
+                              sizeof(queue_[queueposition].name));
     queue_[queueposition].queueposition = tail_;
     ++tail_;
     if (tail_ > size_) tail_ = 0;
@@ -65,7 +66,7 @@ void Turn::erase(const char *name, int16_t id) {
   __ENTER_FUNCTION
     Assert(name);
     uint16_t i;
-    connection::Pool *connectionpool = 
+    pf_net::connection::Pool *connectionpool = 
       ENGINE_SYSTEM_POINTER->get_netmanager()->getpool();
     Assert(connectionpool);
     for (i = 0; i < size_; ++i) {
@@ -92,7 +93,7 @@ bool Turn::getout(int16_t &id, char *name) {
     using namespace pf_sys;
     if (false == queue_[head_].isused) return false;
     Assert(name);
-    pf_base::safecopy(name, queue_[head_].name, ACCOUNT_LENGTH_MAX);
+    pf_base::string::safecopy(name, queue_[head_].name, ACCOUNT_LENGTH_MAX);
     id = queue_[head_].id;
     queue_[head_].isused = false;
     ++head_;
@@ -107,7 +108,7 @@ uint16_t Turn::calculate_turnnumber(uint16_t queueposition) const {
     uint16_t i = 0;
     uint16_t turnnumber = 1;
     uint16_t head = gethead();
-    connection::Pool *connectionpool = 
+    pf_net::connection::Pool *connectionpool = 
       ENGINE_SYSTEM_POINTER->get_netmanager()->getpool();
     Assert(connectionpool);
     if (head <= queueposition) {

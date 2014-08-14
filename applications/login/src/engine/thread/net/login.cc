@@ -6,12 +6,13 @@
 #include "common/net/packet/login_toclient/turnstatus.h"
 #include "connection/queue/turn.h"
 #include "connection/counter/center.h"
+#include "connection/login.h"
 #include "engine/thread/net/login.h"
 
 using namespace engine::thread::net;
 using namespace common::net::packet;
 
-Login::Login()() {
+Login::Login() {
   //do nothing
 }
 
@@ -32,7 +33,7 @@ void Login::run() {
   __ENTER_FUNCTION
     while (isactive()) {
       bool result = false;
-      pf_base::sleep(10);
+      pf_base::util::sleep(10);
       uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
       result = dotick(currenttime);
       Assert(result);
@@ -69,7 +70,7 @@ bool Login::isactive() const {
 bool Login::dotick(uint32_t time) {
   __ENTER_FUNCTION
     bool result = false;
-    conection::manager::Login::tick();
+    connection::manager::Login::tick();
     try {
       result = move_queueplayer();
       AssertEx(result, "move_queueplayer error");
@@ -98,7 +99,7 @@ bool Login::move_queueplayer() {
         inc_normalcount();
         login_toclient::TurnStatus message;
         message.set_turnstatus(kLoginTurnStatusNormal);
-        loginconnection->sendpakcet(&message);
+        loginconnection->sendpacket(&message);
       } else {
         continue;
       }
@@ -111,7 +112,7 @@ bool Login::move_queueplayer() {
 
 bool Login::can_entercenter() const {
   __ENTER_FUNCTION
-    bool result = CONECTION_COUNTER_CENTER_POINTER->get_center_playercount() + 
+    bool result = CONNECTION_COUNTER_CENTER_POINTER->get_center_playercount() + 
                   get_normalcount() < 
                   CONNECTION_COUNTER_CENTER_POINTER->get_playercount_max();
     return result;

@@ -58,7 +58,7 @@ server_data_t *Server::get_serverinfo(int16_t serverid) {
     return NULL;
 }
 
-pf_net::connection::Server *Server::get_serverconnection(int16_t serverid) {
+common::net::connection::Server *Server::get_serverconnection(int16_t serverid) {
   __ENTER_FUNCTION
     if (ID_INVALID == serverid) return NULL;
     Assert(serverid >= 0 && serverid < OVER_SERVER_MAX);
@@ -142,7 +142,7 @@ void Server::broadcast_center(pf_net::packet::Base *packet) {
   __LEAVE_FUNCTION
 }
 
-void Server::broadcast_center(pf_net::packet::Base *packet) {
+void Server::broadcast_server(pf_net::packet::Base *packet) {
   __ENTER_FUNCTION
     uint16_t count = getcount();
     uint16_t i;
@@ -191,9 +191,8 @@ bool Server::connect_toserver(const char *ip,
   __ENTER_FUNCTION
     using namespace common::net::packet::serverserver;
     uint8_t step = 0;
-    bool remove = false;
+    bool _remove = false;
     bool result = false;
-    uint16_t i;
     pf_net::connection::Base *connection = pool_->create(create);
     if (NULL == connection) return false;
     pf_net::socket::Base *socket = connection->getsocket();
@@ -230,11 +229,11 @@ bool Server::connect_toserver(const char *ip,
       step = 6;
       goto EXCEPTION;
     }
-    remove = true;
+    _remove = true;
     if (sendconnect) {
       Connect packet;
       packet.set_serverid(serverid);
-      result = sendpacket(&packet);
+      result = connection->sendpacket(&packet);
       if (!result) {
         step = 7;
         goto EXCEPTION;
@@ -256,7 +255,7 @@ EXCEPTION:
                     port,
                     serverid,
                     step);
-    if (remove) {
+    if (_remove) {
       remove(connection);
     } else {
       pool_->remove(connection->getid());
@@ -274,7 +273,7 @@ pf_net::connection::Base *Server::connect_toserver_forgroup(
   __ENTER_FUNCTION
     uint8_t step = 0;
     bool result = false;
-    bool remove = false;
+    bool _remove = false;
     bool closesocket = false;
     pf_net::connection::Base *connection = pool_->create(true);
     if (NULL == connection) return NULL;
@@ -342,7 +341,7 @@ pf_net::connection::Base *Server::connect_toserver_forgroup(
       step = 10;
       goto EXCEPTION;
     }
-    remove = true;
+    _remove = true;
     SLOW_LOG(NET_MODULENAME,
              "[net.manager] (Server::connect_toserver_forgroup) success!"
              " ip: %s, port: %d, serverid: %d",
@@ -360,7 +359,7 @@ EXCEPTION:
                     serverid,
                     step);
     if (closesocket) socket->close();
-    if (remove) {
+    if (_remove) {
       remove(connection);
     } else {
       pool_->remove(connection->getid());

@@ -41,7 +41,7 @@ class Server : public pf_net::connection::Base {
  public:
    virtual bool isserver() const;
    virtual bool isplayer() const;
-   virtual bool sendpacket(packet::Base *packet);
+   virtual bool sendpacket(pf_net::packet::Base *packet);
 
  public:
    server_data_t *get_serverdata();

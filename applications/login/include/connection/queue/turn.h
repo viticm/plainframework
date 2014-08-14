@@ -25,7 +25,7 @@ class Turn : public pf_base::Singleton<Turn> {
    Turn();
    ~Turn();
 
- public
+ public:
    static Turn *getsingleton_pointer();
    static Turn &getsingleton();
 
@@ -34,14 +34,14 @@ class Turn : public pf_base::Singleton<Turn> {
    bool addin(int16_t id, const char *name, uint16_t &queueposition);
    bool getout(int16_t &id, char *name);
    uint16_t calculate_turnnumber(uint16_t queueposition) const;
-   TurnInfo &get(uint32_t queueposition);
+   turninfo_t &get(uint16_t queueposition);
    bool isempty() const;
    uint16_t getcount() const;
    uint16_t gethead() const;
    void erase(const char *name, int16_t id);
 
  private:
-   TurnInfo *queue_;
+   turninfo_t *queue_;
    uint16_t size_;
    uint16_t head_;
    uint16_t tail_;

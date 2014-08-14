@@ -46,7 +46,7 @@ uint16_t Connect::getid() const {
 
 uint32_t Connect::getsize() const {
   uint32_t result = sizeof(serverid_) +
-                    sizeof(worldid_) +
+                    sizeof(centerid_) +
                     sizeof(zoneid_);
   return result;
 }

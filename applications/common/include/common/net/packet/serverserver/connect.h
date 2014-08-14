@@ -40,7 +40,7 @@ class Connect : public pf_net::packet::Base {
  public: 
    int16_t get_serverid();
    void set_serverid(int16_t serverid);
-   int16_t get_worldid();
+   int16_t get_centerid();
    void set_centerid(int16_t centerid);
    int16_t get_zoneid();
    void set_zoneid(int16_t zoneid);

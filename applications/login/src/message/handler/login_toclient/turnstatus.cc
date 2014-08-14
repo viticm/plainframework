@@ -2,8 +2,8 @@
 
 using namespace common::net::packet::login_toclient;
 
-uint32_t TrunStatusHandler::execute(
-    TrunStatus *packet,
+uint32_t TurnStatusHandler::execute(
+    TurnStatus *packet,
     pf_net::connection::Base *connection) {
   __ENTER_FUNCTION
     return kPacketExecuteStatusContinue;

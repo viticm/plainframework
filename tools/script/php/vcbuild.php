@@ -85,6 +85,7 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 $g_scriptdirs = array(
   "gateway applications/gateway/scripts",
   "sharememory applications/sharememory/scripts",
+  "login applications/login/scripts",
   "pf_simple applications/pf_simple/scripts",
   "pf_core pf/core/scripts",
 
@@ -255,7 +256,7 @@ $revert_fileinfo = <<<EOF
 1
 en:
   This is a flag file of visual studio script if need revert.
-  If you don't understand this, you don't delete it.
+  If you don't understand this, can't delete it.
 cn:
     这个文件用来作为是否需要还原vcscript的标记。
     如果你不清楚该文件的用途，则不要删除它。

@@ -1103,7 +1103,7 @@ void Setting::load_login_info_only() {
     login_info_.clientin_sameip_max =
       login_info_ini.read_int8("System", "ClientInSameIpMax");
     login_info_.net_connectionmax =
-      login_info_.read_uint16("System", "NetConnectionMax");
+      login_info_ini.read_uint16("System", "NetConnectionMax");
     SLOW_LOG("setting", 
              "[common] (Setting::load) %s only ... ok!", 
              LOGIN_INFO_FILE);

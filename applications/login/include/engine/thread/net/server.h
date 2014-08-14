@@ -35,7 +35,7 @@ class Server : public pf_sys::Thread, public connection::manager::Server {
    bool isactive() const;
 
  private:
-   isactive_;
+   bool isactive_;
    pf_base::TinyTimer timer_;
 
 };

@@ -4,7 +4,7 @@
 #include "common/net/packet/client_tologin/asklogin.h"
 
 using namespace pf_net::socket;
-using namespace common::net::packet::login_toclient;
+using namespace common::net::packet::client_tologin;
 
 AskLogin::AskLogin() {
   __ENTER_FUNCTION
@@ -41,7 +41,7 @@ uint32_t AskLogin::execute(
 
 uint16_t AskLogin::getid() const {
   using namespace 
-    common::define::net::packet::id::login_toclient; 
+    common::define::net::packet::id::client_tologin; 
   return kAskLogin;
 }
 
@@ -77,7 +77,7 @@ pf_net::packet::Base *AskLoginFactory::createpacket() {
 
 uint16_t AskLoginFactory::get_packetid() const {
   using namespace 
-    common::define::net::packet::id::login_tocenter; 
+    common::define::net::packet::id::client_tologin; 
   return kAskLogin;
 }
 

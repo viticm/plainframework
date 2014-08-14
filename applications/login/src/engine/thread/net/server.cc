@@ -19,7 +19,7 @@ Server::~Server() {
 bool Server::init() {
   __ENTER_FUNCTION
     isactive_ = connection::manager::Server::init(kConnectServerTypeNumber);
-    return isactive_
+    return isactive_;
   __LEAVE_FUNCTION
     return false;
 }
@@ -36,10 +36,9 @@ void Server::run() {
         timer_.start(60000, TIME_MANAGER_POINTER->get_current_time());
       }
       try {
-        pf_base::uitl::sleep(1); 
-        bool result = connection::manager::Server::tick();
-        Assert(result);
-        if (counting(TIME_MANAGER_POINTER->get_current_time())) {
+        pf_base::util::sleep(1); 
+        connection::manager::Server::tick();
+        if (timer_.counting(TIME_MANAGER_POINTER->get_current_time())) {
           SLOW_LOG(NET_MODULENAME,
                    "[engine.thread.net] (Server::run)"
                    " connection count map ->"
