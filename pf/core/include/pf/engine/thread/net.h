@@ -32,7 +32,7 @@ class PF_API Net : public pf_net::Manager, public pf_sys::Thread {
    virtual void run();
    virtual void stop();
    void quit();
-   bool isactive();
+   bool isactive() const;
 
  private:
    bool isactive_;

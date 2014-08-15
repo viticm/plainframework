@@ -213,6 +213,7 @@ bool Epoll::processcommand() {
       connection::Base* connection = NULL;
       connection = pool_->get(connection_idset_[i]);
       Assert(connection);
+      if (connection->isdisconnect()) continue;
       int32_t socketid = connection->getsocket()->getid();
       if (socketid_ == socketid) continue;
       if (connection->getsocket()->iserror()) {

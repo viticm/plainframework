@@ -101,7 +101,6 @@ SET (SOURCEFILES_NET_CONNECTION_MANAGER_LIST
 SET (SOURCEFILES_NET_CONNECTION_LIST
 	../src/net/connection/base.cc
 	../src/net/connection/pool.cc
-	../src/net/connection/server.cc
 )
 
 SET (SOURCEFILES_NET_LIST
@@ -245,7 +244,6 @@ SET (HEADERFILES_NET_CONNECTION_LIST
 	../include/pf/net/connection/base.h
 	../include/pf/net/connection/config.h
 	../include/pf/net/connection/pool.h
-	../include/pf/net/connection/server.h
 )
 
 SET (HEADERFILES_NET_LIST

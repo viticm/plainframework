@@ -29,9 +29,11 @@ class PF_API Kernel {
    ~Kernel();
 
  public: //kernel sys functions
-   bool init();
-   void run();
-   void stop();
+   virtual bool init();
+   virtual void run();
+   virtual void stop();
+
+ public:
    void registerconfig(int32_t key, int32_t value);
    void registerconfig(int32_t key, bool value);
    void registerconfig(int32_t key, const char *value);
@@ -68,21 +70,21 @@ class PF_API Kernel {
    virtual bool loop_handle(); //引擎循环处理的逻辑，受帧率控制
 
  protected:
-   bool init_base();
-   bool init_db();
-   bool init_net();
-   bool init_script();
-   bool init_performance();
-   void run_base();
-   void run_db();
-   void run_net();
-   void run_script();
-   void run_performance();
-   void stop_base();
-   void stop_db();
-   void stop_net();
-   void stop_script();
-   void stop_performance();
+   virtual bool init_base();
+   virtual bool init_db();
+   virtual bool init_net();
+   virtual bool init_script();
+   virtual bool init_performance();
+   virtual void run_base();
+   virtual void run_db();
+   virtual void run_net();
+   virtual void run_script();
+   virtual void run_performance();
+   virtual void stop_base();
+   virtual void stop_db();
+   virtual void stop_net();
+   virtual void stop_script();
+   virtual void stop_performance();
 
  private:
    void calculate_FPS(); //计算帧率

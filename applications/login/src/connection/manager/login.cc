@@ -59,14 +59,14 @@ bool Login::processinput() {
         loginconnection->set_readykick_count(
             loginconnection->get_readykick_count() + 1);
         if (loginconnection->get_readykick_count() > READY_HEARTBEAT_MAX)
-          remove(connection);
+          remove(loginconnection);
       }
       if (loginconnection->getstatus() != kPlayerStatusLoginNormal ||
           loginconnection->getstatus() != kPlayerStatusLoginServerReady) {
         continue;
       }
-      int32_t socketid = loginconnection->getsocket()->getid();
-      if (SOCKET_INVALID == socketid) {
+      int32_t _socketid = loginconnection->getsocket()->getid();
+      if (SOCKET_INVALID == _socketid) {
         SLOW_ERRORLOG(NET_MODULENAME,
                       "[connection.manager] (Login::processinput)"
                       " error! socket id is invalid ");

@@ -106,7 +106,7 @@ bool Server::heartbeat(uint32_t time) {
 
 int16_t Server::get_current_serverid() const {
   __ENTER_FUNCTION
-    if (!SETTING_POINTER) return -1;
+    if (!SETTING_POINTER) return ID_INVALID;
     int16_t serverid = SETTING_POINTER->login_info_.id;
     return serverid;
   __LEAVE_FUNCTION
@@ -118,7 +118,8 @@ bool Server::syncpacket(pf_net::packet::Base *packet,
                         uint8_t flag) {
   __ENTER_FUNCTION
     USE_PARAM(flag); //now not useit
-    common::net::connection::Server *serverconnection = get_serverconnection(servertype);
+    common::net::connection::Server *serverconnection = 
+      get_serverconnection(servertype);
     bool result = serverconnection->sendpacket(packet);
     return result;
   __LEAVE_FUNCTION

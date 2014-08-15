@@ -90,6 +90,7 @@ bool System::init() {
     }
 
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
+    setconfig(ENGINE_CONFIG_NET_ISACTIVE, true); //一定要在初始化各个系统前设置
     setconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, true);
     setconfig(
         ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME, 
@@ -123,9 +124,27 @@ bool System::init() {
 
 bool System::init_net() {
   __ENTER_FUNCTION
-    if (!init_net_server()) return false;
-    if (!init_net_incoming()) return false;
-    if (!init_net_login()) return false;
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::init_net) server start");
+    if (!init_net_server()) {
+      SLOW_ERRORLOG(ENGINE_MODULENAME,
+                    "[engine] (System::init_net) server error");
+      return false;
+    }
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::init_net) incoming start");
+    if (!init_net_incoming()) {
+      SLOW_ERRORLOG(ENGINE_MODULENAME,
+                    "[engine] (System::init_net) incoming error");
+      return false;
+    }
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::init_net) login start");
+    if (!init_net_login()) {
+      SLOW_ERRORLOG(ENGINE_MODULENAME,
+                    "[engine] (System::init_net) login error");
+      return false;
+    }
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -154,13 +173,13 @@ bool System::init_net_connectionpool() {
       Assert(loginconnection);
       get_netmanager()->getpool()->init_data(i, loginconnection);
     }
+    return true;
   __LEAVE_FUNCTION
     return false;
 }
 
 bool System::init_net_incoming() { //接收管理器将作为主管理器
   __ENTER_FUNCTION
-    setconfig(ENGINE_CONFIG_NET_ISACTIVE, true); //所有网络管理器以线程运行
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               SETTING_POINTER->login_info_.net_connectionmax);
     thread::net::Incoming *incoming_netmanager_ = new thread::net::Incoming();
@@ -201,15 +220,27 @@ bool System::init_net_server() {
 void System::run_net() {
   __ENTER_FUNCTION
     run_net_server();
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::run_net) server");
     run_net_incoming();
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::run_net) incoming");
     run_net_login();
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::run_net) login");
   __LEAVE_FUNCTION
 }
 
 void System::stop_net() {
   __ENTER_FUNCTION
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::stop_net) server");
     stop_net_server();
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::stop_net) incoming");
     stop_net_incoming();
+    SLOW_LOG(NET_MODULENAME, 
+             "[engine] (System::stop_net) login");
     stop_net_login();
   __LEAVE_FUNCTION
 }

@@ -369,11 +369,11 @@ uint32_t Base::getstatus() const {
 }
 
 bool Base::isserver() const {
-  return false;
+  return true;
 }
 
-bool Base::isclient() const {
-  return true;
+bool Base::isplayer() const {
+  return false;
 }
 
 } //namespace connection

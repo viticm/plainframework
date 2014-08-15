@@ -37,6 +37,6 @@ void Net::quit() {
   //do nothing
 }
 
-bool Net::isactive() {
+bool Net::isactive() const {
   return isactive_;
 }
