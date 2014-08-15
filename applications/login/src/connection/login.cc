@@ -186,4 +186,8 @@ uint8_t Login::get_rolelevel(int64_t guid) const {
     return 1;
 }
 
+const char *Login::getaccount() {
+  return account_;
+}
+
 } //namespace connection

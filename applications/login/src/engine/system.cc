@@ -123,10 +123,12 @@ bool System::init() {
 
 bool System::init_net() {
   __ENTER_FUNCTION
-    init_net_server();
-    init_net_incoming();
-    init_net_login();
+    if (!init_net_server()) return false;
+    if (!init_net_incoming()) return false;
+    if (!init_net_login()) return false;
+    return true;
   __LEAVE_FUNCTION
+    return false;
 }
 
 bool System::init_setting() {
@@ -163,9 +165,9 @@ bool System::init_net_incoming() { //接收管理器将作为主管理器
               SETTING_POINTER->login_info_.net_connectionmax);
     thread::net::Incoming *incoming_netmanager_ = new thread::net::Incoming();
     setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
-      CONNECTION_MANAGER_SERVER_POINTER->get_serverinfo()->ip);
+      CONNECTION_MANAGER_SERVER_POINTER->get_current_serverinfo()->ip);
     setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
-      CONNECTION_MANAGER_SERVER_POINTER->get_serverinfo()->port);
+      CONNECTION_MANAGER_SERVER_POINTER->get_current_serverinfo()->port);
     if (NULL == incoming_netmanager_) return false;
     pf_net::Manager *netmanager = 
       dynamic_cast<pf_net::Manager *>(incoming_netmanager_);
@@ -180,7 +182,7 @@ bool System::init_net_login() {
   __ENTER_FUNCTION
     thread::net::Login *login_netmanager_ = new thread::net::Login();
     if (NULL == login_netmanager_) return false;
-    if (!login_netmanager->init()) return false;
+    if (!login_netmanager_->init()) return false;
     return true;
   __LEAVE_FUNCTION
     return false;

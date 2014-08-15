@@ -1,6 +1,8 @@
 #include "pf/base/log.h"
 #include "common/setting.h"
+#include "common/net/packet/login_togateway/playeronline.h"
 #include "engine/system.h"
+#include "connection/counter/center.h"
 #include "connection/login.h"
 #include "connection/queue/center.h"
 #include "connection/manager/server.h"
@@ -209,6 +211,24 @@ bool Server::send_queue_tocenter() {
     return true;
   __LEAVE_FUNCTION
     return false;
+}
+
+void Server::notify_totalcount_togateway() {
+  __ENTER_FUNCTION
+    using namespace common::net::packet::login_togateway;
+    uint32_t now = TIME_MANAGER_POINTER->get_current_time();
+    if (!onlinetimer_.isstart()) {
+      onlinetimer_.start(1000 * 300, now);
+    }
+    if (onlinetimer_.counting(now)) {
+      PlayerOnline message;
+      message.set_centerid(SETTING_POINTER->center_info_.id);
+      message.setonline(CONNECTION_COUNTER_CENTER_POINTER->get_center_playercount());
+      common::net::connection::Server *serverconnection = 
+        get_serverconnection(kConnectServerTypeGateway);
+      if (serverconnection) serverconnection->sendpacket(&message);
+    }
+  __LEAVE_FUNCTION
 }
 
 } //namespace manager

@@ -60,7 +60,7 @@ class Server : public pf_base::Singleton<Server>,
    
  private:
    int16_t serverids_[kConnectServerTypeNumber]; //连接服务器ID数组，同连接ID数据一样
-   pf_base::TinyTimer usercount_timer_;
+   pf_base::TinyTimer onlinetimer_;
 
 };
 

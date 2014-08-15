@@ -7,6 +7,7 @@
 #include "connection/queue/turn.h"
 #include "connection/counter/center.h"
 #include "connection/login.h"
+#include "engine/system.h"
 #include "engine/thread/net/login.h"
 
 using namespace engine::thread::net;
@@ -24,6 +25,7 @@ bool Login::init() {
   __ENTER_FUNCTION
     isactive_ = connection::manager::Login::init(
         SETTING_POINTER->login_info_.net_connectionmax);
+    connection::manager::Login::init_pool();
     return isactive_;
   __LEAVE_FUNCTION
     return false;

@@ -43,6 +43,7 @@ typedef enum {
   kFirst = LOGIN_TOGATEWAY_PACKETID_MIN,
   kAskAuth, //请求验证账号
   kPlayerLeave, //玩家退出
+  kPlayerOnline, //玩家在线数量
   kLast, /* the last packetid */
   kMax = LOGIN_TOGATEWAY_PACKETID_MAX,
   /*end }*/

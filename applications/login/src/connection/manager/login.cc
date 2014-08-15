@@ -145,7 +145,7 @@ bool Login::init_pool() {
     pf_net::connection::Pool *connectionpool = 
       ENGINE_SYSTEM_POINTER->get_netmanager()->getpool();
     Assert(connectionpool); //需要引擎核心先初始化
-    pool_ = connectionpool;
+    Base::init_pool(connectionpool);
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -158,7 +158,7 @@ bool Login::remove(pf_net::connection::Base *connection) {
     connection::Login *loginconnection = 
       dynamic_cast<connection::Login *>(connection);
     Assert(loginconnection);
-    bool result = false;
+    //bool result = false;
     if (kPlayerStatusLoginNormal == loginconnection->getstatus()) {
       PlayerLeave *message = dynamic_cast<PlayerLeave *>(
           NET_PACKET_FACTORYMANAGER_POINTER->createpacket(kPlayerLeave));
@@ -203,6 +203,18 @@ bool Login::remove(const char *account, int16_t id) {
     return true;
   __LEAVE_FUNCTION
     return false;
+}
+
+uint16_t Login::get_normalcount() const {
+  return normalcount_;
+}
+
+void Login::inc_normalcount() {
+  ++normalcount_;
+}
+
+void Login::dec_normalcount() {
+  --normalcount_;
 }
 
 } //namespace manager

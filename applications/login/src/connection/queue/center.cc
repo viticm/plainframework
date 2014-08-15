@@ -1,4 +1,5 @@
 #include "pf/base/string.h"
+#include "pf/sys/thread.h"
 #include "connection/queue/center.h"
 
 template <>
@@ -90,6 +91,16 @@ uint16_t Center::getcount() const {
     result = size_ - (head_ - tail_);
   }
   return result;
+}
+
+bool Center::findhead(uint16_t &queueposition) {
+  __ENTER_FUNCTION
+    pf_sys::lock_guard<pf_sys::ThreadLock> autolock(lock_);
+    if (false == queue_[head_].isused) return false;
+    queueposition = head_;
+    return true;
+  __LEAVE_FUNCTION
+    return false;
 }
 
 uint16_t Center::gethead() const {
