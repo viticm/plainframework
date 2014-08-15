@@ -140,7 +140,8 @@ common::net::connection::Server *Server::get_serverconnection(
 
 bool Server::is_serverconnected(uint8_t type) {
   __ENTER_FUNCTION
-    common::net::connection::Server *serverconnection = get_serverconnection(type);
+    common::net::connection::Server *serverconnection = 
+      get_serverconnection(type);
     if (NULL == serverconnection) return false;
     bool result = serverconnection->isvalid();
     return result;
@@ -224,7 +225,8 @@ void Server::notify_totalcount_togateway() {
     if (onlinetimer_.counting(now)) {
       PlayerOnline message;
       message.set_centerid(SETTING_POINTER->center_info_.id);
-      message.setonline(CONNECTION_COUNTER_CENTER_POINTER->get_center_playercount());
+      message.setonline(
+          CONNECTION_COUNTER_CENTER_POINTER->get_center_playercount());
       common::net::connection::Server *serverconnection = 
         get_serverconnection(kConnectServerTypeGateway);
       if (serverconnection) serverconnection->sendpacket(&message);

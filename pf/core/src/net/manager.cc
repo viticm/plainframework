@@ -65,10 +65,13 @@ void Manager::tick() {
       try {
         result = select();
         Assert(result);
+
         result = processexception();
         Assert(result);
+
         result = processinput();
         Assert(result);
+
         result = processoutput();
         Assert(result); 
         if (PERFORMANCE_EYES_POINTER) { //网络性能监视
@@ -89,7 +92,6 @@ void Manager::tick() {
       } catch(...) {
         
       }
-
       try {
         result = heartbeat();
         Assert(result);

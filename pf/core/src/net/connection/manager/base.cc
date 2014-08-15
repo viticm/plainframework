@@ -278,7 +278,7 @@ EXCEPTION:
 
 connection::Base *Base::get(int16_t id) {
   __ENTER_FUNCTION 
-    Assert(id >= 0 && id < maxcount_);
+    if (id <= 0 || id > maxcount_) return NULL;
     connection::Base *connection = NULL;
     connection = pool_->get(id);
     Assert(connection);

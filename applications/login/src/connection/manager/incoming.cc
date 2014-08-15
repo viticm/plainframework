@@ -61,6 +61,7 @@ bool Incoming::heartbeat(uint32_t time) {
     bool result = false;
     if (0 == time) time = TIME_MANAGER_POINTER->get_current_time();
     uint16_t count = getcount();
+    DEBUGPRINTF("count: %d", count);
     uint16_t i;
     for (i = 0; i < count; ++i) {
       if (ID_INVALID == connection_idset_[i]) continue;

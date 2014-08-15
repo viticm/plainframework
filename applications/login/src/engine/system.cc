@@ -22,7 +22,11 @@ System &System::getsingleton() {
 }
 
 System::System() {
-  //do nothing
+  __ENTER_FUNCTION
+    server_netmanager_ = NULL;
+    incoming_netmanager_ = NULL;
+    login_netmanager_ = NULL;
+  __LEAVE_FUNCTION
 }
 
 System::~System() {
@@ -182,7 +186,7 @@ bool System::init_net_incoming() { //接收管理器将作为主管理器
   __ENTER_FUNCTION
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               SETTING_POINTER->login_info_.net_connectionmax);
-    thread::net::Incoming *incoming_netmanager_ = new thread::net::Incoming();
+    incoming_netmanager_ = new thread::net::Incoming();
     setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
       CONNECTION_MANAGER_SERVER_POINTER->get_current_serverinfo()->ip);
     setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
@@ -199,7 +203,7 @@ bool System::init_net_incoming() { //接收管理器将作为主管理器
 
 bool System::init_net_login() {
   __ENTER_FUNCTION
-    thread::net::Login *login_netmanager_ = new thread::net::Login();
+    login_netmanager_ = new thread::net::Login();
     if (NULL == login_netmanager_) return false;
     if (!login_netmanager_->init()) return false;
     return true;
@@ -209,7 +213,7 @@ bool System::init_net_login() {
 
 bool System::init_net_server() {
   __ENTER_FUNCTION
-    thread::net::Server *server_netmanager_ = new thread::net::Server();
+    server_netmanager_ = new thread::net::Server();
     if (NULL == server_netmanager_) return false;
     if (!server_netmanager_->init()) return false;
     return true;

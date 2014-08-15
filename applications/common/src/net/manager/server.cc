@@ -189,6 +189,7 @@ bool Server::connect_toserver(const char *ip,
                               bool create, 
                               bool sendconnect) {
   __ENTER_FUNCTION
+    DEBUGPRINTF("Server::connect_toserver 0");
     using namespace common::net::packet::serverserver;
     uint8_t step = 0;
     bool _remove = false;
