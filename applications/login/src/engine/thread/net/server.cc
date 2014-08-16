@@ -18,7 +18,9 @@ Server::~Server() {
 
 bool Server::init() {
   __ENTER_FUNCTION
-    isactive_ = connection::manager::Server::init(kConnectServerTypeNumber);
+    if (!connection::manager::Server::init(kConnectServerTypeNumber)) 
+      return false;
+    isactive_ = connection::manager::Server::init_pool();
     return isactive_;
   __LEAVE_FUNCTION
     return false;

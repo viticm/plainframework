@@ -78,6 +78,7 @@ int32_t main(int32_t argc, char *argv[]) {
   }
 #endif  
   ENGINE_SYSTEM_POINTER->run();
+  pf_base::util::sleep(1000); //等待所有线程安全退出，特别是运行过快的线程
   SAFE_DELETE(g_engine_system);
   remove(PROCESS_ID_FILE);
   //engine_kernel.stop();

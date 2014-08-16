@@ -2,6 +2,8 @@
 #include "pf/sys/thread.h"
 #include "connection/queue/center.h"
 
+connection::queue::Center *g_connection_queue_center = NULL;
+
 template <>
 connection::queue::Center 
   *pf_base::Singleton<connection::queue::Center>::singleton_ = NULL;

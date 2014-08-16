@@ -1,4 +1,5 @@
 #include "pf/base/log.h"
+#include "pf/base/util.h"
 #include "common/setting.h"
 #include "common/net/packet/login_togateway/playeronline.h"
 #include "engine/system.h"
@@ -61,7 +62,7 @@ bool Server::init_pool() {
     for (i = 0; i < pool_->get_maxcount(); ++i) {
       common::net::connection::Server *connection = 
         new common::net::connection::Server();
-      getpool()->init_data(i, connection);
+      pool_->init_data(i, connection);
     }
     return true;
   __LEAVE_FUNCTION
@@ -99,6 +100,7 @@ bool Server::heartbeat(uint32_t time) {
         connectserver(i);
       }
     }
+    pf_base::util::sleep(2000);
     return true;
   __LEAVE_FUNCTION
     return false;

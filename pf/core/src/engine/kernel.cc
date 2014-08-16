@@ -48,10 +48,10 @@ Kernel::Kernel() {
 Kernel::~Kernel() {
   __ENTER_FUNCTION
     SAFE_DELETE(performance_thread_);
+    SAFE_DELETE(net_thread_);
+    SAFE_DELETE(net_manager_);
     SAFE_DELETE(script_thread_);
-    SAFE_DELETE(net_manager_);
     SAFE_DELETE(db_thread_);
-    SAFE_DELETE(net_manager_);
     SAFE_DELETE(db_manager_);
     SAFE_DELETE(g_log);
     SAFE_DELETE(g_time_manager);
@@ -60,10 +60,14 @@ Kernel::~Kernel() {
 
 bool Kernel::init() {
   __ENTER_FUNCTION
+#if __LINUX__ //一些系统设置
+    signal(SIGPIPE, SIG_IGN); //屏蔽该信号是因为在socket连接到
+                              //一个不存在的IP时该信号会导致程序异常退出
     if (!pf_sys::util::set_core_rlimit()) {
       ERRORPRINTF("[engine] (Kernel::init) change core rlimit failed!");
       return false;
     }
+#endif
     //base
     bool hasinit = getconfig_boolvalue(ENGINE_CONFIG_BASEMODULE_HAS_INIT);
     if (!hasinit) 
@@ -176,7 +180,7 @@ void Kernel::run() {
 
 void Kernel::stop() {
   __ENTER_FUNCTION
-    isactive_ = false;
+    if (!isactive_) return;
     //performance
     if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE)) {
       SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) performance module");
@@ -200,6 +204,7 @@ void Kernel::stop() {
     //base
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::stop) base module");
     stop_base();
+    isactive_ = false;
   __LEAVE_FUNCTION
 }
 
@@ -528,7 +533,6 @@ void Kernel::stop_net() {
     }
     //pf_base::util::sleep(5000);
     //SAFE_DELETE(net_manager_);
-    
   __LEAVE_FUNCTION
 }
 

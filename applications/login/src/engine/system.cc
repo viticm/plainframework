@@ -3,6 +3,9 @@
 #include "common/net/packetfactory.h"
 #include "common/setting.h"
 #include "connection/login.h"
+#include "connection/counter/center.h"
+#include "connection/queue/center.h"
+#include "connection/queue/turn.h"
 #include "engine/system.h"
 
 engine::System *g_engine_system = NULL;
@@ -31,6 +34,9 @@ System::System() {
 
 System::~System() {
   SAFE_DELETE(login_netmanager_);
+  SAFE_DELETE(g_connection_queue_turn);
+  SAFE_DELETE(g_connection_queue_center);
+  SAFE_DELETE(g_connection_counter_center);
   SAFE_DELETE(incoming_netmanager_);
   SAFE_DELETE(server_netmanager_);
   SAFE_DELETE(g_setting);
@@ -195,6 +201,19 @@ bool System::init_net_incoming() { //接收管理器将作为主管理器
     pf_net::Manager *netmanager = 
       dynamic_cast<pf_net::Manager *>(incoming_netmanager_);
     set_netmanager(netmanager);
+    
+    if (!CONNECTION_COUNTER_CENTER_POINTER) //中心计数器
+      g_connection_counter_center = new connection::counter::Center();
+    if (!CONNECTION_COUNTER_CENTER_POINTER) return false;
+
+    if (!CONNECTION_QUEUE_CENTER_POINTER) //中心排队
+      g_connection_queue_center = new connection::queue::Center();
+    if (!CONNECTION_QUEUE_CENTER_POINTER) return false;
+
+    if (!CONNECTION_QUEUE_TURN_POINTER) //登陆排队信息
+      g_connection_queue_turn = new connection::queue::Turn();
+    if (!CONNECTION_QUEUE_TURN_POINTER) return false;
+
     if (!Kernel::init_net()) return false;
     return true;
   __LEAVE_FUNCTION

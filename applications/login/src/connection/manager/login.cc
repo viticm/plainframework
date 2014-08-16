@@ -29,7 +29,7 @@ Login::Login() {
 }
 
 Login::~Login() {
-  //do nothing
+  pool_ = NULL; //池设置为空，防止基类删除了外部的指针
 }
 
 Login *Login::getsingleton_pointer() {
@@ -214,7 +214,7 @@ void Login::inc_normalcount() {
 }
 
 void Login::dec_normalcount() {
-  --normalcount_;
+  if (normalcount_ > 0) --normalcount_;
 }
 
 } //namespace manager

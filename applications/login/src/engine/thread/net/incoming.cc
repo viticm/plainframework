@@ -14,8 +14,8 @@ bool Incoming::init(uint16_t connectionmax,
                     uint16_t listenport,
                     const char *listenip) {
   __ENTER_FUNCTION
- 
-    if (!connection::manager::Incoming::init(connectionmax, listenport, listenip))
+    if (!connection::manager::Incoming::init(
+          connectionmax, listenport, listenip))
       return false;
     isactive_ = connection::manager::Incoming::init_pool(connectionmax);
     return isactive_;

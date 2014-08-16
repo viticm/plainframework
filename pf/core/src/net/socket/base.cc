@@ -53,6 +53,7 @@ bool Base::connect() {
   __ENTER_FUNCTION
     bool result = true;
     struct sockaddr_in connect_sockaddr_in;
+    memset(&connect_sockaddr_in, 0, sizeof(connect_sockaddr_in));
     connect_sockaddr_in.sin_family = AF_INET;
     connect_sockaddr_in.sin_addr.s_addr = inet_addr(host_);
     connect_sockaddr_in.sin_port = htons(port_);

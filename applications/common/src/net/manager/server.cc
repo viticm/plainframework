@@ -189,13 +189,13 @@ bool Server::connect_toserver(const char *ip,
                               bool create, 
                               bool sendconnect) {
   __ENTER_FUNCTION
-    DEBUGPRINTF("Server::connect_toserver 0");
     using namespace common::net::packet::serverserver;
     uint8_t step = 0;
     bool _remove = false;
     bool result = false;
     pf_net::connection::Base *connection = pool_->create(create);
     if (NULL == connection) return false;
+    if (!connection->init()) return false; //记得初始化连接
     pf_net::socket::Base *socket = connection->getsocket();
     try {
       if (create) {
@@ -224,7 +224,6 @@ bool Server::connect_toserver(const char *ip,
       step = 5;
       goto EXCEPTION;
     }
-
     result = add(connection);
     if (!result) {
       step = 6;
@@ -278,6 +277,7 @@ pf_net::connection::Base *Server::connect_toserver_forgroup(
     bool closesocket = false;
     pf_net::connection::Base *connection = pool_->create(true);
     if (NULL == connection) return NULL;
+    if (!connection->init()) return NULL;
     pf_net::socket::Base *socket = connection->getsocket();
     try {
       result = socket->create();

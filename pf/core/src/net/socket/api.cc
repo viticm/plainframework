@@ -160,98 +160,97 @@ bool bindex(int32_t socketid,
 }
 
 bool connectex(int32_t socketid, 
-               const struct sockaddr* addr, 
+               const struct sockaddr *addr, 
                uint32_t addrlength) {
-  
-  if (SOCKET_ERROR == connect(socketid,addr,addrlength)) {
+  if (SOCKET_ERROR == connect(socketid, addr, addrlength)) {
 #if __LINUX__
     switch (errno) {
-      case EALREADY : 
-      case EINPROGRESS : 
-      case ECONNREFUSED : 
-      case EISCONN : 
-      case ETIMEDOUT : 
-      case ENETUNREACH : 
-      case EADDRINUSE : 
-      case EBADF : 
-      case EFAULT : 
-      case ENOTSOCK : 
-      default : {
+      case EALREADY: 
+      case EINPROGRESS: 
+      case ECONNREFUSED: 
+      case EISCONN: 
+      case ETIMEDOUT: 
+      case ENETUNREACH: 
+      case EADDRINUSE: 
+      case EBADF: 
+      case EFAULT: 
+      case ENOTSOCK: 
+      default: {
           break;
       }
     }
 #elif __WINDOWS__
     error = WSAGetLastError();
     switch (error) {
-      case WSANOTINITIALISED : {
+      case WSANOTINITIALISED: {
         strncpy(errormessage, "WSANOTINITIALISED", sizeof(errormessage) - 1);
         break;
       }
-      case WSAENETDOWN : {
+      case WSAENETDOWN: {
         strncpy(errormessage, "WSAENETDOWN", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEADDRINUSE : {
+      case WSAEADDRINUSE: {
         strncpy(errormessage, "WSAEADDRINUSE", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEINTR : {
+      case WSAEINTR: {
         strncpy(errormessage, "WSAEINTR", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEINPROGRESS : {
+      case WSAEINPROGRESS: {
         strncpy(errormessage, "WSAEINPROGRESS", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEALREADY : {
+      case WSAEALREADY: {
         strncpy(errormessage, "WSAEALREADY", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEADDRNOTAVAIL : {
+      case WSAEADDRNOTAVAIL: {
         strncpy(errormessage, "WSAEADDRNOTAVAIL", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEAFNOSUPPORT : {
+      case WSAEAFNOSUPPORT: {
         strncpy(errormessage, "WSAEAFNOSUPPORT", sizeof(errormessage) - 1);
         break;
       }
-      case WSAECONNREFUSED : {
+      case WSAECONNREFUSED: {
         strncpy(errormessage, "WSAECONNREFUSED", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEFAULT : {
+      case WSAEFAULT: {
         strncpy(errormessage, "WSAEFAULT", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEINVAL : {
+      case WSAEINVAL: {
         strncpy(errormessage, "WSAEINVAL", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEISCONN : {
+      case WSAEISCONN: {
         strncpy(errormessage, "WSAEISCONN", sizeof(errormessage) - 1);
         break;
       }
-      case WSAENETUNREACH : {
+      case WSAENETUNREACH: {
         strncpy(errormessage, "WSAENETUNREACH", sizeof(errormessage) - 1);
         break;
       }
-      case WSAENOBUFS : {
+      case WSAENOBUFS: {
         strncpy(errormessage, "WSAENOBUFS", sizeof(errormessage) - 1);
         break;
       }
-      case WSAENOTSOCK : {
+      case WSAENOTSOCK: {
         strncpy(errormessage, "WSAENOTSOCK", sizeof(errormessage) - 1);
         break;
       }
-      case WSAETIMEDOUT : {
+      case WSAETIMEDOUT: {
         strncpy(errormessage, "WSAETIMEDOUT", sizeof(errormessage) - 1);
         break;
       }
-      case WSAEWOULDBLOCK  : {
+      case WSAEWOULDBLOCK: {
         strncpy(errormessage, "WSAEWOULDBLOCK", sizeof(errormessage) - 1);
         break;
       }
-      default : {
+      default: {
         strncpy(errormessage, "UNKNOWN", sizeof(errormessage) - 1);
         break;
       }

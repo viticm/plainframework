@@ -66,12 +66,12 @@ Base *Pool::create(bool clear) {
     for (i = 0; i < maxcount_; i++) {
       if (connections_[position_]->isempty()) { //找出空闲位置
         result = static_cast<uint16_t>(position_);
-        if (clear) connection->cleanup(); //清除连接信息
         connections_[position_]->setempty(false);
         ++position_;
         if (position_ >= maxcount_) position_ = 0;
         --count_;
         connection = connections_[result];
+        if (clear && connection) connection->cleanup(); //清除连接信息
         break;
       }
       ++position_;
