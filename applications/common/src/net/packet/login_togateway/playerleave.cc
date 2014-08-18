@@ -26,6 +26,7 @@ bool PlayerLeave::write(OutputStream& outputstream) const {
     outputstream.write_string(account_);
     outputstream.write_int64(guid_);
     outputstream.write_int16(centerid_);
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

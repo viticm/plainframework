@@ -52,15 +52,18 @@ bool FactoryManager::init() {
     if (isinit()) return true;
     Assert(size_ > 0);
     if (!function_isvalid_packetid_ || !function_registerfactories_) {
-      SLOW_ERRORLOG(NET_MODULENAME, 
-                    "[net.packet] (FactoryManager::init) error,"
-                    " the register factories and is valid packet id function pointer is NULL");
+      SLOW_ERRORLOG(
+          NET_MODULENAME, 
+          "[net.packet] (FactoryManager::init) error,"
+          " the register factories and is valid packet id"
+          " function pointer is NULL");
       return false;
     }
     factories_ = new Factory * [size_];
     Assert(factories_);
     packet_alloccount_ = new uint32_t[size_];
     Assert(packet_alloccount_);
+    idindexs_.init(size_); //ID索引数组初始化
     uint16_t i;
     for (i = 0; i < size_; ++i) {
       factories_[i] = NULL;
@@ -161,7 +164,7 @@ void FactoryManager::unlock() {
   lock_.unlock();
 }
 
-void FactoryManager::addfactory(Factory* factory) {
+void FactoryManager::addfactory(Factory *factory) {
   __ENTER_FUNCTION
     bool isfind = idindexs_.isfind(factory->get_packetid());
     uint16_t index = 

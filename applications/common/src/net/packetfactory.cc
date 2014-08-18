@@ -4,8 +4,11 @@
 
 /* packets { */
 #include "common/net/packet/serverserver/connect.h"
+#if defined(_GATEWAY) || defined(_LOGIN)
 #include "common/net/packet/gateway_tologin/resultauth.h"
 #include "common/net/packet/login_togateway/askauth.h"
+#include "common/net/packet/login_togateway/playeronline.h"
+#endif
 /* } packets */
 
 #include "common/net/packetfactory.h"
@@ -76,6 +79,8 @@ bool __stdcall registerfactories() {
         new gateway_tologin::ResultAuthFactory());
     NET_PACKET_FACTORYMANAGER_POINTER->addfactory(
         new login_togateway::AskAuthFactory());
+    NET_PACKET_FACTORYMANAGER_POINTER->addfactory(
+        new login_togateway::PlayerOnline());    
 #endif /* } */
 
 #if defined(_LOGIN) || defined(_CLIENT) /* { */

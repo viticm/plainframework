@@ -58,7 +58,8 @@ server_data_t *Server::get_serverinfo(int16_t serverid) {
     return NULL;
 }
 
-common::net::connection::Server *Server::get_serverconnection(int16_t serverid) {
+common::net::connection::Server *Server::get_serverconnection(
+    int16_t serverid) {
   __ENTER_FUNCTION
     if (ID_INVALID == serverid) return NULL;
     Assert(serverid >= 0 && serverid < OVER_SERVER_MAX);
@@ -101,8 +102,11 @@ void Server::remove_serverconenction(pf_net::connection::Base *connection) {
     common::net::connection::Server *serverconnection =
       dynamic_cast<common::net::connection::Server *>(connection);
     Assert(serverconnection);
-    int16_t serverid = serverconnection->get_serverid();
-    remove_serverconenction(serverid);
+    server_data_t *serverdata = serverconnection->get_serverdata();
+    if (serverdata) {
+      int16_t serverid = serverdata->id;
+      remove_serverconenction(serverid);
+    }
   __LEAVE_FUNCTION
 }
 

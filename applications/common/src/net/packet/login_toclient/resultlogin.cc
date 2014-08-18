@@ -28,6 +28,7 @@ bool ResultLogin::write(OutputStream& outputstream) const {
     outputstream.write(account_, sizeof(account_));
     outputstream.write(password_, sizeof(password_));
     outputstream.write((char*)&result_, sizeof(result_));
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

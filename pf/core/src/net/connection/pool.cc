@@ -53,6 +53,7 @@ Base *Pool::get(int16_t id) {
     Base *connection = NULL;
     if (static_cast<uint32_t>(id) > maxcount_) return NULL;
     connection = connections_[id];
+    if (NULL == connection) ERRORPRINTF("Pool::get is NULL");
     return connection;
   __LEAVE_FUNCTION
     return NULL;
@@ -66,12 +67,12 @@ Base *Pool::create(bool clear) {
     for (i = 0; i < maxcount_; i++) {
       if (connections_[position_]->isempty()) { //找出空闲位置
         result = static_cast<uint16_t>(position_);
-        connections_[position_]->setempty(false);
+        connection = connections_[result];
+        if (clear && connection) connection->cleanup(); //清除连接信息
+        if (connection) connection->setempty(false);
         ++position_;
         if (position_ >= maxcount_) position_ = 0;
         --count_;
-        connection = connections_[result];
-        if (clear && connection) connection->cleanup(); //清除连接信息
         break;
       }
       ++position_;
@@ -92,7 +93,7 @@ void Pool::remove(int16_t id) {
       unlock();
       return;
     }
-    connections_[id]->setempty(true);
+    connections_[id]->cleanup(); //清除连接信息
     ++count_;
     unlock();
   __LEAVE_FUNCTION

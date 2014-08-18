@@ -235,6 +235,7 @@ bool Base::sendpacket(packet::Base* packet) {
                       packet->getid(),
                       after_writesize - before_writesize - 6,
                       packet->getsize());
+        result = false;
       }
       /**
       if (kPacketIdSCCharacterIdle == packet->getid()) {
@@ -313,8 +314,10 @@ void Base::cleanup() {
     set_managerid(ID_INVALID);
     set_userid(ID_INVALID);
     packetindex_ = 0;
+    status_ = 0;
     execute_count_pretick_ = NET_CONNECTION_EXECUTE_COUNT_PRE_TICK_DEFAULT;
     setdisconnect(false);
+    setempty(true);
   __LEAVE_FUNCTION
 }
 

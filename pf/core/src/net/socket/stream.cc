@@ -77,7 +77,7 @@ uint32_t Stream::reallength() {
     uint32_t bufferlength = streamdata_.bufferlength;
     uint32_t headlength = streamdata_.headlength;
     uint32_t taillength = streamdata_.taillength;
-    if (headlength < taillength) {
+    if (headlength <= taillength) {
       length = taillength - headlength;
     } else {
       length = bufferlength - headlength + taillength;

@@ -136,8 +136,19 @@ bool Epoll::processinput() {
         }
       } else if (polldata_.events[i].events & EPOLLIN) {
         connection::Base *connection = NULL;
+        if (ID_INVALID == connectionid) {
+          SLOW_WARNINGLOG(NET_MODULENAME, 
+                          "[net.connection.manager] (Epoll::processinput)"
+                          " ID_INVALID == connectionid");
+          continue;
+        }
         connection = Base::get(connectionid);
-        Assert(connection);
+        if (NULL == connection) {
+          SLOW_WARNINGLOG(NET_MODULENAME, 
+                          "[net.connection.manager] (Epoll::processinput)"
+                          " NULL == connection, id: %d", connectionid);
+          continue;
+        }
         if (connection->isdisconnect()) continue;
         int32_t _socketid = connection->getsocket()->getid();
         if (SOCKET_INVALID == _socketid) {

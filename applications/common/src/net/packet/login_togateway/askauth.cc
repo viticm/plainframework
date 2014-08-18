@@ -25,6 +25,7 @@ bool AskAuth::write(OutputStream& outputstream) const {
   __ENTER_FUNCTION
     outputstream.write(account_, sizeof(account_));
     outputstream.write(password_, sizeof(password_));
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

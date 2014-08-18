@@ -127,7 +127,7 @@ bool Base::add(int16_t id) {
 bool Base::remove(int16_t id) {
   __ENTER_FUNCTION
     Assert(count_ > 0);
-    connection::Base* connection = NULL;
+    connection::Base *connection = NULL;
     connection = pool_->get(id);
     if (NULL == connection) {
       Assert(false);
@@ -161,7 +161,7 @@ bool Base::erase(connection::Base* connection) {
     removesocket(connection->getsocket()->getid());
     Assert(connection != NULL);
     FAST_LOG(kNetLogFile, 
-             "[net.connection.manager] (Base::removeconnection) id: %d", 
+             "[net.connection.manager] (Base::erase) id: %d", 
              connection->getid());
     return true;
   __LEAVE_FUNCTION
@@ -212,7 +212,6 @@ connection::Base *Base::accept() {
     if (NULL == newconnection) return false;
     step = 5;
     newconnection->init();
-    newconnection->cleanup();
     int32_t socketid = SOCKET_INVALID;
     step = 10;
     try {
@@ -278,7 +277,7 @@ EXCEPTION:
 
 connection::Base *Base::get(int16_t id) {
   __ENTER_FUNCTION 
-    if (id <= 0 || id > maxcount_) return NULL;
+    if (id < 0 || id > maxcount_) return NULL;
     connection::Base *connection = NULL;
     connection = pool_->get(id);
     Assert(connection);

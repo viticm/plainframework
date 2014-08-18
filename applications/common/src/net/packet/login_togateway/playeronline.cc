@@ -25,6 +25,7 @@ bool PlayerOnline::write(OutputStream& outputstream) const {
   __ENTER_FUNCTION
     outputstream.write_int16(centerid_);
     outputstream.write_uint16(online_);
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

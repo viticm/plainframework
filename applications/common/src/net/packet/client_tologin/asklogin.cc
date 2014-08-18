@@ -25,6 +25,7 @@ bool AskLogin::write(OutputStream& outputstream) const {
   __ENTER_FUNCTION
     outputstream.write_string(account_);
     outputstream.write_string(password_);
+    return true;
   __LEAVE_FUNCTION
     return false;
 }
