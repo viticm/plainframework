@@ -225,6 +225,10 @@
 							RelativePath="..\src\message\handler\login_togateway\askauth.cc"
 							>
 						</File>
+						<File
+							RelativePath="..\src\message\handler\login_togateway\playeronline.cc"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="gateway_tologin"
