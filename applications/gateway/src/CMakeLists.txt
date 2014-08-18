@@ -36,6 +36,8 @@ SET (SOURCEFILES_MESSAGE_HANDLER_SERVERSERVER_LIST
 
 SET (SOURCEFILES_MESSAGE_HANDLER_LOGIN_TOGATEWAY_LIST
 	../src/message/handler/login_togateway/askauth.cc
+	../src/message/handler/login_togateway/playerleave.cc
+	../src/message/handler/login_togateway/playeronline.cc
 )
 
 SET (SOURCEFILES_MESSAGE_HANDLER_GATEWAY_TOLOGIN_LIST
@@ -96,6 +98,8 @@ SET (RESOURCEFILES_LIST
 
 SET (COMMON_SRC_NET_PACKET_LOGIN_TOGATEWAY_LIST
 	../../common/src/net/packet/login_togateway/askauth.cc
+	../../common/src/net/packet/login_togateway/playerleave.cc
+	../../common/src/net/packet/login_togateway/playeronline.cc
 )
 
 SET (COMMON_SRC_NET_PACKET_GATEWAY_TOLOGIN_LIST
@@ -147,6 +151,8 @@ SET (COMMON_INCLUDE_DEFINE_LIST
 SET (COMMON_INCLUDE_NET_PACKET_LOGIN_TOGATEWAY_LIST
 	../../common/include/common/net/packet/login_togateway/askauth.h
 	../../common/include/common/net/packet/login_togateway/config.h
+	../../common/include/common/net/packet/login_togateway/playerleave.h
+	../../common/include/common/net/packet/login_togateway/playeronline.h
 )
 
 SET (COMMON_INCLUDE_NET_PACKET_GATEWAY_TOLOGIN_LIST

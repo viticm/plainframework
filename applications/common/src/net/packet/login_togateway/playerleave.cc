@@ -48,7 +48,7 @@ uint16_t PlayerLeave::getid() const {
 }
 
 uint32_t PlayerLeave::getsize() const {
-  uint32_t result = sizeof(account_) +
+  uint32_t result = strlen(account_) +
                     sizeof(guid_) +
                     sizeof(centerid_);
   return result;

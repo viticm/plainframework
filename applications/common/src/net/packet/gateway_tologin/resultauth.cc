@@ -50,8 +50,8 @@ uint16_t ResultAuth::getid() const {
 }
 
 uint32_t ResultAuth::getsize() const {
-  uint32_t result = sizeof(account_) +
-                    sizeof(password_) +
+  uint32_t result = strlen(account_) +
+                    strlen(password_) +
                     sizeof(result_);
   return result;
 }

@@ -48,7 +48,7 @@ uint16_t RequirePlayerLogin::getid() const {
 }
 
 uint32_t RequirePlayerLogin::getsize() const {
-  uint32_t result = sizeof(account_) +
+  uint32_t result = strlen(account_) +
                     sizeof(guid_) +
                     sizeof(pid_);
   return result;

@@ -80,7 +80,7 @@ bool __stdcall registerfactories() {
     NET_PACKET_FACTORYMANAGER_POINTER->addfactory(
         new login_togateway::AskAuthFactory());
     NET_PACKET_FACTORYMANAGER_POINTER->addfactory(
-        new login_togateway::PlayerOnline());    
+        new login_togateway::PlayerOnlineFactory());    
 #endif /* } */
 
 #if defined(_LOGIN) || defined(_CLIENT) /* { */

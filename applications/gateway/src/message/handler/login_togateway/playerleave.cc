@@ -3,7 +3,7 @@
 using namespace common::net::packet::login_togateway;
 
 uint32_t PlayerLeaveHandler::execute(
-    PlayerOnline *packet,
+    PlayerLeave *packet,
     pf_net::connection::Base *connection) {
   __ENTER_FUNCTION
     USE_PARAM(connection);

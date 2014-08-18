@@ -1,3 +1,4 @@
+#include "pf/base/log.h"
 #include "common/net/packet/login_togateway/playeronline.h"
 
 using namespace common::net::packet::login_togateway;
@@ -10,7 +11,8 @@ uint32_t PlayerOnlineHandler::execute(
     FAST_LOG(kApplicationLogFile,
              "[gateway][message][handler][login_togateway]"
              " (PlayerOnlineHandler::execute) success."
-             " online player: %d",
+             " center id: %d, online player: %d",
+             packet->get_centerid(),
              packet->getonline());
     return kPacketExecuteStatusContinue;
   __LEAVE_FUNCTION
