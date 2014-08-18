@@ -226,6 +226,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\message\handler\login_togateway\playerleave.cc"
+							>
+						</File>
+						<File
 							RelativePath="..\src\message\handler\login_togateway\playeronline.cc"
 							>
 						</File>
@@ -358,6 +362,14 @@
 							>
 							<File
 								RelativePath="..\..\common\src\net\packet\login_togateway\askauth.cc"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_togateway\playerleave.cc"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\src\net\packet\login_togateway\playeronline.cc"
 								>
 							</File>
 						</Filter>
@@ -494,6 +506,14 @@
 							</File>
 							<File
 								RelativePath="..\..\common\include\common\net\packet\login_togateway\config.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_togateway\playerleave.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\login_togateway\playeronline.h"
 								>
 							</File>
 						</Filter>
