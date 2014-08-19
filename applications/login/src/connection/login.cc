@@ -62,11 +62,12 @@ bool Login::heartbeat(uint32_t time) {
                     " didn't receive message for long time. Kicked!");
       return false;
     }
-    if (getstatus() == kPlayerStatusLoginProcessTurn) {
+    if (kPlayerStatusLoginProcessTurn == getstatus()) {
       if (time > last_sendmessage_turntime_ + CONNECTION_TURNMESSAGE_TIME_MAX) {
         last_sendmessage_turntime_ = time;
         uint32_t turnnumber = 0;
-        turnnumber = CONNECTION_QUEUE_TURN_POINTER->calculate_turnnumber(queueposition_);
+        turnnumber = 
+          CONNECTION_QUEUE_TURN_POINTER->calculate_turnnumber(queueposition_);
         TurnStatus message;
         message.set_turnstatus(kPlayerStatusLoginProcessTurn);
         message.set_turnnumber(turnnumber);

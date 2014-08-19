@@ -15,8 +15,8 @@ ResultAuth::ResultAuth() {
 
 bool ResultAuth::read(InputStream& inputstream) {
   __ENTER_FUNCTION
-    inputstream.read(account_, sizeof(account_));
-    inputstream.read(password_, sizeof(password_));
+    inputstream.read_string(account_, sizeof(account_));
+    inputstream.read_string(password_, sizeof(password_));
     inputstream.read((char*)&result_, sizeof(result_));
     return true;
   __LEAVE_FUNCTION
@@ -25,8 +25,8 @@ bool ResultAuth::read(InputStream& inputstream) {
 
 bool ResultAuth::write(OutputStream& outputstream) const {
   __ENTER_FUNCTION
-    outputstream.write(account_, sizeof(account_));
-    outputstream.write(password_, sizeof(password_));
+    outputstream.write_string(account_);
+    outputstream.write_string(password_);
     outputstream.write((char*)&result_, sizeof(result_));
     return true;
   __LEAVE_FUNCTION

@@ -238,6 +238,11 @@ tags
 ./pf/dependencies/iconv/lib/*
 ./pf/dependencies/lua/lib/*
 
+#############
+## backup dir
+#############
+pf/plugin/bak/*
+
 #######################
 ## build libs
 #######################
