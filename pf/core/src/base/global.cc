@@ -42,7 +42,7 @@ const char *get_performanace_modulename() {
     if (strlen(performance_modulename) > 0) return performance_modulename;
     snprintf(performance_modulename, 
              sizeof(performance_modulename) - 1, 
-             "net_%s", 
+             "performance_%s", 
              APPLICATION_NAME);
     return performance_modulename;
   __LEAVE_FUNCTION
@@ -54,7 +54,7 @@ const char *get_db_modulename() {
     if (strlen(db_modulename) > 0) return db_modulename;
     snprintf(db_modulename, 
              sizeof(db_modulename) - 1, 
-             "net_%s", 
+             "db_%s", 
              APPLICATION_NAME);
     return db_modulename;
   __LEAVE_FUNCTION
@@ -79,7 +79,7 @@ const char *get_applicationname() {
       snprintf(applicationname,
                sizeof(applicationname) - 1,
                "%s",
-               "unkonow");
+               "unknown");
     }
     return applicationname;
   __LEAVE_FUNCTION

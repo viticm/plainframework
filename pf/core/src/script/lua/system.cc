@@ -28,6 +28,16 @@ System::~System() {
   //do nothing
 }
 
+void System::registerfunctions() {
+  __ENTER_FUNCTION
+    if (function_registers_) function_registers_();
+  __LEAVE_FUNCTION
+}
+
+void System::set_function_registers(function_registers function) {
+  function_registers_ = function;
+}
+
 int32_t System::call_noclosure(lua_State *L) {
   __ENTER_FUNCTION
     int32_t argc = lua_gettop(L);

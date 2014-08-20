@@ -54,6 +54,7 @@ class PF_API Interface {
    void set_globalfile(const char *filename);
    void set_rootpath(const char *path);
    void set_workpath(const char *path);
+   VM *get_vm();
 
  public:
    static bool check_paramnumber(lua_State *L, int32_t count);

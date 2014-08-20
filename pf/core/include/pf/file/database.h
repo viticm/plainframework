@@ -93,6 +93,7 @@ class PF_API Database {
    int32_t record_number_;
    int32_t field_number_;
    data_buffer data_buffer_; //所有表格数据容器
+   std::vector<std::string> columnnames_;
    char *string_buffer_; //表格中所有字符串组成的数组，重复的字符串使用一个地址
    int32_t string_buffer_size_;
    field_hashmap hash_index_;

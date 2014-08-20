@@ -77,7 +77,7 @@ void Server::add_serverconnection(int16_t serverid, int16_t connectionid) {
   __ENTER_FUNCTION
     Assert(serverid >= 0 && serverid < OVER_SERVER_MAX);
     SLOW_LOG(NET_MODULENAME,
-             "[connection.manager] (Server::add_serverconnection)"
+             "[common.net.manager] (Server::add_serverconnection)"
              " connectionids_[%d] = %d",
              serverid,
              connectionid); 
@@ -89,7 +89,7 @@ void Server::remove_serverconenction(int16_t serverid) {
   __ENTER_FUNCTION
     Assert(serverid >= 0 && serverid < OVER_SERVER_MAX);
     SLOW_LOG(NET_MODULENAME,
-             "[connection.manager] (Server::remove_serverconnection)"
+             "[common.net.manager] (Server::remove_serverconnection)"
              " connectionids_[%d] = %d",
              serverid,
              ID_INVALID); 
@@ -244,7 +244,7 @@ bool Server::connect_toserver(const char *ip,
       }
     }
     SLOW_LOG(NET_MODULENAME,
-             "[net.manager] (Server::connect_toserver) success!"
+             "[common.net.manager] (Server::connect_toserver) success!"
              " ip: %s, port: %d, serverid: %d",
              ip,
              port,
@@ -253,7 +253,7 @@ bool Server::connect_toserver(const char *ip,
     return true;
 EXCEPTION:
     SLOW_WARNINGLOG(NET_MODULENAME,
-                    "[net.manager] (Server::connect_toserver) failed!"
+                    "[common.net.manager] (Server::connect_toserver) failed!"
                     " ip: %s, port: %d, serverid: %d, step: %d",
                     ip,
                     port,
@@ -348,7 +348,7 @@ pf_net::connection::Base *Server::connect_toserver_forgroup(
     }
     _remove = true;
     SLOW_LOG(NET_MODULENAME,
-             "[net.manager] (Server::connect_toserver_forgroup) success!"
+             "[common.net.manager] (Server::connect_toserver_forgroup) success!"
              " ip: %s, port: %d, serverid: %d",
              ip,
              port,
@@ -356,13 +356,14 @@ pf_net::connection::Base *Server::connect_toserver_forgroup(
     connectionid = connection->getid();
     return connection;
 EXCEPTION:
-    SLOW_WARNINGLOG(NET_MODULENAME,
-                    "[net.manager] (Server::connect_toserver_forgroup) failed!"
-                    " ip: %s, port: %d, serverid: %d, step: %d",
-                    ip,
-                    port,
-                    serverid,
-                    step);
+    SLOW_WARNINGLOG(
+        NET_MODULENAME,
+        "[common.net.manager] (Server::connect_toserver_forgroup) failed!"
+        " ip: %s, port: %d, serverid: %d, step: %d",
+        ip,
+        port,
+        serverid,
+        step);
     if (closesocket) socket->close();
     if (_remove) {
       remove(connection);

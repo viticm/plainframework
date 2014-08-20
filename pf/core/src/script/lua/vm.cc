@@ -27,7 +27,10 @@ bool VM::loadbuffer(unsigned char *buffer, uint64_t length) {
       return false;
     }
     char *_buffer = reinterpret_cast<char *>(buffer);
-    if (luaL_loadbuffer(lua_state_, _buffer, static_cast<size_t>(length), NULL) != 0) {
+    if (luaL_loadbuffer(lua_state_, 
+                        _buffer, 
+                        static_cast<size_t>(length), 
+                        NULL) != 0) {
       on_scripterror(kErrorCodeLoadBuffer);
       return false;
     }
@@ -85,8 +88,9 @@ bool VM::load(const char *filename) {
     if (!executecode()) {
       SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) execute code"
-                    " failed from file %s",
-                    filename);
+                    " failed from file %s, error: %s",
+                    filename,
+                    get_lastresult());
       return false;
     }
     return true;
@@ -564,6 +568,10 @@ const char *VM::get_rootpath() {
     return path;
   __LEAVE_FUNCTION
     return NULL;
+}
+const char *VM::get_lastresult() {
+  const char *result= lua_tostring(lua_state_, lua_gettop(lua_state_));
+  return result;  
 }
 
 } //namespace lua

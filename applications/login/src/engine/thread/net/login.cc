@@ -35,6 +35,7 @@ void Login::run() {
   __ENTER_FUNCTION
     while (isactive()) {
       bool result = false;
+      pf_base::util::sleep(10);
       uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
       result = dotick(currenttime);
       Assert(result);

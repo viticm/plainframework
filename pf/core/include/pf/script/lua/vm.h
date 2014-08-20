@@ -118,6 +118,7 @@ class PF_API VM {
    void on_init();
    void on_scripterror(int32_t error);
    void on_scripterror(int32_t, int32_t);
+   const char *get_lastresult();
 
  private:
    FileBridge filebridge_;

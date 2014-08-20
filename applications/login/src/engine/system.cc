@@ -39,6 +39,7 @@ System::~System() {
   SAFE_DELETE(g_connection_counter_center);
   SAFE_DELETE(incoming_netmanager_);
   SAFE_DELETE(server_netmanager_);
+  SAFE_DELETE(g_packetfactory_manager);
   SAFE_DELETE(g_setting);
 }
 
@@ -99,6 +100,7 @@ bool System::init() {
       return false;
     }
 
+    setconfig(ENGINE_CONFIG_PERFORMANCE_ISACTIVE, true);
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
     setconfig(ENGINE_CONFIG_NET_ISACTIVE, true); //一定要在初始化各个系统前设置
     setconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, true);

@@ -286,6 +286,8 @@ bool Database::open_from_memory_text(const char *memory,
     std::vector<std::pair<std::string, int32_t> > string_buffer;
     std::map<std::string, int32_t> map_string_buffer;
     _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
+    //第二行为列名（相当于数据库的字段名），应尽量使用英文
+    convert_string_tovector(line, columnnames_, "\t", true, true);
     if (!_memory) return false;
     int32_t string_buffer_size = 0;
     bool loop = true;

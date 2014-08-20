@@ -1,5 +1,6 @@
 #include "pf/base/util.h"
 #include "pf/base/time_manager.h"
+#include "pf/base/log.h"
 #include "pf/sys/process.h"
 #include "pf/sys/info.h"
 #include "pf/performance/eyes.h"
@@ -37,39 +38,49 @@ void Eyes::printinfo() {
     using namespace pf_sys;
     using namespace pf_base;
     int32_t current_processid = process::getid();
-    char temp[128] = {0};
     info::loadaverage_t loadaverage;
     memset(&loadaverage, 0, sizeof(loadaverage));
     info::get_loadaverage(loadaverage);
     process::info_t processinfo;
     memset(&processinfo, 0, sizeof(processinfo));
     process::getinfo(current_processid, processinfo);
-    DEBUGPRINTF("-------------------------------------------"
-                "performance"
-                "-------------------------------------------");
-    //DEBUGPRINTF("- FPS: %.1f", FPF_);
-    DEBUGPRINTF("- load average: %.2f, %.2f, %.2f", 
-                loadaverage.oneminutes, 
-                loadaverage.fiveminutes, 
-                loadaverage.fifteenminutes);
-    DEBUGPRINTF("- process id: %d", processinfo.id);
-    DEBUGPRINTF("- process cpu usage: %.1f%%", processinfo.cpu_percent);
-    util::get_sizestr(processinfo.VSZ, temp, sizeof(temp) - 1);
-    DEBUGPRINTF("- process VSZ: %s", temp);
-    util::get_sizestr(processinfo.RSS, temp, sizeof(temp) - 1);
-    DEBUGPRINTF("- process RSS: %s", temp);
-    DEBUGPRINTF("- online: %d", get_onlinecount());
-    DEBUGPRINTF("- connection: %d", get_connectioncount());
-    util::get_sizestr(get_uptraffic(), temp, sizeof(temp) - 1); 
-    DEBUGPRINTF("- up traffic: %s", temp);
-    util::get_sizestr(get_downtraffic(), temp, sizeof(temp) - 1);
-    DEBUGPRINTF("- down traffic: %s", temp);
+    char vsz_str[128] = {0};
+    util::get_sizestr(processinfo.VSZ, vsz_str, sizeof(vsz_str) - 1);
+    char rss_str[128] = {0};
+    util::get_sizestr(processinfo.RSS, rss_str, sizeof(rss_str) - 1);
+    char uptraffic_str[128] = {0};
+    util::get_sizestr(
+        get_uptraffic(), uptraffic_str, sizeof(uptraffic_str) - 1); 
+    char downtraffic_str[128] = {0};
+    util::get_sizestr(
+        get_downtraffic(), downtraffic_str, sizeof(downtraffic_str) - 1);
     char modulename[FILENAME_MAX] = {0};
     util::get_module_filename(modulename, sizeof(modulename));
-    DEBUGPRINTF("- IMG: %s", modulename);
-    DEBUGPRINTF("-------------------------------------------"
-                "performance"
-                "-------------------------------------------");
+    SLOW_DEBUGLOG(PERFORMANCE_MODULENAME,
+                  "[performance] (Eyes::printinfo)"
+                  " load average: %.2f, %.2f, %.2f|"
+                  " process id: %d|"
+                  " cpu usage: %.1f%%|" 
+                  " FPS: %.2f|"
+                  " VSZ: %s|"
+                  " RSS: %s|"
+                  " online: %d|"
+                  " connection: %d|"
+                  " traffic: %s up, %s down|"
+                  " img: %s",
+                  loadaverage.oneminutes,
+                  loadaverage.fiveminutes,
+                  loadaverage.fifteenminutes,
+                  processinfo.id,
+                  processinfo.cpu_percent,
+                  FPS_, 
+                  vsz_str,
+                  rss_str,
+                  get_onlinecount(),
+                  get_connectioncount(),
+                  uptraffic_str,
+                  downtraffic_str,
+                  modulename);
   __LEAVE_FUNCTION
 }
 

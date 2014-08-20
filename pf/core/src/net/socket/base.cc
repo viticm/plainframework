@@ -127,7 +127,10 @@ int32_t Base::accept(uint16_t port, const char *ip) {
     uint32_t addrlength = 0;
     struct sockaddr_in accept_sockaddr_in;
     accept_sockaddr_in.sin_family = AF_INET;
-    if (NULL == ip || 0 == strlen(ip) || 0 == strcmp("127.0.0.1", ip)) {
+    if (NULL == ip || 
+        0 == strlen(ip) || 
+        0 == strcmp("127.0.0.1", ip) ||
+        0 == strcmp("0.0.0.0", ip)) {
       accept_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
     } else {
       accept_sockaddr_in.sin_addr.s_addr = inet_addr(ip);
@@ -163,7 +166,10 @@ bool Base::bind(const char *ip) {
     bool result = true;
     struct sockaddr_in connect_sockaddr_in;
     connect_sockaddr_in.sin_family = AF_INET;
-    if (NULL == ip || 0 == strlen(ip) || 0 == strcmp("127.0.0.1", ip)) {
+    if (NULL == ip || 
+        0 == strlen(ip) || 
+        0 == strcmp("127.0.0.1", ip) ||
+        0 == strcmp("0.0.0.0", ip)) {
       connect_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
     } else {
       connect_sockaddr_in.sin_addr.s_addr = inet_addr(ip);

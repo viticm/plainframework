@@ -1,7 +1,9 @@
 #include "pf/base/log.h"
 #include "pf/net/packet/factorymanager.h"
+#include "pf/script/lua/system.h"
 #include "common/net/packetfactory.h"
 #include "common/setting.h"
+#include "common/script/lua/export.h"
 #include "engine/system.h"
 
 engine::System *g_engine_system = NULL;
@@ -25,6 +27,7 @@ System::System() {
 }
 
 System::~System() {
+  SAFE_DELETE(g_packetfactory_manager);
   SAFE_DELETE(g_setting);
 }
 
@@ -60,6 +63,7 @@ bool System::init() {
       return false;
     }
     setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
+    setconfig(ENGINE_CONFIG_SCRIPT_ISACTIVE, true);
     //setconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, true);
     setconfig(
         ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME, 
@@ -80,6 +84,8 @@ bool System::init() {
               SETTING_POINTER->gateway_info_.listenport_);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               SETTING_POINTER->gateway_info_.net_connectionmax_);
+    SCRIPT_LUASYSTEM_POINTER->set_function_registers(
+        common::script::lua::export_globals);
     SLOW_LOG(ENGINE_MODULENAME, 
              "[engine] (System::init) setting module success");
     if (!NET_PACKET_FACTORYMANAGER_POINTER)

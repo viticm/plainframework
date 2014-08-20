@@ -134,6 +134,7 @@ bool Kernel::init() {
     }
     //DEBUGPRINTF("performance");
     //SYS_PROCESS_CURRENT_INFO_PRINT();
+    isactive_ = true;
     return true;
   __LEAVE_FUNCTION
     return false;
@@ -141,7 +142,6 @@ bool Kernel::init() {
 
 void Kernel::run() {
   __ENTER_FUNCTION
-    isactive_ = true;
     //base
     SLOW_LOG(ENGINE_MODULENAME, "[engine] (Kernel::run) base module");
     run_base();
@@ -585,7 +585,8 @@ bool Kernel::init_net_connectionpool() {
 bool Kernel::loop_handle() {
   __ENTER_FUNCTION
     bool db_is_usethread = getconfig_boolvalue(ENGINE_CONFIG_DB_RUN_ASTHREAD);
-    if (!db_is_usethread)
+    bool db_isactive = getconfig_boolvalue(ENGINE_CONFIG_DB_ISACTIVE);
+    if (db_isactive && !db_is_usethread)
       db_manager_->check_db_connect();
     return true;
   __LEAVE_FUNCTION
@@ -606,6 +607,8 @@ void Kernel::calculate_FPS() {
     if (looptime > kCalculateFPS) {
       FPS_ = static_cast<float>((loopcount * 1000) / looptime);
       looptime = loopcount = 0;
+      if (getconfig_boolvalue(ENGINE_CONFIG_PERFORMANCE_ISACTIVE))
+        PERFORMANCE_EYES_POINTER->set_fps(FPS_);
     }
     ++loopcount;
   __LEAVE_FUNCTION

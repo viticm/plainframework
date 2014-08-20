@@ -56,6 +56,11 @@ const char *Interface::get_rootpath() {
   __LEAVE_FUNCTION
     return NULL;
 }
+   
+VM *Interface::get_vm() {
+  VM *vm = &VM_;
+  return vm;
+}
 
 bool Interface::init() {
   __ENTER_FUNCTION
