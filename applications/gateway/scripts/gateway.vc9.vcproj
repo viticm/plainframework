@@ -391,6 +391,18 @@
 						</Filter>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="script"
+					>
+					<Filter
+						Name="lua"
+						>
+						<File
+							RelativePath="..\..\common\src\script\lua\export.cc"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="include"
@@ -541,6 +553,26 @@
 								>
 							</File>
 						</Filter>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="script"
+					>
+					<File
+						RelativePath="..\..\common\include\common\script\config.h"
+						>
+					</File>
+					<Filter
+						Name="lua"
+						>
+						<File
+							RelativePath="..\..\common\include\common\script\lua\config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\common\include\common\script\lua\export.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
