@@ -28,6 +28,7 @@ System::System() {
 
 System::~System() {
   SAFE_DELETE(g_packetfactory_manager);
+  SAFE_DELETE(g_script_luasystem);
   SAFE_DELETE(g_setting);
 }
 
@@ -84,6 +85,8 @@ bool System::init() {
               SETTING_POINTER->gateway_info_.listenport_);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               SETTING_POINTER->gateway_info_.net_connectionmax_);
+    if (!SCRIPT_LUASYSTEM_POINTER) 
+      g_script_luasystem = new pf_script::lua::System();
     SCRIPT_LUASYSTEM_POINTER->set_function_registers(
         common::script::lua::export_globals);
     SLOW_LOG(ENGINE_MODULENAME, 
@@ -99,6 +102,7 @@ bool System::init() {
     NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();
     NET_PACKET_FACTORYMANAGER_POINTER->init();
+    SCRIPT_LUASYSTEM_POINTER->loadscript("/preload.lua");
     return result;
   __LEAVE_FUNCTION
     return false;

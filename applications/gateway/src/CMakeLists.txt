@@ -117,6 +117,13 @@ SET (COMMON_SRC_NET_LIST
 	../../common/src/net/packetfactory.cc
 )
 
+SET (COMMON_SRC_SCRIPT_LUA_LIST
+	../../common/src/script/lua/export.cc
+)
+
+SET (COMMON_SRC_SCRIPT_LIST
+)
+
 SET (COMMON_SRC_LIST
 	../../common/src/setting.cc
 )
@@ -174,6 +181,15 @@ SET (COMMON_INCLUDE_NET_LIST
 	../../common/include/common/net/packetfactory.h
 )
 
+SET (COMMON_INCLUDE_SCRIPT_LUA_LIST
+	../../common/include/common/script/lua/config.h
+	../../common/include/common/script/lua/export.h
+)
+
+SET (COMMON_INCLUDE_SCRIPT_LIST
+	../../common/include/common/script/config.h
+)
+
 SET (COMMON_INCLUDE_LIST
 	../../common/include/common/config.h
 	../../common/include/common/setting.h
@@ -206,6 +222,8 @@ if (WIN32)
 	source_group(common\\src\\net\\packet\\serverserver FILES ${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST})
 	source_group(common\\src\\net\\packet FILES ${COMMON_SRC_NET_PACKET_LIST})
 	source_group(common\\src\\net FILES ${COMMON_SRC_NET_LIST})
+	source_group(common\\src\\script\\lua FILES ${COMMON_SRC_SCRIPT_LUA_LIST})
+	source_group(common\\src\\script FILES ${COMMON_SRC_SCRIPT_LIST})
 	source_group(common\\src FILES ${COMMON_SRC_LIST})
 	source_group(common\\include\\define\\net\\packet\\id FILES ${COMMON_INCLUDE_DEFINE_NET_PACKET_ID_LIST})
 	source_group(common\\include\\define\\net\\packet FILES ${COMMON_INCLUDE_DEFINE_NET_PACKET_LIST})
@@ -216,6 +234,8 @@ if (WIN32)
 	source_group(common\\include\\net\\packet\\serverserver FILES ${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST})
 	source_group(common\\include\\net\\packet FILES ${COMMON_INCLUDE_NET_PACKET_LIST})
 	source_group(common\\include\\net FILES ${COMMON_INCLUDE_NET_LIST})
+	source_group(common\\include\\script\\lua FILES ${COMMON_INCLUDE_SCRIPT_LUA_LIST})
+	source_group(common\\include\\script FILES ${COMMON_INCLUDE_SCRIPT_LIST})
 	source_group(common\\include FILES ${COMMON_INCLUDE_LIST})
 	source_group(common FILES ${COMMON_LIST})
 endif()
@@ -243,6 +263,8 @@ ADD_EXECUTABLE(gateway
 	${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST}
 	${COMMON_SRC_NET_PACKET_LIST}
 	${COMMON_SRC_NET_LIST}
+	${COMMON_SRC_SCRIPT_LUA_LIST}
+	${COMMON_SRC_SCRIPT_LIST}
 	${COMMON_SRC_LIST}
 	${COMMON_INCLUDE_DEFINE_NET_PACKET_ID_LIST}
 	${COMMON_INCLUDE_DEFINE_NET_PACKET_LIST}
@@ -253,6 +275,8 @@ ADD_EXECUTABLE(gateway
 	${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST}
 	${COMMON_INCLUDE_NET_PACKET_LIST}
 	${COMMON_INCLUDE_NET_LIST}
+	${COMMON_INCLUDE_SCRIPT_LUA_LIST}
+	${COMMON_INCLUDE_SCRIPT_LIST}
 	${COMMON_INCLUDE_LIST}
 	${COMMON_LIST}
 )

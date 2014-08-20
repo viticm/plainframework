@@ -3,9 +3,11 @@
 
 namespace common {
 
+namespace script {
+
 namespace lua {
 
-int32_t luatest(Lua_State *L) {
+int32_t luatest(lua_State *L) {
   __ENTER_FUNCTION
     lua_newtable(L);
     lua_pushstring(L, "mydata");
@@ -22,8 +24,10 @@ bool export_globals() {
     vm->register_function("luatest", (void *)luatest);
   __LEAVE_FUNCTION
     return false;
-};
+}
 
-}; //namespace lua
+} //namespace lua
+
+} //namespace script
 
 } //namespace common

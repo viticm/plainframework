@@ -17,7 +17,11 @@ namespace common {
 
 namespace script {
 
+namespace lua {
+
 bool export_globals();
+
+}; //namespace lua
 
 }; //namespace script
 

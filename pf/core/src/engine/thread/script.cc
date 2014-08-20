@@ -28,8 +28,8 @@ bool Script::init(const char *rootpath,
       SCRIPT_LUASYSTEM_POINTER->set_rootpath(rootpath);
     if (workpath != NULL)
       SCRIPT_LUASYSTEM_POINTER->set_workpath(workpath);
-    SCRIPT_LUASYSTEM_POINTER->registerfunctions();
     if (!SCRIPT_LUASYSTEM_POINTER->init()) return false;
+    SCRIPT_LUASYSTEM_POINTER->registerfunctions();
     return true;
   __LEAVE_FUNCTION
     return false;
