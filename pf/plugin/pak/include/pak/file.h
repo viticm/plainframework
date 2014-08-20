@@ -38,37 +38,37 @@ namespace pak {
 
 namespace file {
 
-void *create(const char *filename, 
-             uint64_t mode, 
-             uint64_t sharing, 
-             void *secondattribute, 
-             uint64_t creation, 
-             uint64_t flag, 
-             void *file);
-bool close(handle_t fp);
+void *createex(const char *filename, 
+               uint64_t mode, 
+               uint64_t sharing, 
+               void *secondattribute, 
+               uint64_t creation, 
+               uint64_t flag, 
+               void *file);
+bool closeex(handle_t fp);
 uint64_t getszie(void *fp, uint64_t *offsethigh);
 uint64_t setpointer(void *fp, 
                     int64_t offsetlow, 
                     int64_t *offsethigh, 
                     uint64_t method);
 bool setend(void *fp);
-bool read(void *fp, 
-          void *buffer, 
-          uint64_t length, 
-          uint64_t *read, 
-          void *overlapped);
-bool write(void *fp, 
-           const void *buffer, 
-           uint64_t length, 
-           uint64_t *write, 
-           void *overlapped);
+bool readex(void *fp, 
+            void *buffer, 
+            uint64_t length, 
+            uint64_t *read, 
+            void *overlapped);
+bool writeex(void *fp, 
+             const void *buffer, 
+             uint64_t length, 
+             uint64_t *write, 
+             void *overlapped);
 uint64_t getattribute(const char *filename);
 void get_temppath(uint64_t length, char *temp);
 void get_temp_filename(const char *temp_directorypath, 
                        const char *filename, 
                        uint64_t something, 
                        char *delimiter);
-bool _remove(const char *filename);
+bool removeex(const char *filename);
 bool move(const char *source, const char *target);
 
 }; //namespace file

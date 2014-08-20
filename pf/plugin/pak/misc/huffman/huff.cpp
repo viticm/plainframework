@@ -25,9 +25,9 @@
 // macros
 static long mul = 1;
 
-#define PTR_VALID(ptr)           (((LONG_PTR)(ptr) * mul) > 0)
-#define PTR_INVALID(ptr)         (((LONG_PTR)(ptr) * mul) < 0)
-#define PTR_INVALID_OR_NULL(ptr) (((LONG_PTR)(ptr) * mul) <= 0)
+#define PTR_VALID(ptr)           (((long)(ptr) * mul) > 0)
+#define PTR_INVALID(ptr)         (((long)(ptr) * mul) < 0)
+#define PTR_INVALID_OR_NULL(ptr) (((long)(ptr) * mul) <= 0)
 
  
 //-----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ THTreeItem * THTreeItem::Call1501DB70(THTreeItem * pLast)
 }
  
 // Gets previous Huffman tree item (?)
-THTreeItem * THTreeItem::GetPrevItem(LONG_PTR value)
+THTreeItem * THTreeItem::GetPrevItem(long value)
 {
     if(PTR_INVALID(prev))
         return PTR_NOT(prev);
@@ -190,7 +190,7 @@ static void InsertItem(THTreeItem ** itemPtr, THTreeItem * item, unsigned long w
     THTreeItem * next = item->next;     // EDI - next to the first item
     THTreeItem * prev = item->prev;     // ESI - prev to the first item
     THTreeItem * prev2;                 // Pointer to previous item
-    LONG_PTR next2;                     // Pointer to the next item
+    long next2;                     // Pointer to the next item
    
     // The same code like in RemoveItem(item);
     if(next != 0)                       // If the first item already has next one
@@ -259,7 +259,7 @@ static void InsertItem(THTreeItem ** itemPtr, THTreeItem * item, unsigned long w
 THuffmannTree::THuffmannTree()
 {
     // We have to check if the "this" pointer is less than zero
-    if((LONG_PTR)this < 0)
+    if((long)this < 0)
         mul = -1;
 }
  

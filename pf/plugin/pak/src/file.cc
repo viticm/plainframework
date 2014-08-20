@@ -7,13 +7,13 @@ namespace pak {
 
 namespace file {
 
-void *create(const char *filename, 
-             uint64_t mode, 
-             uint64_t sharing, 
-             void *secondattribute, 
-             uint64_t creation, 
-             uint64_t flag, 
-             void *file) {
+void *createex(const char *filename, 
+               uint64_t mode, 
+               uint64_t sharing, 
+               void *secondattribute, 
+               uint64_t creation, 
+               uint64_t flag, 
+               void *file) {
   __ENTER_FUNCTION
     void *result = NULL;
 #if __LINUX__
@@ -43,10 +43,11 @@ void *create(const char *filename,
     return NULL;
 }
 
-bool close(handle_t fp) {
+bool closeex(handle_t fp) {
   bool result = false;
 #if __LINUX__ 
-  result = (0 == close((int32_t)fp);
+  int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
+  result = (0 == close(_fp));
 #elif __WINDOWS__
   result = (1 == CloseHandle(fp));
 #endif
@@ -57,9 +58,10 @@ uint64_t getszie(void *fp, uint64_t *offsethigh) {
   __ENTER_FUNCTION
     uint64_t result;
 #if __LINUX__
-    if (NULL == fp) result = 0xffffffff;
+    if (NULL == fp) return 0xffffffff;
     struct stat fileinfo;
-    fstat((int)hFile, &fileinfo);
+    int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
+    fstat(_fp, &fileinfo);
     result = fileinfo.st_size;
 #elif __WINDOWS__
     result = GetFileSize(fp, offsethigh);
@@ -76,10 +78,11 @@ uint64_t setpointer(void *fp,
   __ENTER_FUNCTION
     uint64_t result;
 #if __LINUX__
+    int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
     off64_t offset = static_cast<off64_t>(offsetlow);
     if (offsethigh != NULL)
       offset |= (*(off64_t *)offsethigh) << 32;
-    result = lseek64((int32_t)fp, offset, method);
+    result = lseek64(_fp, offset, method);
 #elif __WINDOWS__
     result = SetFilePointer(fp, offsetlow, offsethigh, method);
 #endif
@@ -91,7 +94,8 @@ bool setend(void *fp) {
   __ENTER_FUNCTION
     bool result = false;
 #if __LINUX__
-    result = (0 == ftruncate((int32_t)fp, lseek((int32_t)fp, 0, SEEK_CUR)));
+    int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
+    result = (0 == ftruncate(_fp, lseek(_fp, 0, SEEK_CUR)));
 #elif __WINDOWS__
     result = SetEndOfFile(fp);
 #endif
@@ -99,45 +103,48 @@ bool setend(void *fp) {
     return false;
 }
 
-bool read(void *fp, 
-          void *buffer, 
-          uint64_t length, 
-          uint64_t *read, 
-          void *overlapped) {
+bool readex(void *fp, 
+            void *buffer, 
+            uint64_t length, 
+            uint64_t *_read, 
+            void *overlapped) {
   __ENTER_FUNCTION
     bool result = false;
 #if __LINUX__
     ssize_t count;
-    if (-1 == (count = read((int32_t)fp, buffer, length))) {
-      *read = 0;
+    int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
+    if (-1 == (count = read(_fp, buffer, length))) {
+      *_read = 0;
     } else {
-      *read = count;
+      *_read = count;
       result = true;
     }
 #elif __WINDOWS__
-    result = 1 == ReadFile(fp, buffer, length, length, read, overlapped);
+    result = 1 == ReadFile(fp, buffer, length, length, _read, overlapped);
 #endif
     return result;
   __LEAVE_FUNCTION
     return false;
 }
-bool write(void *fp, 
-           const void *buffer, 
-           uint64_t length, 
-           uint64_t *write, 
-           void *overlapped) {
+
+bool writeex(void *fp, 
+             const void *buffer, 
+             uint64_t length, 
+             uint64_t *_write, 
+             void *overlapped) {
   __ENTER_FUNCTION
     bool result = false;
 #if __LINUX__
+    int32_t _fp = static_cast<int32_t>(reinterpret_cast<int64_t>(fp));
     ssize_t count;
-    if (-1 == (count = write((int32_t)fp, buffer, length))) {
-      *write = 0;
+    if (-1 == (count = write(_fp, buffer, length))) {
+      *_write = 0;
     } else {
-      *write = count;
+      *_write = count;
       result = true;
     }
 #elif __WINDOWS__
-    result = 1 == ReadFile(fp, buffer, length, length, write, overlapped);
+    result = 1 == ReadFile(fp, buffer, length, length, _write, overlapped);
 #endif
     return result;
   __LEAVE_FUNCTION
@@ -182,13 +189,14 @@ void get_temp_filename(const char *temp_directorypath,
   __LEAVE_FUNCTION
 }
 
-bool _remove(const char *filename) { //区分系统加_
+bool removex(const char *filename) {
   bool result = false;
 #if __LINUX__
   result = 0 == remove(filename);
 #elif __WINDOWS__
   result = 1 == DeleteFile(filename);
 #endif
+  return result;
 }
 
 bool move(const char *source, const char *target) {

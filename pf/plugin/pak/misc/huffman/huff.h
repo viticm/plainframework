@@ -13,17 +13,15 @@
 #ifndef __HUFFMAN_H__
 #define __HUFFMAN_H__
 
-#include "kpmPlatform.h"
-using namespace KPM;
 //-----------------------------------------------------------------------------
 // Defines
  
 #define INSERT_ITEM    1                   
 #define SWITCH_ITEMS   2                    // Switch the item1 and item2
  
-#define PTR_NOT(ptr)  (THTreeItem *)(~(DWORD_PTR)(ptr))
+#define PTR_NOT(ptr)  (THTreeItem *)(~(unsigned long)(ptr))
 #define PTR_PTR(ptr)  ((THTreeItem *)(ptr))
-#define PTR_INT(ptr)  (INT_PTR)(ptr)
+#define PTR_INT(ptr)  (long)(ptr)
  
 #ifndef NULL
 #define NULL 0
@@ -66,7 +64,7 @@ struct THTreeItem
     public:
     
     THTreeItem * Call1501DB70(THTreeItem * pLast);
-	THTreeItem * GetPrevItem(KPM::LONG_PTR value);
+	  THTreeItem * GetPrevItem(long value);
     void         ClearItemLinks();
     void         RemoveItem();
  
