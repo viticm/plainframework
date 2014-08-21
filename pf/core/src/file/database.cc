@@ -11,6 +11,7 @@ Database::Database(uint32_t id) {
     id_ = id;
     string_buffer_ = NULL;
     index_column_ = -1;
+    record_number_ = 0;
   __LEAVE_FUNCTION
 }
 

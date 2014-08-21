@@ -1,4 +1,6 @@
 require("public/data/script/test")
 local test = luatest()
 mytest()
-print(test["mydata"])
+print(test["basekey1"]["key7"])
+local tb = file.opentab("public/data/setting/hairstyle.txt")
+print(type(tb[0].cost_itemid))

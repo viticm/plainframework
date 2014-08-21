@@ -12,9 +12,22 @@ namespace lua {
 int32_t luatest(lua_State *L) {
   __ENTER_FUNCTION
     lua_newtable(L);
-    lua_pushstring(L, "mydata");
-    lua_pushstring(L, "var");
-    lua_settable(L, -3);
+    for (int32_t j = 0; j < 8; ++j) {
+      char basekey[20] = {0};
+      snprintf(basekey, sizeof(basekey) -1, "basekey%d", j);
+      lua_pushstring(L, basekey);
+      lua_newtable(L);
+      for (int32_t i = 0; i < 8; ++i) {
+        char key[20] = {0};
+        char val[20] = {0};
+        snprintf(key, sizeof(key) -1, "key%d", i);
+        snprintf(val, sizeof(key) - 1, "var%d", i);
+        lua_pushstring(L, key);
+        lua_pushstring(L, val);
+        lua_settable(L, -3);
+      }
+      lua_settable(L, -3);
+    }
     return 1;
   __LEAVE_FUNCTION
     return -1;

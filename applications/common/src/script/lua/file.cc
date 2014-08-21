@@ -1,5 +1,7 @@
+#include "pf/base/log.h"
 #include "pf/file/database.h"
-#include "common/script/lua/tab.h"
+#include "pf/script/lua/system.h"
+#include "common/script/lua/file.h"
 
 #define TAB_PUSHVALUE(L, obj, line, column) { \
   switch ((obj).get_fieldtype(column)) { \
@@ -29,8 +31,7 @@ int32_t file_opentab(lua_State *L) {
     const char *filename = lua_tostring(L, 1);
     if (NULL == filename) return 0;
     pf_file::Database tabfile(0);
-    tabfile.open_from_txt(filename);
-    if (tabfile.get_record_number() <= 0) return 0;
+    if (!tabfile.open_from_txt(filename)) return 0;
     int32_t i, j;
     lua_newtable(L);
     int32_t tab_index = tabfile.get_fieldindex("index");
@@ -40,15 +41,15 @@ int32_t file_opentab(lua_State *L) {
       } else {
         TAB_PUSHVALUE(L, tabfile, i, tab_index);    
       }
+      lua_newtable(L);
       for (j = 0; j < tabfile.get_field_number(); ++j) {
-        lua_newtable(L);
         const char *fieldname = tabfile.get_fieldname(j);
         lua_pushstring(L, fieldname);
         TAB_PUSHVALUE(L, tabfile, i, j);
+        lua_settable(L, -3);
       }
       lua_settable(L, -3);
     }
-    lua_settable(L, -3);
     return 1;
   __LEAVE_FUNCTION
     return -1;

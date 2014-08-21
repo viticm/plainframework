@@ -1,0 +1,4 @@
+INT	INT	INT	INT
+index	raceid	cost_itemid	cost_itemcount
+0	0	20307104	1
+1	0	20307105	1
