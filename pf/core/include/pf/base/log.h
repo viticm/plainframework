@@ -65,7 +65,9 @@ class PF_API Log : public Singleton<Log> {
          vsnprintf(temp, sizeof(temp) - 1, format, argptr);
          va_end(argptr);
          if (1 == APPLICATION_TYPE) { //如果客户端使用了快速日志，则转为慢速
-           slow_savelog<type>(g_log_filename[logid], temp);
+           char log_filename[FILENAME_MAX] = {0};
+           get_log_filename(logid, log_filename);
+           slow_savelog<type>(log_filename, temp);
            return;
          }
          char time_str[256] = {0};

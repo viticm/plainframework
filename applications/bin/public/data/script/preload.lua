@@ -1,2 +1,2 @@
 local test = luatest()
-print(test)
+print(test["mydata"])

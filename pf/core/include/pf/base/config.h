@@ -18,7 +18,7 @@ enum {
   kDebugLogFile = 0,
   kErrorLogFile = 1,
   kNetLogFile = 2,
-  kFunctionLogFile = 3,
+  kScriptLogFile = 3,
   kEngineLogFile = 4,
   kApplicationLogFile, //应用的日志记录ID
   kLogFileCount,

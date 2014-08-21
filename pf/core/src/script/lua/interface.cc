@@ -1337,7 +1337,7 @@ void Interface::enter_runstep(int32_t scriptid, const char *functionname) {
     lua_Debug debug;
     int32_t topindex = lua_gettop(VM_.lua_state_);
     int32_t stackspace = lua_getstack(VM_.lua_state_, 2, &debug);
-    FAST_LOG(kFunctionLogFile,
+    FAST_LOG(kScriptLogFile,
              "[script.lua] (Interface::enter_runstep)"
              " topindex: %d, stackspace: %d, scriptid: %d, functionname: %s",
              topindex,
@@ -1353,7 +1353,7 @@ void Interface::leave_runstep(int32_t scriptid, const char *functionname) {
     lua_Debug debug;
     int32_t topindex = lua_gettop(VM_.lua_state_);
     int32_t stackspace = lua_getstack(VM_.lua_state_, 2, &debug);
-    FAST_LOG(kFunctionLogFile,
+    FAST_LOG(kScriptLogFile,
              "[script.lua] (Interface::enter_runstep)"
              " topindex: %d, stackspace: %d, scriptid: %d, functionname: %s",
              topindex,

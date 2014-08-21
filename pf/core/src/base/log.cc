@@ -15,8 +15,9 @@ const char *g_log_filename[] = {
   "debug", //kDebugLogFile
   "error", //kErrorLogFile
   "net", //kNetLogFile
-  "function", //kFunctionLogFile
+  "script", //kScriptLogFile
   "engine", //kEngineLogFile
+  "script", //kScriptLogFile
   '\0',
 };
 
@@ -173,12 +174,19 @@ void Log::get_log_filename(uint8_t logid, char *save) {
   __ENTER_FUNCTION
     const char *filename_prefix = 
       logid != kApplicationLogFile ? g_log_filename[logid] : APPLICATION_NAME;
+    char prefixfinal[128] = {0};
+    snprintf(prefixfinal, 
+             sizeof(prefixfinal) - 1, 
+             "%s%s%s", 
+             filename_prefix, 
+             logid != kApplicationLogFile ? "_" : "",
+             logid != kApplicationLogFile ? APPLICATION_NAME : "");
     if (g_time_manager) {
       snprintf(save,
                FILENAME_MAX - 1,
                "%s/%s_%d_%d_%d.log",
                kBaseLogSaveDir,
-               filename_prefix,
+               prefixfinal,
                g_time_manager->get_year(),
                g_time_manager->get_month() + 1,
                g_time_manager->get_day());
@@ -187,7 +195,7 @@ void Log::get_log_filename(uint8_t logid, char *save) {
                FILENAME_MAX - 1,
                "%s/%s.log",
                kBaseLogSaveDir,
-               filename_prefix);
+               prefixfinal);
     }
   __LEAVE_FUNCTION
 }
