@@ -402,6 +402,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\common\src\script\lua\file.cc"
+							>
+						</File>
+						<File
 							RelativePath="..\..\common\src\script\lua\log.cc"
 							>
 						</File>
@@ -575,6 +579,10 @@
 						</File>
 						<File
 							RelativePath="..\..\common\include\common\script\lua\export.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\common\include\common\script\lua\file.h"
 							>
 						</File>
 						<File
