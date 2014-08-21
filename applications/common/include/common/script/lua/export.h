@@ -19,7 +19,7 @@ namespace script {
 
 namespace lua {
 
-bool export_globals();
+bool __stdcall export_globals();
 
 }; //namespace lua
 

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="pf_lua"
+	Name="iconv"
 	ProjectGUID="{8CA4AA89-654D-468B-A6D8-E42421001D87}"
-	RootNamespace="pf_lua"
+	RootNamespace="iconv"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUA_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ICONV_BUILD_AS_DLL;ICONV_CORE;CHARSET_BUILD_AS_DLL;CHARSET_CORE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -130,7 +130,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUA_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ICONV_BUILD_AS_DLL;ICONV_CORE;CHARSET_BUILD_AS_DLL;CHARSET_CORE"
 				StringPooling="false"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -205,7 +205,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -277,7 +277,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="false"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -326,107 +326,7 @@
 			Name="include"
 			>
 			<File
-				RelativePath="..\src\lapi.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lauxlib.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lcode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lctype.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldebug.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldo.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lfunc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lgc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\llex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\llimits.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lmem.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lobject.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lopcodes.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lparser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lstate.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lstring.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ltable.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ltm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lua.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lua.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\luaconf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\luaextend.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lualib.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lundump.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lvm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lzio.h"
+				RelativePath="..\include\iconv.h"
 				>
 			</File>
 		</Filter>
@@ -434,139 +334,23 @@
 			Name="src"
 			>
 			<File
-				RelativePath="..\src\lapi.c"
+				RelativePath="..\src\iconv.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\lauxlib.c"
+				RelativePath="..\src\localcharset.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\lbaselib.c"
+				RelativePath="..\src\relocatable.c"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="resource"
+			>
 			<File
-				RelativePath="..\src\lbitlib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lcode.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lcorolib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lctype.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldblib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldebug.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldo.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ldump.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lfunc.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lgc.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\linit.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\liolib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\llex.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lmathlib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lmem.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\loadlib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lobject.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lopcodes.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\loslib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lparser.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lstate.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lstring.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lstrlib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ltable.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ltablib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ltm.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\luac.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\luaextend.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lundump.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lvm.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\lzio.c"
+				RelativePath="..\src\libiconv.rc"
 				>
 			</File>
 		</Filter>

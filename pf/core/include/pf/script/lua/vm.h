@@ -13,9 +13,6 @@
 
 #include "pf/script/lua/config.h"
 #include <lua.hpp>
-extern "C" {
-#include "luaextend.h"
-}
 #include "pf/script/lua/filebridge.h"
 
 namespace pf_script {

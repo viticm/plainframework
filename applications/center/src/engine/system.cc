@@ -1,7 +1,9 @@
 #include "pf/base/log.h"
 #include "pf/net/packet/factorymanager.h"
+#include "pf/script/lua/system.h"
 #include "common/net/packetfactory.h"
 #include "common/setting.h"
+#include "common/script/lua/export.h"
 #include "engine/system.h"
 
 engine::System *g_engine_system = NULL;
@@ -26,6 +28,7 @@ System::System() {
 
 System::~System() {
   SAFE_DELETE(g_packetfactory_manager);
+  SAFE_DELETE(g_script_luasystem);
   SAFE_DELETE(g_setting);
 }
 
@@ -60,28 +63,18 @@ bool System::init() {
                     "[engine] (System::init) setting module failed");
       return false;
     }
-    setconfig(ENGINE_CONFIG_DB_ISACTIVE, true);
-    //setconfig(ENGINE_CONFIG_SCRIPT_ISACTIVE, true);
-    //setconfig(ENGINE_CONFIG_NET_RUN_ASTHREAD, true);
-    setconfig(
-        ENGINE_CONFIG_DB_CONNECTION_OR_DBNAME, 
-        SETTING_POINTER->gateway_info_.db_connection_ordbname_);
-    setconfig(
-        ENGINE_CONFIG_DB_USERNAME,
-        SETTING_POINTER->gateway_info_.db_user_);
-    setconfig(
-        ENGINE_CONFIG_DB_PASSWORD,
-        SETTING_POINTER->gateway_info_.db_password_);
-    setconfig(
-        ENGINE_CONFIG_DB_CONNECTOR_TYPE,
-        SETTING_POINTER->gateway_info_.db_connectortype_);
+    setconfig(ENGINE_CONFIG_SCRIPT_ISACTIVE, true);
     setconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
     setconfig(ENGINE_CONFIG_NET_LISTEN_IP, 
-              SETTING_POINTER->gateway_info_.listenip_);
+              SETTING_POINTER->server_info_.center_data.ip);
     setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
-              SETTING_POINTER->gateway_info_.listenport_);
+              SETTING_POINTER->server_info_.center_data.port);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
-              SETTING_POINTER->gateway_info_.net_connectionmax_);
+              SETTING_POINTER->server_info_.net_connectionmax);
+    if (!SCRIPT_LUASYSTEM_POINTER) 
+      g_script_luasystem = new pf_script::lua::System();
+    SCRIPT_LUASYSTEM_POINTER->set_function_registers(
+        common::script::lua::export_globals);
     SLOW_LOG(ENGINE_MODULENAME, 
              "[engine] (System::init) setting module success");
     if (!NET_PACKET_FACTORYMANAGER_POINTER)
@@ -95,6 +88,7 @@ bool System::init() {
     NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
     bool result = Kernel::init();
     NET_PACKET_FACTORYMANAGER_POINTER->init();
+    SCRIPT_LUASYSTEM_POINTER->loadscript("/preload.lua");
     return result;
   __LEAVE_FUNCTION
     return false;

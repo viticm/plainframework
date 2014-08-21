@@ -33,7 +33,7 @@ int32_t luatest(lua_State *L) {
     return -1;
 }
 
-bool export_globals() {
+bool __stdcall export_globals() {
   __ENTER_FUNCTION
     if (!SCRIPT_LUASYSTEM_POINTER) return false;
     pf_script::lua::VM *vm = SCRIPT_LUASYSTEM_POINTER->get_vm();

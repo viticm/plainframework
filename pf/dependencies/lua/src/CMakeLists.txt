@@ -57,7 +57,6 @@ SET(SRC_LIST lvm.h
              lmem.h
              lzio.h
              lualib.h
-             luaextend.c
              )
              
 

@@ -86,6 +86,7 @@ $g_scriptdirs = array(
   "gateway applications/gateway/scripts",
   "sharememory applications/sharememory/scripts",
   "login applications/login/scripts",
+  "center applications/center/scripts",
   "pf_simple applications/pf_simple/scripts",
   "pf_core pf/core/scripts",
 

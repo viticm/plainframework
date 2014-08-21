@@ -506,6 +506,7 @@ struct server_info_t {
   server_data_t *data;
   uint16_t count;
   int16_t current_server_id;
+  uint16_t net_connectionmax; //最大网络连接数量
   int16_t hash_server[OVER_SERVER_MAX];
   server_center_data_t center_data;
   server_info_t();

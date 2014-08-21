@@ -153,7 +153,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
-				AdditionalDependencies="ws2_32.lib ../../../pf/core/lib/Release/pf_core.lib"
+				AdditionalDependencies="ws2_32.lib ../../../pf/core/lib/Release/pf_core.lib ../../../pf/dependencies/dll/Release/iconv.lib ../../../pf/dependencies/dll/Release/lua.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib;LIBCMT"

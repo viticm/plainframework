@@ -355,6 +355,7 @@ server_info_t::server_info_t() {
     data = NULL;
     count = 0;
     current_server_id = -1;
+    net_connectionmax = NET_CONNECTION_MAX;
     memset(center_data.ip, '\0', sizeof(center_data.ip));
     for (int16_t i = 0; i < OVER_SERVER_MAX; ++i)
       hash_server[i] = ID_INVALID;
@@ -1416,6 +1417,7 @@ void Setting::load_server_info_only() {
   __ENTER_FUNCTION
     pf_file::Ini server_info_ini(SERVER_INFO_FILE);
     server_info_.count = server_info_ini.read_uint16("System", "ServerNumber");
+    server_info_.net_connectionmax = server_info_ini.read_uint16("System", "NetConnectionMax");
     server_info_.data = new server_data_t[server_info_.count];
     memset(server_info_.data, 0, sizeof(server_info_.data));
     uint32_t i;

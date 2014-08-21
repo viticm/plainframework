@@ -95,7 +95,7 @@ int32_t Database::get_fieldindex(const char *name) {
 uint8_t Database::get_fieldtype(int32_t index) {
   __ENTER_FUNCTION
     Assert(index >= 0 && index <= field_number_);
-    uint8_t result = type_[index];
+    uint8_t result = static_cast<uint8_t>(type_[index]);
     return result;
   __LEAVE_FUNCTION
     return kTypeString;
