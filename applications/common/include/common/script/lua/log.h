@@ -30,6 +30,7 @@ int32_t fast_errorlog(lua_State *L);
 int32_t fast_warninglog(lua_State *L);
 int32_t fast_debuglog(lua_State *L);
 int32_t fast_writelog(lua_State *L);
+bool register_functiontable_log(); //注册全局的方法表
 
 }; //namespace lua
 

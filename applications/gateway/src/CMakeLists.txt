@@ -119,6 +119,7 @@ SET (COMMON_SRC_NET_LIST
 
 SET (COMMON_SRC_SCRIPT_LUA_LIST
 	../../common/src/script/lua/export.cc
+	../../common/src/script/lua/log.cc
 )
 
 SET (COMMON_SRC_SCRIPT_LIST
@@ -184,6 +185,7 @@ SET (COMMON_INCLUDE_NET_LIST
 SET (COMMON_INCLUDE_SCRIPT_LUA_LIST
 	../../common/include/common/script/lua/config.h
 	../../common/include/common/script/lua/export.h
+	../../common/include/common/script/lua/log.h
 )
 
 SET (COMMON_INCLUDE_SCRIPT_LIST

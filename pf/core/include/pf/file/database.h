@@ -70,6 +70,9 @@ class PF_API Database {
    uint32_t get_id() const; //获得ID
    int32_t get_field_number() const;
    int32_t get_record_number() const;
+   const char *get_fieldname(int32_t index);
+   int32_t get_fieldindex(const char *name);
+   uint8_t get_fieldtype(int32_t index);
    void create_index(int32_t column = 0, const char *filename = 0);
 
  public:
@@ -93,7 +96,7 @@ class PF_API Database {
    int32_t record_number_;
    int32_t field_number_;
    data_buffer data_buffer_; //所有表格数据容器
-   std::vector<std::string> columnnames_;
+   std::vector<std::string> fieldnames_;
    char *string_buffer_; //表格中所有字符串组成的数组，重复的字符串使用一个地址
    int32_t string_buffer_size_;
    field_hashmap hash_index_;

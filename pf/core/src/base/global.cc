@@ -30,7 +30,7 @@ const char *get_script_modulename() {
     if (strlen(script_modulename) > 0) return script_modulename;
     snprintf(script_modulename, 
              sizeof(script_modulename) - 1, 
-             "net_%s", 
+             "script_%s", 
              APPLICATION_NAME);
     return script_modulename;
   __LEAVE_FUNCTION

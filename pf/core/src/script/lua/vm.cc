@@ -88,9 +88,8 @@ bool VM::load(const char *filename) {
     if (!executecode()) {
       SLOW_ERRORLOG(SCRIPT_MODULENAME,
                     "[script.lua] (VM::load) execute code"
-                    " failed from file %s, error: %s",
-                    filename,
-                    get_lastresult());
+                    " failed from file %s",
+                    filename);
       return false;
     }
     return true;
@@ -104,7 +103,7 @@ bool VM::executecode() {
       on_scripterror(kErrorCodeExecute);
       return false;
     }
-    int32_t state = lua_execute(lua_state_);
+    int32_t state = lua_pcall(lua_state_, 0, LUA_MULTRET, 0);
     if (state != 0) {
       on_scripterror(kErrorCodeExecute, state);
       return false;
@@ -503,6 +502,23 @@ bool VM::register_function(const char *name, void *pointer) {
     return false;
 }
 
+bool VM::register_functiontable(
+    const char *name, const struct luaL_Reg regtable[]) {
+  __ENTER_FUNCTION
+    if (!lua_state_) return false;
+    lua_getglobal(lua_state_, name);
+    if (lua_isnil(lua_state_, -1)) lua_newtable(lua_state_); //没有才创建
+    for (; regtable->name != NULL; ++regtable) {
+      lua_pushstring(lua_state_, regtable->name);
+      lua_pushcfunction(lua_state_, regtable->func);
+      lua_settable(lua_state_, -3);
+    }
+    lua_setglobal(lua_state_, name);
+    return true;
+  __LEAVE_FUNCTION
+    return false;
+}
+
 void VM::on_init() {
   __ENTER_FUNCTION
     if (!lua_state_) return;
@@ -534,17 +550,19 @@ void VM::set_workpath(const char *path) {
 void VM::on_scripterror(int32_t error) {
   __ENTER_FUNCTION
     SLOW_ERRORLOG(SCRIPT_MODULENAME,
-                  "[script.lua] (VM::on_scripterror) code: %d",
-                  error);
+                  "[script.lua] (VM::on_scripterror) code: %d, message: %s",
+                  error,
+                  get_lastresult());
   __LEAVE_FUNCTION
 }
 
 void VM::on_scripterror(int32_t error, int32_t error1) {
   __ENTER_FUNCTION
     SLOW_ERRORLOG(SCRIPT_MODULENAME,
-                  "[script.lua] (VM::on_scripterror) code: %d:[%d]",
+                  "[script.lua] (VM::on_scripterror) code: %d:[%d], message: %s",
                   error,
-                  error1);
+                  error1, 
+                  get_lastresult());
   __LEAVE_FUNCTION
 }
 

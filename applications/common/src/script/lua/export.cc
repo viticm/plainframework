@@ -1,5 +1,6 @@
 #include "pf/script/lua/system.h"
 #include "common/script/lua/log.h"
+#include "common/script/lua/file.h"
 #include "common/script/lua/export.h"
 
 namespace common {
@@ -24,7 +25,9 @@ bool export_globals() {
     if (!SCRIPT_LUASYSTEM_POINTER) return false;
     pf_script::lua::VM *vm = SCRIPT_LUASYSTEM_POINTER->get_vm();
     vm->register_function("luatest", (void *)luatest);
-    vm->register_function("slow_log", (void *)slow_log);
+    if (!register_functiontable_log()) return false;
+    if (!register_functiontable_file()) return false;
+    return true;
   __LEAVE_FUNCTION
     return false;
 }

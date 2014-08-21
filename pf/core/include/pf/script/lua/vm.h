@@ -47,7 +47,11 @@ class PF_API VM {
  public:
    bool init(int32_t size = 0);
    void release();
+   //注册全局方法
    bool register_function(const char *name, void *pointer);
+   //注册方法到一个全局表中
+   bool register_functiontable(
+       const char *name, const struct luaL_Reg regtable[]);
    bool load(const char *filename);
    bool loadbuffer(unsigned char *buffer, uint64_t length);
 

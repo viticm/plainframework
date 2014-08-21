@@ -28,7 +28,9 @@
                   __LINE__, \
                   _argc, \
                   argc);\
+    return 0; \
   } \
 }
+#define LUA_COMPAT_MODULE //兼容新老版本
 
 #endif //PF_SCRIPT_LUA_CONFIG_H_

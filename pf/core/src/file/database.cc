@@ -66,7 +66,41 @@ const Database::field_data* Database::search_index_equal(int32_t index) const {
     return NULL;
 }
 
-const Database::field_data* Database::search_position(int32_t line, 
+const char *Database::get_fieldname(int32_t index) {
+  __ENTER_FUNCTION
+    const char *name = NULL;
+    Assert(index >= 0 && index <= field_number_);
+    name = fieldnames_[index].c_str();
+    return name;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
+int32_t Database::get_fieldindex(const char *name) {
+  __ENTER_FUNCTION
+    int32_t result = -1;
+    uint32_t i;
+    for (i = 0; i < fieldnames_.size(); ++i) {
+      if (0 == strcmp(name, fieldnames_[i].c_str())) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  __LEAVE_FUNCTION
+    return -1;
+}
+
+uint8_t Database::get_fieldtype(int32_t index) {
+  __ENTER_FUNCTION
+    Assert(index >= 0 && index <= field_number_);
+    uint8_t result = type_[index];
+    return result;
+  __LEAVE_FUNCTION
+    return kTypeString;
+}
+
+const Database::field_data *Database::search_position(int32_t line, 
                                                       int32_t column) const {
   __ENTER_FUNCTION
     int32_t position = line * get_field_number() + column;
@@ -287,7 +321,7 @@ bool Database::open_from_memory_text(const char *memory,
     std::map<std::string, int32_t> map_string_buffer;
     _memory = get_line_from_memory(line, sizeof(line) - 1, _memory, end);
     //第二行为列名（相当于数据库的字段名），应尽量使用英文
-    convert_string_tovector(line, columnnames_, "\t", true, true);
+    convert_string_tovector(line, fieldnames_, "\t", true, true);
     if (!_memory) return false;
     int32_t string_buffer_size = 0;
     bool loop = true;
