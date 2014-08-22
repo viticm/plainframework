@@ -30,6 +30,8 @@ local sharememory_cmakelists = "../../../../applications/sharememory/src/CMakeLi
 local sharememory_vcproj = "../../../../applications/sharememory/scripts/sharememory.vc9.vcproj"
 local login_cmakelists = "../../../../applications/login/src/CMakeLists.txt"
 local login_vcproj = "../../../../applications/login/scripts/login.vc9.vcproj"
+local center_cmakelists = "../../../../applications/center/src/CMakeLists.txt"
+local center_vcproj = "../../../../applications/center/scripts/center.vc9.vcproj"
 
 update_CMakeLists(gateway_cmakelists, gateway_vcproj)
 update_CMakeLists(sharememory_cmakelists, sharememory_vcproj)
@@ -37,3 +39,4 @@ update_CMakeLists(pf_simple_cmakelists, pf_simple_vcproj)
 update_CMakeLists(pf_core_cmakelists, pf_core_vcproj, nil, true, "shared")
 --update_CMakeLists(pf_plugin_pak_cmakelists, pf_plugin_pak_vcproj, nil, true, "shared")
 update_CMakeLists(login_cmakelists, login_vcproj)
+update_CMakeLists(center_cmakelists, center_vcproj)

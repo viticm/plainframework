@@ -1417,7 +1417,8 @@ void Setting::load_server_info_only() {
   __ENTER_FUNCTION
     pf_file::Ini server_info_ini(SERVER_INFO_FILE);
     server_info_.count = server_info_ini.read_uint16("System", "ServerNumber");
-    server_info_.net_connectionmax = server_info_ini.read_uint16("System", "NetConnectionMax");
+    server_info_.net_connectionmax = 
+      server_info_ini.read_uint16("System", "NetConnectionMax");
     server_info_.data = new server_data_t[server_info_.count];
     memset(server_info_.data, 0, sizeof(server_info_.data));
     uint32_t i;
@@ -1453,7 +1454,8 @@ void Setting::load_server_info_only() {
                                "IP", 
                                server_info_.center_data.ip, 
                                sizeof(server_info_.center_data.ip) - 1);
-    server_info_.center_data.port = server_info_ini.read_uint16("Center", "Port");
+    server_info_.center_data.port = 
+      server_info_ini.read_uint16("Center", "Port");
     for (i = 0; i < server_info_.count; ++i) {
       int16_t server_id = server_info_.data[i].id;
       Assert(server_id != ID_INVALID && server_id <= OVER_SERVER_MAX);

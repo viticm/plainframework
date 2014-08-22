@@ -20,7 +20,7 @@ namespace script {
 namespace lua {
 
 int32_t file_opentab(lua_State *L);
-int32_t file_openini(lua_State *L);
+int32_t file_openini(lua_State *L); //所有值和键都为string，使用需类型转换
 bool register_functiontable_file();
 
 }; //namespace lua

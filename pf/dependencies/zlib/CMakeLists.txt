@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-SET(LIBRARY_OUTPUT_PATH "../lib")
+SET(LIBRARY_OUTPUT_PATH "../dll")
 
 ##update_begin
 
@@ -43,7 +43,7 @@ if (WIN32)
 	source_group(HeaderFiles FILES ${HEADERFILES_LIST})
 endif()
 
-ADD_LIBRARY(pf_zlib STATIC
+ADD_LIBRARY(zlib SHARED
 	${SOURCEFILES_LIST}
 	${HEADERFILES_LIST}
 )

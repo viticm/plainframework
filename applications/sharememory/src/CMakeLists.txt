@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 LINK_DIRECTORIES(
   "./" #run dir
   "../../../pf/core/dll" #linux
+  "../../../pf/dependencies/dll" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})
@@ -186,9 +187,9 @@ else()
 endif(USE_32BITS)
 
 if (WIN32)
-TARGET_LINK_LIBRARIES(sharememory ws2_32.lib odbc32.lib odbccp32.lib pf_core.lib)
+TARGET_LINK_LIBRARIES(sharememory ws2_32.lib odbc32.lib odbccp32.lib pf_core.lib iconv.lib lua.lib)
 else()
-TARGET_LINK_LIBRARIES(sharememory pthread odbc pf_core)
+TARGET_LINK_LIBRARIES(sharememory pthread odbc pf_core lua iconv)
   if(USE_32BITS)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")

@@ -848,4 +848,16 @@ int32_t Ini::get_line_number(const char *str) {
     return -1;
 }
 
+int32_t *Ini::get_section_indexlist() {
+  return section_indexlist_;
+}
+
+int32_t Ini::get_sectionnumber() const {
+  return section_number_;
+}
+
+int32_t Ini::get_datalength() const {
+  return data_length_;
+}
+
 } //namespace pf_file

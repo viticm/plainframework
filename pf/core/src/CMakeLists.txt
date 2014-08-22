@@ -10,7 +10,7 @@ ENDIF(CMAKE_SYSTEM MATCHES Linux)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 LINK_DIRECTORIES(
   "./" #run dir
-  "../../dependencies/lib" #linux
+  "../../dependencies/dll" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})
@@ -403,9 +403,9 @@ ADD_LIBRARY(pf_core SHARED
 ##update_end
 
 if (WIN32)
-TARGET_LINK_LIBRARIES(pf_core ws2_32.lib odbc32.lib odbccp32.lib pf_lua.lib pf_iconv.lib)
+TARGET_LINK_LIBRARIES(pf_core ws2_32.lib odbc32.lib odbccp32.lib lua.lib iconv.lib)
 else()
-TARGET_LINK_LIBRARIES(pf_core pthread odbc pf_iconv pf_lua)
+TARGET_LINK_LIBRARIES(pf_core pthread odbc iconv lua)
   if(USE_32BITS)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")

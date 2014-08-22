@@ -4,3 +4,5 @@ mytest()
 print(test["basekey1"]["key7"])
 local tb = file.opentab("public/data/setting/hairstyle.txt")
 print(type(tb[0].cost_itemid))
+local tb1 = file.openini("public/data/setting/hostset.ini");
+print(tb1.WorldSet["1_File"])

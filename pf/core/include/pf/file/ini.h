@@ -30,6 +30,17 @@ class PF_API Ini {
    void close();
    bool save(char *file_name = NULL);
    const int32_t get_title_index(const char *title);
+   
+ public: //以下函数让外部可以获取到文件所有数据
+   int32_t goto_next_line(int32_t line); //提行
+   char *find_key(int32_t &postion); //在指定位置读取键
+   char *readstring(int32_t postion); //在指定位置读取字符串
+   int32_t *get_section_indexlist();
+   int32_t get_sectionnumber() const;
+   int32_t get_datalength() const;
+   int32_t find_section_index(const char *section);
+   //返回数据所在的索引
+   int32_t find_key_index(int32_t postion, const char *key);
  
  public: //out useful functions
    int64_t read_int64(const char *section, const char *key);
@@ -97,7 +108,7 @@ class PF_API Ini {
    int64_t data_length_;
    char *data_info_;
    int32_t section_number_; //索引的数量（[]的数目）
-   int32_t* section_indexlist_; //数据索引列表
+   int32_t *section_indexlist_; //数据索引列表
    int32_t point_; //当前指针
    int32_t line_, row_; //当前行列
    char value_[INI_VALUE_MAX];
@@ -105,12 +116,6 @@ class PF_API Ini {
 
  private:
    void init_section();
-   int32_t find_section_index(const char *section);
-   //返回数据所在的索引
-   int32_t find_key_index(int32_t postion, const char *key);
-   int32_t goto_next_line(int32_t line); //提行
-   char *find_key(int32_t &postion); //在指定位置读取键
-   char *readstring(int32_t postion); //在指定位置读取字符串
    bool add_section(const char *section); //添加一个节点
    //在当前位置加入数据
    bool add_data(int32_t index, const char *key, const char *value);

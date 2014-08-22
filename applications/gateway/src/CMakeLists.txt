@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 LINK_DIRECTORIES(
   "./" #run dir
   "../../../pf/core/dll" #linux
+  "../../../pf/dependencies/dll" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})
@@ -117,15 +118,6 @@ SET (COMMON_SRC_NET_LIST
 	../../common/src/net/packetfactory.cc
 )
 
-SET (COMMON_SRC_SCRIPT_LUA_LIST
-	../../common/src/script/lua/export.cc
-	../../common/src/script/lua/file.cc
-	../../common/src/script/lua/log.cc
-)
-
-SET (COMMON_SRC_SCRIPT_LIST
-)
-
 SET (COMMON_SRC_LIST
 	../../common/src/setting.cc
 )
@@ -183,17 +175,6 @@ SET (COMMON_INCLUDE_NET_LIST
 	../../common/include/common/net/packetfactory.h
 )
 
-SET (COMMON_INCLUDE_SCRIPT_LUA_LIST
-	../../common/include/common/script/lua/config.h
-	../../common/include/common/script/lua/export.h
-	../../common/include/common/script/lua/file.h
-	../../common/include/common/script/lua/log.h
-)
-
-SET (COMMON_INCLUDE_SCRIPT_LIST
-	../../common/include/common/script/config.h
-)
-
 SET (COMMON_INCLUDE_LIST
 	../../common/include/common/config.h
 	../../common/include/common/setting.h
@@ -226,8 +207,6 @@ if (WIN32)
 	source_group(common\\src\\net\\packet\\serverserver FILES ${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST})
 	source_group(common\\src\\net\\packet FILES ${COMMON_SRC_NET_PACKET_LIST})
 	source_group(common\\src\\net FILES ${COMMON_SRC_NET_LIST})
-	source_group(common\\src\\script\\lua FILES ${COMMON_SRC_SCRIPT_LUA_LIST})
-	source_group(common\\src\\script FILES ${COMMON_SRC_SCRIPT_LIST})
 	source_group(common\\src FILES ${COMMON_SRC_LIST})
 	source_group(common\\include\\define\\net\\packet\\id FILES ${COMMON_INCLUDE_DEFINE_NET_PACKET_ID_LIST})
 	source_group(common\\include\\define\\net\\packet FILES ${COMMON_INCLUDE_DEFINE_NET_PACKET_LIST})
@@ -238,8 +217,6 @@ if (WIN32)
 	source_group(common\\include\\net\\packet\\serverserver FILES ${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST})
 	source_group(common\\include\\net\\packet FILES ${COMMON_INCLUDE_NET_PACKET_LIST})
 	source_group(common\\include\\net FILES ${COMMON_INCLUDE_NET_LIST})
-	source_group(common\\include\\script\\lua FILES ${COMMON_INCLUDE_SCRIPT_LUA_LIST})
-	source_group(common\\include\\script FILES ${COMMON_INCLUDE_SCRIPT_LIST})
 	source_group(common\\include FILES ${COMMON_INCLUDE_LIST})
 	source_group(common FILES ${COMMON_LIST})
 endif()
@@ -267,8 +244,6 @@ ADD_EXECUTABLE(gateway
 	${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST}
 	${COMMON_SRC_NET_PACKET_LIST}
 	${COMMON_SRC_NET_LIST}
-	${COMMON_SRC_SCRIPT_LUA_LIST}
-	${COMMON_SRC_SCRIPT_LIST}
 	${COMMON_SRC_LIST}
 	${COMMON_INCLUDE_DEFINE_NET_PACKET_ID_LIST}
 	${COMMON_INCLUDE_DEFINE_NET_PACKET_LIST}
@@ -279,8 +254,6 @@ ADD_EXECUTABLE(gateway
 	${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST}
 	${COMMON_INCLUDE_NET_PACKET_LIST}
 	${COMMON_INCLUDE_NET_LIST}
-	${COMMON_INCLUDE_SCRIPT_LUA_LIST}
-	${COMMON_INCLUDE_SCRIPT_LIST}
 	${COMMON_INCLUDE_LIST}
 	${COMMON_LIST}
 )
@@ -297,9 +270,9 @@ else()
 endif(USE_32BITS)
 
 if (WIN32)
-TARGET_LINK_LIBRARIES(gateway ws2_32.lib odbc32.lib odbccp32.lib pf_core.lib)
+TARGET_LINK_LIBRARIES(gateway ws2_32.lib odbc32.lib odbccp32.lib pf_core.lib lua.lib iconv.lib)
 else()
-TARGET_LINK_LIBRARIES(gateway pthread odbc pf_core)
+TARGET_LINK_LIBRARIES(gateway pthread odbc pf_core lua iconv)
   if(USE_32BITS)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")

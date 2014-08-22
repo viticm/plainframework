@@ -1,5 +1,6 @@
 #include "pf/base/log.h"
 #include "pf/file/database.h"
+#include "pf/file/ini.h"
 #include "pf/script/lua/system.h"
 #include "common/script/lua/file.h"
 
@@ -58,6 +59,30 @@ int32_t file_opentab(lua_State *L) {
 int32_t file_openini(lua_State *L) {
   __ENTER_FUNCTION
     SCRIPT_LUA_CHECKARGC(L, 1);
+    const char *filename = lua_tostring(L, 1);
+    if (NULL == filename) return 0;
+    pf_file::Ini inifile(filename);
+    if (inifile.get_sectionnumber() <= 0) return 0;
+    int32_t i;
+    int32_t sectionnumber = inifile.get_sectionnumber();
+    int32_t *section_indexlist = inifile.get_section_indexlist();
+    lua_newtable(L);
+    for (i = 0; i < sectionnumber; ++i) {
+      const char *sectionname = inifile.readstring(section_indexlist[i]);
+      lua_pushstring(L, sectionname);
+      lua_newtable(L);
+      int32_t position = section_indexlist[i];
+      for (;;) {
+        position = inifile.goto_next_line(position);
+        const char *key = inifile.find_key(position);
+        const char *value = inifile.readstring(position);
+        lua_pushstring(L, key);
+        lua_pushstring(L, value);
+        lua_settable(L, -3);
+        if ('[' == key[0] || position >= inifile.get_datalength()) break;
+      }
+      lua_settable(L, -3);
+    }
     return 1;
   __LEAVE_FUNCTION
     return -1;
