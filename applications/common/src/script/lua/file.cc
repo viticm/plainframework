@@ -38,7 +38,7 @@ int32_t file_opentab(lua_State *L) {
     int32_t tab_index = tabfile.get_fieldindex("index");
     for (i = 0; i < tabfile.get_record_number(); ++i) {
       if (-1 == tab_index) {
-        lua_pushnumber(L, i);
+        lua_pushnumber(L, i + 1); //lua default index from 1
       } else {
         TAB_PUSHVALUE(L, tabfile, i, tab_index);    
       }
