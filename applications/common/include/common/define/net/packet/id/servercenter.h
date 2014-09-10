@@ -20,7 +20,7 @@ namespace servercenter {
 enum packetid_enum {
   kFirst = SERVERCENTER_PACKETID_MIN,
   kLast,
-  kMax = SERVERCENTER_PACKETID_MAX
+  kMax = SERVERCENTER_PACKETID_MAX,
 };
 
 }; //namespace servercenter
@@ -30,7 +30,7 @@ namespace server_tocenter {
 enum packetid_enum {
   kFirst = CENTER_TOSERVER_PACKETID_MIN,
   kLast,
-  kMax = CENTER_TOSERVER_PACKETID_MAX
+  kMax = CENTER_TOSERVER_PACKETID_MAX,
 };
 
 }; //server_tocenter
@@ -40,7 +40,7 @@ namespace center_toserver {
 enum packetid_enum {
   kFirst = SERVER_TOCENTER_PACKETID_MIN,
   kLast,
-  kMax = SERVER_TOCENTER_PACKETID_MAX
+  kMax = SERVER_TOCENTER_PACKETID_MAX,
 };
 
 }; //center_toserver

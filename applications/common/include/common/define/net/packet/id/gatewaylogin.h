@@ -31,7 +31,7 @@ typedef enum {
   kFirst = GATEWAY_TOLOGIN_PACKETID_MIN,
   kResultAuth, /*begin {*/
   kLast, /* the last packetid */
-  kMax = GATEWAY_TOLOGIN_PACKETID_MAX, /*end }*/
+  kMax = GATEWAY_TOLOGIN_PACKETID_MAX,
 } packetid_enum;
 
 }; //namespace gateway_tologin
