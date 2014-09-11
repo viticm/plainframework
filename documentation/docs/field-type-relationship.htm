@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset=UTF-8"utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>
+            Laravel Administrator Documentation                            : Relationship                    </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/style.css" tppabs="http://administrator.frozennode.com/css/style.css">
+        <script src="../js/vendor/modernizr-2.6.2.min.js" tppabs="http://administrator.frozennode.com/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="javascript:if(confirm('http://browsehappy.com/  \n\n∏√Œƒº˛Œﬁ∑®”√ Teleport Ultra œ¬‘ÿ, “ÚŒ™ À¸ «“ª∏ˆ”ÚªÚ¬∑æ∂Õ‚≤ø±ª…Ë÷√Œ™À¸µƒ∆Ù ºµÿ÷∑µƒµÿ÷∑°£  \n\nƒ„œÎ‘⁄∑˛ŒÒ∆˜…œ¥Úø™À¸?'))window.location='http://browsehappy.com/'" tppabs="http://browsehappy.com/">upgrade your browser</a> or <a href="javascript:if(confirm('http://www.google.com/chromeframe/?redirect=true  \n\n∏√Œƒº˛Œﬁ∑®”√ Teleport Ultra œ¬‘ÿ, “ÚŒ™ À¸ «“ª∏ˆ”ÚªÚ¬∑æ∂Õ‚≤ø±ª…Ë÷√Œ™À¸µƒ∆Ù ºµÿ÷∑µƒµÿ÷∑°£  \n\nƒ„œÎ‘⁄∑˛ŒÒ∆˜…œ¥Úø™À¸?'))window.location='http://www.google.com/chromeframe/?redirect=true'" tppabs="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="wrapper">
+            <header>
+                
+                <h1>Laravel Administrator Documentation</h1>
+                <div id="donateContainer">
+                    <form action="javascript:if(confirm('http://administrator.frozennode.com/charge  \n\n∏√Œƒº˛Œﬁ∑®”√ Teleport Ultra œ¬‘ÿ, “ÚŒ™ ∑˛ŒÒ∆˜±®∏Ê∏√Œƒº˛µƒ«Î«Û∑Ω∑®≤ª‘ –Ì π”√°£  \n\nƒ„œÎ‘⁄∑˛ŒÒ∆˜…œ¥Úø™À¸?'))window.location='http://administrator.frozennode.com/charge'" tppabs="http://administrator.frozennode.com/charge" method="post">
+                        <button id="donateButton" class="stripe-button-el">
+                            <span style="display: block; min-height: 30px;">Donate</span>
+                        </button>
+                    </form>
+                </div>
+            </header>
+            <aside class="sidebar">
+                	<ul>
+<li>Overview
+
+<ul>
+<li><a href="introduction.htm" tppabs="http://administrator.frozennode.com/docs/introduction">Introduction</a></li>
+<li><a href="contributing.htm" tppabs="http://administrator.frozennode.com/docs/contributing">Contributing</a></li>
+<li><a href="style-guide.htm" tppabs="http://administrator.frozennode.com/docs/style-guide">Style Guide</a></li>
+<li><a href="license.htm" tppabs="http://administrator.frozennode.com/docs/license">License</a></li>
+</ul></li>
+<li>Getting Started
+
+<ul>
+<li><a href="installation.htm" tppabs="http://administrator.frozennode.com/docs/installation">Installation</a></li>
+<li><a href="configuration.htm" tppabs="http://administrator.frozennode.com/docs/configuration">Configuration</a></li>
+<li><a href="model-configuration.htm" tppabs="http://administrator.frozennode.com/docs/model-configuration">Model Configuration</a></li>
+<li><a href="settings-configuration.htm" tppabs="http://administrator.frozennode.com/docs/settings-configuration">Settings Configuration</a></li>
+<li><a href="validation.htm" tppabs="http://administrator.frozennode.com/docs/validation">Validation</a></li>
+<li><a href="localization.htm" tppabs="http://administrator.frozennode.com/docs/localization">Localization</a></li>
+<li><a href="tutorials.htm" tppabs="http://administrator.frozennode.com/docs/tutorials">Tutorials</a></li>
+</ul></li>
+<li>Custom Actions
+
+<ul>
+<li><a href="actions.htm" tppabs="http://administrator.frozennode.com/docs/actions">Overview</a></li>
+</ul></li>
+<li>Columns
+
+<ul>
+<li><a href="columns.htm" tppabs="http://administrator.frozennode.com/docs/columns">Overview</a></li>
+<li><a href="relationship-columns.htm" tppabs="http://administrator.frozennode.com/docs/relationship-columns">Relationships</a></li>
+</ul></li>
+<li>Fields
+
+<ul>
+<li><a href="fields.htm" tppabs="http://administrator.frozennode.com/docs/fields">Overview</a></li>
+</ul></li>
+<li>Field Types
+
+<ul>
+<li><a href="field-type-key.htm" tppabs="http://administrator.frozennode.com/docs/field-type-key">Key</a></li>
+<li><a href="field-type-text.htm" tppabs="http://administrator.frozennode.com/docs/field-type-text">Text</a></li>
+<li><a href="field-type-password.htm" tppabs="http://administrator.frozennode.com/docs/field-type-password">Password</a></li>
+<li><a href="field-type-textarea.htm" tppabs="http://administrator.frozennode.com/docs/field-type-textarea">TextArea</a></li>
+<li><a href="field-type-wysiwyg.htm" tppabs="http://administrator.frozennode.com/docs/field-type-wysiwyg">WYSIWYG</a></li>
+<li><a href="field-type-markdown.htm" tppabs="http://administrator.frozennode.com/docs/field-type-markdown">Markdown</a></li>
+<li><a href="field-type-relationship.htm" tppabs="http://administrator.frozennode.com/docs/field-type-relationship">Relationship</a></li>
+<li><a href="field-type-number.htm" tppabs="http://administrator.frozennode.com/docs/field-type-number">Number</a></li>
+<li><a href="field-type-bool.htm" tppabs="http://administrator.frozennode.com/docs/field-type-bool">Bool</a></li>
+<li><a href="field-type-enum.htm" tppabs="http://administrator.frozennode.com/docs/field-type-enum">Enum</a></li>
+<li><a href="field-type-date.htm" tppabs="http://administrator.frozennode.com/docs/field-type-date">Date</a></li>
+<li><a href="field-type-time.htm" tppabs="http://administrator.frozennode.com/docs/field-type-time">Time</a></li>
+<li><a href="field-type-datetime.htm" tppabs="http://administrator.frozennode.com/docs/field-type-datetime">Datetime</a></li>
+<li><a href="field-type-file.htm" tppabs="http://administrator.frozennode.com/docs/field-type-file">File</a></li>
+<li><a href="field-type-image.htm" tppabs="http://administrator.frozennode.com/docs/field-type-image">Image</a></li>
+<li><a href="field-type-color.htm" tppabs="http://administrator.frozennode.com/docs/field-type-color">Color</a></li>
+</ul></li>
+</ul>
+            </aside>
+            <section class="content">
+                	<h1>Field Type - Relationship</h1>
+
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#belongs-to">Belongs To</a></li>
+<li><a href="#belongs-to-filter">Belongs To Filter</a></li>
+<li><a href="#belongs-to-many">Belongs To Many</a></li>
+<li><a href="#belongs-to-many-filter">Belongs To Many Filter</a></li>
+<li><a href="#large-datasets-and-autocomplete">Large Datasets and Autocomplete</a></li>
+<li><a href="#filtering-relationship-options">Filtering Relationship Options</a></li>
+<li><a href="#constraining-relationships">Constraining Relationships</a></li>
+</ul>
+
+<p><a name="overview"></a></p>
+
+<h2>Overview</h2>
+
+<p>Relationship field types allow you to manage the <code>belongsTo</code> and <code>belongsToMany</code> relationships on your model. Unlike regular field types, the <em>key</em> of the relationship field type should be the <em>name of the relationship method</em>.</p>
+
+<p><a name="belongs-to"></a></p>
+
+<h2>Belongs To</h2>
+
+<p><img src="../../raw.githubusercontent.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single.png" tppabs="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single.png" /></p>
+
+<pre><code>'user' =&gt; array(
+    'type' =&gt; 'relationship',
+    'title' =&gt; 'User',
+    'name_field' =&gt; 'name', //what column or accessor on the other table you want to use to represent this object
+)
+</code></pre>
+
+<p>The <code>name_field</code> option lets you define which column or accessor on the other table will be used to represent the relationship. This field might be used in this model:</p>
+
+<pre><code>class Hat extends Eloquent {
+
+    public function user()
+    {
+        return $this-&gt;belongsTo('User');
+    }
+}
+</code></pre>
+
+<p><a name="belongs-to-filter"></a></p>
+
+<h2>Belongs To Filter</h2>
+
+<p><img src="../../raw.githubusercontent.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single-filter.png" tppabs="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-single-filter.png" /></p>
+
+<p>The <code>belongsTo</code> filter lets you filter a result set for items that are related to the selection you make.</p>
+
+<p><a name="belongs-to-many"></a></p>
+
+<h2>Belongs To Many</h2>
+
+<p><img src="../../raw.githubusercontent.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi.png" tppabs="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi.png" /></p>
+
+<pre><code>'actors' =&gt; array(
+    'type' =&gt; 'relationship',
+    'title' =&gt; 'Actors',
+    'name_field' =&gt; 'full_name', //using the getFullNameAttribute accessor
+    'options_sort_field' =&gt; "CONCAT(first_name, ' ' , last_name)",
+)
+</code></pre>
+
+<p>In this case, the <code>name_field</code> supplied is an accessor on the <code>User</code> model that combines the <code>first_name</code> field and the <code>last_name</code> field. However, since the <code>name_field</code> is an accessor and not a column in the database, you must also specify an <code>options_sort_field</code> if you want to order the options. The <code>options_sort_field</code> isn't required, but without it the options will be ordered by ascending order on the primary key column. You can also set the <code>options_sort_direction</code> to either <code>asc</code> or <code>desc</code>.</p>
+
+<p>This field might be used in this model:</p>
+
+<pre><code>class Film extends Eloquent {
+
+    public function actors()
+    {
+        return $this-&gt;belongsToMany('Actor', 'films_actors');
+    }
+}
+</code></pre>
+
+<p>With this setup, the user will be presented with a multi-select field to choose all of the actors in the film.</p>
+
+<p>If you want to let your admin users reorder the selected values, you can create an integer-based sorting column on your pivot table and then specify that column as an option in the field. In our example above, we may wish to reorder the actors arbitrarily by dragging and dropping them in the UI. In order to do this, you would need to add an integer field (let's call it <code>ordering</code>) to the <code>films_actors</code> table. Then in your model config, you would provide that column name in the <code>sort_field</code> option:</p>
+
+<pre><code>'actors' =&gt; array(
+    'type' =&gt; 'relationship',
+    'title' =&gt; 'Actors',
+    'name_field' =&gt; 'full_name',    //using the getFullNameAttribute accessor
+    'sort_field' =&gt; 'ordering',     //this will look for a numerical column at films_actors.ordering
+)
+</code></pre>
+
+<p>Now the individual items in the multi-select box will be sortable via drag and drop.</p>
+
+<p><a name="belongs-to-many-filter"></a></p>
+
+<h2>Belongs To Many Filter</h2>
+
+<p><img src="../../raw.githubusercontent.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi-filter.png" tppabs="https://raw.github.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-relation-multi-filter.png" /></p>
+
+<p>The <code>belongsToMany</code> filter lets you filter a result set for items that are related to the selection you make. This is an inclusive filter, not a progressively exclusive filter.</p>
+
+<p><a name="large-datasets-and-autocomplete"></a></p>
+
+<h2>Large Datasets and Autocomplete</h2>
+
+<p>If your relationship field points at another model whose data set is potentially very large, loading in all of the options may not be what you want. Fortunately, you can set the <code>autocomplete</code> option.</p>
+
+<pre><code>'actors' =&gt; array(
+    'type' =&gt; 'relationship',
+    'title' =&gt; 'Actors',
+    'name_field' =&gt; 'full_name',
+    'autocomplete' =&gt; true,
+    'num_options' =&gt; 5, //default is 10
+    'search_fields' =&gt; array("CONCAT(first_name, ' ', last_name)"), //default is array([name_field])
+)
+</code></pre>
+
+<p>A relationship field with <code>autocomplete</code> set to <code>true</code> will wait for a user to type in a value.</p>
+
+<p>Once a value is typed in, the <code>num_options</code> option determines how many results are returned to the user for each search.</p>
+
+<p>The <code>search_fields</code> option should be an array of valid SQL select fields that can be searched with the <code>LIKE</code> operator. In the above example, the admin user will be able to search for "Liam N" and get "Liam Neeson" back. The default value for this field is just the name_field supplied in all relationship fields.</p>
+
+<p><a name="filtering-relationship-options"></a></p>
+
+<h2>Filtering Relationship Options</h2>
+
+<p>In some instances you may want to limit the available options for a relationship. This is easy to do with the <code>options_filter</code> option:</p>
+
+<pre><code>'actors' =&gt; array(
+    'type' =&gt; 'relationship',
+    'title' =&gt; 'Actors',
+    'name_field' =&gt; 'full_name',
+    'options_filter' =&gt; function($query)
+    {
+        $query-&gt;whereNull('died_at'); //only returns living actors
+    },
+)
+</code></pre>
+
+<p>The <code>options_filter</code> is passed the query builder instance so that you can modify the query however you like.</p>
+
+<p><a name="constraining-relationships"></a></p>
+
+<h2>Constraining Relationships</h2>
+
+<p>Occasionally you might be in a situation where you have two or more relationship fields in a model. These two fields might themselves be related via a <code>hasOne</code>, <code>hasMany</code>, or <code>belongsToMany</code> relationship. In this case, it's sometimes useful to be able to constrain the options of one of these fields based on the selected option of the other. An example might help clear things up...</p>
+
+<h3>Has One or Has Many</h3>
+
+<p>Let's say we have a <code>Theater</code> model and we want to let our admin users select which country and state a theater is in. We would also have a <code>Country</code> model and a <code>State</code> model. A state belongs to a country, and a country has many states. The <code>Theater</code> model belongs to both the <code>Country</code> and <code>State</code> models. When a user selects a particular country, the available states should be limited by those in that country.</p>
+
+<p>So our <code>Theater</code> model would look like this:</p>
+
+<pre><code>class Theater extends Eloquent {
+
+    public function country()
+    {
+        return $this-&gt;belongsTo('Country');
+    }
+
+    public function state()
+    {
+        return $this-&gt;belongsTo('State');
+    }
+}
+</code></pre>
+
+<p>Our <code>Country</code> model would look like this:</p>
+
+<pre><code>class Country extends Eloquent {
+
+    public function states()
+    {
+        return $this-&gt;hasMany('State');
+    }
+}
+</code></pre>
+
+<p>And the <code>State</code> model would look like this:</p>
+
+<pre><code>class State extends Eloquent {
+
+    public function country()
+    {
+        return $this-&gt;belongsTo('Country');
+    }
+}
+</code></pre>
+
+<p>Now when we create the <code>Theater</code> <a href="model-configuration.htm" tppabs="http://administrator.frozennode.com/docs/model-configuration">model config</a>, we'd set up the <a href="fields.htm" tppabs="http://administrator.frozennode.com/docs/fields">edit fields</a> to something like this:</p>
+
+<pre><code>'edit_fields' =&gt; array
+(
+    'country' =&gt; array(
+        'title' =&gt; 'Country',
+        'type' =&gt; 'relationship',
+        'name_field' =&gt; 'name',
+    ),
+    'state' =&gt; array(
+        'title' =&gt; 'State',
+        'type' =&gt; 'relationship',
+        'name_field' =&gt; 'name',
+        'constraints' =&gt; array('country' =&gt; 'states') //this is the important bit!
+    ),
+)
+</code></pre>
+
+<p>The constraint we've set on the <code>state</code> field takes a key of the relationship name on the <code>Theater</code> model (i.e. the other field's name) and a value of the <code>states</code> relationship method name on the <code>Country</code> model. Now when the user selects a country, it will automatically limit the available states to those in that particular country.</p>
+
+<h3>Belongs To Many</h3>
+
+<p>We can do the same sort of thing for two fields that are connected by a <code>belongsToMany</code> relationship. Let's pretend that we have two models: a <code>Film</code> model and a <code>Theater</code> model. There can be many films in a theater and each film can be in many theaters. This is a standard <code>belongsToMany</code> relationship. The <code>Film</code> model would look like this:</p>
+
+<pre><code>class Film extends Eloquent {
+
+    public function theaters()
+    {
+        return $this-&gt;belongsToMany('Theater', 'films_theaters');
+    }
+}
+</code></pre>
+
+<p>And the <code>Theater</code> model would look like this:</p>
+
+<pre><code>class Theater extends Eloquent {
+
+    public function films()
+    {
+        return $this-&gt;belongsToMany('Film', 'films_theaters');
+    }
+}
+</code></pre>
+
+<p>Let's also imagine that we have another model that counts the box office takes for each film in each theater. That would look like this:</p>
+
+<pre><code>class BoxOffice extends Eloquent {
+
+    public function theater()
+    {
+        return $this-&gt;belongsTo('Theater');
+    }
+
+    public function film()
+    {
+        return $this-&gt;belongsTo('Film');
+    }
+}
+</code></pre>
+
+<p>Now when we create the <code>BoxOffice</code> <a href="model-configuration.htm" tppabs="http://administrator.frozennode.com/docs/model-configuration">model config</a>, we'd set up the <a href="fields.htm" tppabs="http://administrator.frozennode.com/docs/fields">edit fields</a> to something like this:</p>
+
+<pre><code>'edit_fields' =&gt; array
+(
+    'revenue' =&gt; array(
+        'title' =&gt; 'Revenue',
+        'type' =&gt; 'number',
+        'symbol' =&gt; '$',
+        'decimals' =&gt; 2,
+    ),
+    'film' =&gt; array(
+        'title' =&gt; 'Film',
+        'type' =&gt; 'relationship',
+        'name_field' =&gt; 'name',
+        'constraints' =&gt; array('theater' =&gt; 'films') //films matches the relationship method name on the Theater model
+    ),
+    'theater' =&gt; array(
+        'title' =&gt; 'Theater',
+        'type' =&gt; 'relationship',
+        'name_field' =&gt; 'name',
+        'constraints' =&gt; array('film' =&gt; 'theaters') //theaters matches the relationship method name on the Film model
+    ),
+)
+</code></pre>
+
+<p>So now when you select a particular film, it will limit the available theaters by those that have played that film. When you select a particular theater, it will only give the the ability to choose a film that's been in that theater.</p>
+                <nav>
+                                    <a href="field-type-markdown.htm" tppabs="http://administrator.frozennode.com/docs/field-type-markdown" title="Previous: Markdown">‚Üê Markdown</a> |
+                                                    <a href="field-type-number.htm" tppabs="http://administrator.frozennode.com/docs/field-type-number" title="Next: Number">Number ‚Üí</a>
+                                </nav>
+                <footer>
+                    <p><a href="javascript:if(confirm('http://github.com/daylerees/docs-reader  \n\n∏√Œƒº˛Œﬁ∑®”√ Teleport Ultra œ¬‘ÿ, “ÚŒ™ À¸ «“ª∏ˆ”ÚªÚ¬∑æ∂Õ‚≤ø±ª…Ë÷√Œ™À¸µƒ∆Ù ºµÿ÷∑µƒµÿ÷∑°£  \n\nƒ„œÎ‘⁄∑˛ŒÒ∆˜…œ¥Úø™À¸?'))window.location='http://github.com/daylerees/docs-reader'" tppabs="http://github.com/daylerees/docs-reader" title="Documentation reader by Dayle Rees.">Docs reader</a> by <a href="javascript:if(confirm('http://daylerees.com/  \n\n∏√Œƒº˛Œﬁ∑®”√ Teleport Ultra œ¬‘ÿ, “ÚŒ™ À¸ «“ª∏ˆ”ÚªÚ¬∑æ∂Õ‚≤ø±ª…Ë÷√Œ™À¸µƒ∆Ù ºµÿ÷∑µƒµÿ÷∑°£  \n\nƒ„œÎ‘⁄∑˛ŒÒ∆˜…œ¥Úø™À¸?'))window.location='http://daylerees.com/'" tppabs="http://daylerees.com/" title="Dayle Rees">Dayle Rees</a>.</p>
+                </footer>
+            </section>
+            <div class="clearfix"></div>
+        </div>
+
+        <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" tppabs="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"/*tpa=http://administrator.frozennode.com/js/vendor/jquery-1.8.2.min.js*/><\/script>')</script>
+        <script src="../../checkout.stripe.com/v2/checkout.js" tppabs="https://checkout.stripe.com/v2/checkout.js"></script>
+        <script src="../js/vendor/prettify.js" tppabs="http://administrator.frozennode.com/js/vendor/prettify.js"></script>
+        <script src="../js/plugins.js" tppabs="http://administrator.frozennode.com/js/plugins.js"></script>
+        <script src="../js/main.js" tppabs="http://administrator.frozennode.com/js/main.js"></script>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-37898177-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www/') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+    </body>
+</html>
