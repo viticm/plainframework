@@ -5,7 +5,7 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/09/10 19:35
+ * @date 2014/09/10 20:10
  * @uses 请求登陆
  */
 #ifndef COMMON_NET_PACKET_CLIENT_TOLOGIN_ASK_LOGIN_H_

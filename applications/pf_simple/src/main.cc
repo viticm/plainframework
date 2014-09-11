@@ -15,7 +15,7 @@ int32_t main(int32_t argc, char * argv[]) {
   versionrequested = MAKEWORD(2, 2);
   error = WSAStartup(versionrequested, &data);
 #endif
-  g_engine_kernel.setconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
+  //g_engine_kernel.setconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
   g_engine_kernel.init();
   g_engine_kernel.run();
   g_engine_kernel.stop();
