@@ -6,8 +6,7 @@
     <head>
         <meta charset=UTF-8"utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>
-            Laravel Administrator Documentation                            : Markdown                    </title>
+        <title>简约框架查考手册</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="../css/style.css">
@@ -15,15 +14,15 @@
     </head>
     <body>
         <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="javascript:if(confirm('http://browsehappy.com/  \n\n该文件无法用 Teleport Ultra 下载, 因为 它是一个域或路径外部被设置为它的启始地址的地址。  \n\n你想在服务器上打开它?'))window.location='http://browsehappy.com/'">activate Google Chrome Frame</a> to improve your experience.</p>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="#">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
         <div class="wrapper">
             <header>
                 
-                <h1>Laravel Administrator Documentation</h1>
+                <h1>简约框架查考手册</h1>
                 <div id="donateContainer">
-                    <form action="javascript:if(confirm('http://administrator.frozennode.com/charge  \n\n该文件无法用 Teleport Ultra 下载, 因为 服务器报告该文件的请求方法不允许使用。  \n\n你想在服务器上打开它?'))window.location='http://administrator.frozennode.com/charge'">
+                    <form action="#">
                         <button id="donateButton" class="stripe-button-el">
                             <span style="display: block; min-height: 30px;">Donate</span>
                         </button>
@@ -32,14 +31,15 @@
             </header>
             <aside class="sidebar">
                 	<ul>
-<li>Overview
+<li>入门指引
 
 <ul>
-<li><a href="introduction.htm">Introduction</a></li>
-<li><a href="contributing.htm">Contributing</a></li>
-<li><a href="style-guide.htm">Style Guide</a></li>
-<li><a href="license.htm">License</a></li>
+<li><a href="../index.htm">简介</a></li>
+<li><a href="simpletutorials.htm">简明教程</a></li>
+<li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="license.htm">许可</a></li>
 </ul></li>
+
 <li>Getting Started
 
 <ul>
@@ -90,48 +90,74 @@
 </ul>
             </aside>
             <section class="content">
-                	<h1>Field Type - Markdown</h1>
+                	<h1>简明教程</h1>
 
 <ul>
-<li><a href="#usage">Usage</a></li>
+<li><a href="#simple">简单的例子</a></li>
+<li><a href="#codes">实现代码</a></li>
 </ul>
 
-<p><a name="usage"></a></p>
+<p><a name="simple"></a></p>
 
-<h2>Usage</h2>
+<h2>简单的例子</h2>
 
-<p><img src="../../raw.githubusercontent.com/FrozenNode/Laravel-Administrator/master/examples/images/field-type-markdown.png" /></p>
+<p>如果你已经下载好整个框架的源码，那么你可以在这里找到应用的例子:</p>
 
-<p>The <code>markdown</code> field type should be any text-like type in your database.</p>
-
-<pre><code>'name' =&gt; array(
-    'type' =&gt; 'markdown',
-    'title' =&gt; 'Name',
-    'limit' =&gt; 300, //optional, defaults to no limit
-    'height' =&gt; 130, //optional, defaults to 100
-)
+<pre><code>plainframework/applications/pf_simple
 </code></pre>
 
-<p>In the edit form, an admin user will be presented with a textarea on the left side and the marked up version of that text on the right side. When the field's value is saved to the database, the markdown will be saved, not the marked up html.</p>
+<p>如果你在windows上工作，可以使用vs2008以上版本打开pf_simple/scripts/pf_simple.vc9.sln进行编译，如果你在linux平台下则使用cmake进行编译：</p>
 
-<p>The <code>limit</code> option lets you set a character limit for the field.</p>
+<pre><code>cd plainframework/applications/pf_simple #进入示例的目录
+cmake ./
+make
+</code></pre>
 
-<p>The <code>height</code> option lets you set the height of the textarea in pixels.</p>
+<p>下面是例子的实现代码，非常简单，如果开启了网络模块则会报错，后面的网络模块中会详细的介绍到。</p>
 
-<p>Since the <code>markdown</code> field type requires a bit of space, you may want to think about <a href="model-configuration.htm#form-width">expanding your model's form width</a> to something like <code>400</code>.</p>
+<p><a name="codes"></a></p>
+
+<h2>实现代码</h2>
+
+<pre><code>#include "pf/engine/kernel.h"
+#include "main.h"
+
+pf_engine::Kernel g_engine_kernel;
+int32_t main(int32_t argc, char * argv[]) {
+#if __WINDOWS__
+  USE_PARAM(argc);
+  USE_PARAM(argv);
+  _CrtSetDbgFlag(_CrtSetDbgFlag(0) | _CRTDBG_LEAK_CHECK_DF);
+  system("color 02"); //color green
+  system("mode con cols=120"); //cmd size
+  WORD versionrequested;
+  WSADATA data;
+  int32_t error;
+  versionrequested = MAKEWORD(2, 2);
+  error = WSAStartup(versionrequested, &data);
+#endif
+  //g_engine_kernel.setconfig(ENGINE_CONFIG_NET_ISACTIVE, true);
+  g_engine_kernel.init();
+  g_engine_kernel.run();
+  g_engine_kernel.stop();
+  return 0;
+}
+</code></pre>
+
+
                 <nav>
-                                    <a href="field-type-wysiwyg.htm">鈫?WYSIWYG</a> |
-                                                    <a href="field-type-relationship.htm">Relationship 鈫?/a>
+                                    <a href="installation.htm">Installation</a> |
+                                                    <a href="model-configuration.htm">Model Configuration </a>
                                 </nav>
                 <footer>
-                    <p><a href="javascript:if(confirm('http://github.com/daylerees/docs-reader  \n\n该文件无法用 Teleport Ultra 下载, 因为 它是一个域或路径外部被设置为它的启始地址的地址。  \n\n你想在服务器上打开它?'))window.location='http://github.com/daylerees/docs-reader'">Dayle Rees</a>.</p>
+                    <p><a href="#">Dayle Rees</a>.</p>
                 </footer>
             </section>
             <div class="clearfix"></div>
         </div>
 
         <script src="../../ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"/*tpa=http://administrator.frozennode.com/js/vendor/jquery-1.8.2.min.js*/><\/script>')</script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="../../checkout.stripe.com/v2/checkout.js"></script>
         <script src="../js/vendor/prettify.js"></script>
         <script src="../js/plugins.js"></script>
