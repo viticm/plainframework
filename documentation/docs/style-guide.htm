@@ -19,15 +19,7 @@
 
         <div class="wrapper">
             <header>
-                
                 <h1>简约框架查考手册</h1>
-                <div id="donateContainer">
-                    <form action="#">
-                        <button id="donateButton" class="stripe-button-el">
-                            <span style="display: block; min-height: 30px;">Donate</span>
-                        </button>
-                    </form>
-                </div>
             </header>
             <aside class="sidebar">
                 	<ul>
@@ -37,54 +29,76 @@
 <li><a href="../index.htm">简介</a></li>
 <li><a href="simpletutorials.htm">简明教程</a></li>
 <li><a href="style-guide.htm">代码风格</a></li>
+<li><a href="module.htm">模块</a></li>
 <li><a href="license.htm">许可</a></li>
 </ul></li>
-<li>Getting Started
-
+<li>基础模块
 <ul>
-<li><a href="installation.htm">Installation</a></li>
-<li><a href="configuration.htm">Configuration</a></li>
-<li><a href="model-configuration.htm">Model Configuration</a></li>
-<li><a href="settings-configuration.htm">Settings Configuration</a></li>
-<li><a href="validation.htm">Validation</a></li>
-<li><a href="localization.htm">Localization</a></li>
-<li><a href="tutorials.htm">Tutorials</a></li>
+<li><a href="base.macro.htm">宏</a></li>
+<li><a href="base.global.htm">全局变量</a></li>
+<li><a href="base.log.htm">日志</a></li>
+<li><a href="base.string.htm">字符串</a></li>
+<li><a href="base.hashmap.htm">hash map</a></li>
+<li><a href="base.timemanager.htm">时间管理器</a></li>
+<li><a href="base.tinytimer.htm">小型定时器</a></li>
+<li><a href="base.util.htm">工具集</a></li>
 </ul></li>
-<li>Custom Actions
 
+<li>数据库模块
 <ul>
-<li><a href="actions.htm">Overview</a></li>
+<li><a href="db.manager.htm">管理器</a></li>
+<li><a href="db.odbc.htm">ODBC</a></li>
 </ul></li>
-<li>Columns
 
+<li>引擎模块
 <ul>
-<li><a href="columns.htm">Overview</a></li>
-<li><a href="relationship-columns.htm">Relationships</a></li>
+<li><a href="engine.kernel.htm">核心</a></li>
+<li><a href="engine.thread.htm">线程</a></li>
 </ul></li>
-<li>Fields
 
+<li>事件模块
 <ul>
-<li><a href="fields.htm">Overview</a></li>
+<li><a href="event.manager.htm">管理器</a></li>
 </ul></li>
-<li>Field Types
 
+<li>文件模块
 <ul>
-<li><a href="field-type-key.htm">Key</a></li>
-<li><a href="field-type-text.htm">Text</a></li>
-<li><a href="field-type-password.htm">Password</a></li>
-<li><a href="field-type-textarea.htm">TextArea</a></li>
-<li><a href="field-type-wysiwyg.htm">WYSIWYG</a></li>
-<li><a href="field-type-markdown.htm">Markdown</a></li>
-<li><a href="field-type-relationship.htm">Relationship</a></li>
-<li><a href="field-type-number.htm">Number</a></li>
-<li><a href="field-type-bool.htm">Bool</a></li>
-<li><a href="field-type-enum.htm">Enum</a></li>
-<li><a href="field-type-date.htm">Date</a></li>
-<li><a href="field-type-time.htm">Time</a></li>
-<li><a href="field-type-datetime.htm">Datetime</a></li>
-<li><a href="field-type-file.htm">File</a></li>
-<li><a href="field-type-image.htm">Image</a></li>
-<li><a href="field-type-color.htm">Color</a></li>
+<li><a href="file.api.htm">系统API</a></li>
+<li><a href="file.database.htm">文件数据库</a></li>
+<li><a href="file.ini.htm">ini文件</a></li>
+</ul></li>
+
+<li>网络模块
+<ul>
+<li><a href="net.connection.htm">连接</a></li>
+<li><a href="net.packet.htm">包</a></li>
+<li><a href="net.socket.htm">套接字</a></li>
+<li><a href="net.manager.htm">管理器</a></li>
+</ul></li>
+
+<li>性能模块
+<ul>
+<li><a href="performance.eyes.htm">监视器</a></li>
+</ul></li>
+
+<li>脚本模块
+<ul>
+<li><a href="script.cache.htm">缓存</a></li>
+<li><a href="script.lua.htm">lua</a></li>
+</ul></li>
+
+<li>系统模块
+<ul>
+<li><a href="sys.memory.htm">内存</a></li>
+<li><a href="sys.info.htm">系统信息</a></li>
+<li><a href="sys.process.htm">进程</a></li>
+<li><a href="sys.thread.htm">线程</a></li>
+<li><a href="sys.util.htm">工具集</a></li>
+</ul></li>
+
+<li>工具模块
+<ul>
+<li><a href="util.compressor.htm">压缩模块</a></li>
 </ul></li>
 </ul>
             </aside>
@@ -101,6 +115,12 @@
 <h2>介绍</h2>
 
 <p>框架自身采用了google的C++风格，作者也鼓励在你的应用中使用此风格，有关此风格你可以查阅相关资料了解。下面是一段plain framework中的代码，以便大家参考：</p>
+
+<p>你可以在此处下载到本项目使用的 风格指南:</p>
+
+<blockquote>
+<p>链接：<a href="http://pan.baidu.com/s/1bneYgI7">http://pan.baidu.com/s/1bneYgI7</a> 密码：0ox1</p>
+</blockquote>
 
 <blockquote>
 <p>base/global.h</p>
@@ -271,8 +291,8 @@ void set_applicationtype(uint8_t type) {
 
 
                 <nav>
-                                    <a href="contributing.htm">Contributing</a> |
-                                                    <a href="license.htm">License </a>
+                                    <a href="simpletutorials.htm">简明教程</a> |
+                                                    <a href="module.htm">模块 </a>
                                 </nav>
                 <footer>
                     <p><a href="javascript:if(confirm('http://github.com/daylerees/docs-reader  \n\n该文件无法用 Teleport Ultra 下载, 因为 它是一个域或路径外部被设置为它的启始地址的地址。  \n\n你想在服务器上打开它?'))window.location='http://github.com/daylerees/docs-reader'">Dayle Rees</a>.</p>
