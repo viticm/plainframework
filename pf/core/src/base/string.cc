@@ -82,9 +82,11 @@ void replace_all(std::string& str,
                  const std::string source, 
                  const std::string destination) {
   __ENTER_FUNCTION
-    uint32_t position = static_cast<uint32_t>(str.find(source, 0));
-    while (position != std::string::npos)
-      str.replace(position - 1, source.length(), destination);
+    int32_t position = str.find(source, 0);
+    while (position != static_cast<int32_t>(std::string::npos)) {
+      str.replace(position, source.length(), destination);
+      position = str.find(source, position);
+    }
   __LEAVE_FUNCTION
 }
 

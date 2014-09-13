@@ -107,103 +107,227 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>base module log</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#macro">宏</a></li>
+<li><a href="#function">方法</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>基础日志提供了基本的日志操作，包括日志的打印和保存，以及不同类型日志的操作，而这些操作都集中在日志模块提供的这些宏方法中。</p>
 
-<p><a name="base"></a></p>
+<p><a name="macro"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>宏</h2>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<p>日志类提供了比较健全的操作接口宏，这些宏可以应用于绝大多数日志的操作。</p>
+<blockquote>
+<p>LOGSYSTEM_POINTER</p>
+<p>描述：日志系统指针，日志系统为单例，即整个过程中日志对象只存在一个，可以根据此指针来判断日志系统是否有初始化 ，也可以用此指针调用其成员函数。</p>
+</blockquote>
 
-<p><a name="db"></a></p>
+<p><b>Example #1 LOGSYSTEM_POINTER 范例</b></p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                                
+  if (LOGSYSTEM_POINTER) printf("log system is active\n");                         
+  return 0;                                                                        
+}    
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>log system is active</p>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<blockquote>
+<p>FAST_LOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_WARNINGLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_ERRORLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_DEBUGLOG(uint8_t logid, const char *format, ...)</p>
+<p>FAST_WRITELOG(uint8_t logid, const char *format, ...)</p>
+<p>描述：这几个宏用于快速日志，读写受控于变量：</p>
+<p>bool pf_base::g_command_logprint; //是否打印日志，默认为真true</p>
+<p>bool pf_base::g_command_logactive; //是否写入日志，默认为真true</p>
+<p>自上而下分别为普通日志、警告日志、错误日志、调试日志、只写日志。</p>
+<p><font color="red">注意这几个宏必须在日志系统指针有效的情况下才能调用，快速日志执行比较快I/O操作频率低。</font></p>
+</blockquote>
 
-<p><a name="engine"></a></p>
+<p>logid 的取值必须为（该枚举定义在<code>pf/base/config.h</code>）：</p>
+<pre><code>
+/* base log { */                                                                   
+enum {                                                                             
+  kDebugLogFile = 0,                                                               
+  kErrorLogFile = 1,                                                               
+  kNetLogFile = 2,                                                                 
+  kScriptLogFile = 3,                                                              
+  kEngineLogFile = 4,                                                              
+  kApplicationLogFile, //应用的日志记录ID                                          
+  kLogFileCount,                                                                   
+};                                                                                 
+/* } base log */  
+</code></pre>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<p><b>Example #1 FAST_* 范例</b></p>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                                
+  if (!LOGSYSTEM_POINTER) return 1;                                             
+  LOGSYSTEM_POINTER->init();                                                    
+  int32_t i = 0;                                                                
+  FAST_LOG(kDebugLogFile, "this test log: %d", ++i);                            
+  FAST_WARNINGLOG(kDebugLogFile, "this test log: %d", ++i);                     
+  FAST_ERRORLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_DEBUGLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_WRITELOG(kDebugLogFile, "this test log: %d", ++i);                       
+  return 0;                                                                     
+}        
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>00:00:00 (140701577881376 0.0000) this test log: 1 <br />
+<font color="yellow">00:00:00 (140701577881376 0.0000) this test log: 2</font> <br />
+<font color="red">00:00:00 (140701577881376 0.0000) this test log: 3</font> <br />
+<font color="green">00:00:00 (140701577881376 0.0000) this test log: 4</font></p>
 
-<p><a name="event"></a></p>
+<p><b>Example #2 FAST_* 范例</b></p>
 
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;         
+  if (!TIME_MANAGER_POINTER) return 1;                                          
+  TIME_MANAGER_POINTER->init();                                                 
+  if (!LOGSYSTEM_POINTER) g_log = new pf_base::Log;                             
+  if (!LOGSYSTEM_POINTER) return 1;                                             
+  LOGSYSTEM_POINTER->init();                                                    
+  int32_t i = 0;                                                                
+  FAST_LOG(kDebugLogFile, "this test log: %d", ++i);                            
+  FAST_WARNINGLOG(kDebugLogFile, "this test log: %d", ++i);                     
+  FAST_ERRORLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_DEBUGLOG(kDebugLogFile, "this test log: %d", ++i);                       
+  FAST_WRITELOG(kDebugLogFile, "this test log: %d", ++i);                       
+  return 0;                                                                     
+}                  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>14:56:19 (139667479324448 0.0000) this test log: 1 <br />
+<font color="yellow">14:56:19 (139667479324448 0.0000) this test log: 2</font> <br />
+<font color="red">14:56:19 (139667479324448 0.0000) this test log: 3</font> <br />
+<font color="green">14:56:19 (139667479324448 0.0000) this test log: 4</font></p>
 
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
+<blockquote>
+<p>SLOW_LOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_WARNINGLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_ERRORLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_DEBUGLOG(const char *filename_prefix, const char *format, ...)</p>
+<p>SLOW_WRITELOG(const char *filename_prefix, const char *format, ...)</p>
+<p>描述：这几个宏用于慢速日志，读写受控于变量：</p>
+<p>bool pf_base::g_command_logprint; //是否打印日志，默认为真true</p>
+<p>bool pf_base::g_command_logactive; //是否写入日志，默认为真true</p>
+<p>自上而下分别为普通日志、警告日志、错误日志、调试日志、只写日志。</p>
+<p><font color="red">注意这几个宏在日志系统指针无效的情况下也能调用，慢速日志执行比慢I/O操作频率高。</font></p>
+</blockquote>
 
-<p><a name="file"></a></p>
+<p>filename_prefix 为生成日志文件名的前缀。</p>
 
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
+<p><b>Example #1 SLOW_* 范例</b></p>
 
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t i = 0;                                                                
+  SLOW_LOG("debug", "this test log: %d", ++i);                                  
+  SLOW_WARNINGLOG("debug", "this test log: %d", ++i);                           
+  SLOW_ERRORLOG("debug", "this test log: %d", ++i);                             
+  SLOW_DEBUGLOG("debug", "this test log: %d", ++i);                             
+  SLOW_WRITELOG("debug", "this test log: %d", ++i);                             
+  return 0;                                                                     
+}          
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>00:00:00 (140701577881376 0.0000) this test log: 1 <br />
+<font color="yellow">00:00:00 (140701577881376 0.0000) this test log: 2</font> <br />
+<font color="red">00:00:00 (140701577881376 0.0000) this test log: 3</font> <br />
+<font color="green">00:00:00 (140701577881376 0.0000) this test log: 4</font></p>
 
-<p><a name="net"></a></p>
+<p><b>Example #2 SLOW_* 范例</b></p>
 
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
+<pre><code>
+#include "pf/base/log.h"                                                           
+#include "pf/base/time_manager.h"                                               
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  int32_t i = 0;                                                                
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;         
+  if (!TIME_MANAGER_POINTER) return 1;                                          
+  TIME_MANAGER_POINTER->init();                                                 
+  SLOW_LOG("debug", "this test log: %d", ++i);                                  
+  SLOW_WARNINGLOG("debug", "this test log: %d", ++i);                           
+  SLOW_ERRORLOG("debug", "this test log: %d", ++i);                             
+  SLOW_DEBUGLOG("debug", "this test log: %d", ++i);                             
+  SLOW_WRITELOG("debug", "this test log: %d", ++i);                             
+  return 0;                                                                     
+}                         
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>15:07:14 (140073675331360 0.0000) this test log: 1 <br />
+<font color="yellow">15:07:14 (140073675331360 0.0000) this test log: 2</font> <br />
+<font color="red">15:07:14 (140073675331360 0.0000) this test log: 3</font> <br />
+<font color="green">15:07:14 (140073675331360 0.0000) this test log: 4</font></p>
 
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
+<p><a name="function"></a></p>
 
-<p><a name="performance"></a></p>
+<h2>方法</h2>
 
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
+<p>日志系统对外直接需要执行的方法已经包含在宏中，这里介绍两个重要模板方法。</p>
 
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
+<pre><code>
+   //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志          
+   template < uint8_t type>                                                      
+   void fast_savelog(uint8_t logid, const char *format, ...);
+   //模板函数 type 0 普通日志 1 警告日志 2 错误日志 3 调试日志 9 只写日志       
+   template < uint8_t type>                                                      
+   static void slow_savelog(const char *filename_prefix,                        
+                            const char *format, ...);
+</code></pre>
 
-<p><a name="script"></a></p>
+<p>宏的定义：</p>
 
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
-
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
-
-<p><a name="sys"></a></p>
-
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
-
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
-
-<p><a name="util"></a></p>
-
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
-
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<pre><code>
+//log sytem macros                                                              
+#define LOGSYSTEM_POINTER pf_base::Log::getsingleton_pointer()                  
+#define FAST_LOG LOGSYSTEM_POINTER->fast_savelog<0>                             
+#define FAST_WARNINGLOG LOGSYSTEM_POINTER->fast_savelog<1>                      
+#define FAST_ERRORLOG LOGSYSTEM_POINTER->fast_savelog<2>                        
+#define FAST_DEBUGLOG LOGSYSTEM_POINTER->fast_savelog<3>                        
+#define FAST_WRITELOG LOGSYSTEM_POINTER->fast_savelog<9>                        
+#define SLOW_LOG pf_base::Log::slow_savelog<0>                                  
+#define SLOW_WARNINGLOG pf_base::Log::slow_savelog<1>                           
+#define SLOW_ERRORLOG pf_base::Log::slow_savelog<2>                             
+#define SLOW_DEBUGLOG pf_base::Log::slow_savelog<3>                             
+#define SLOW_WRITELOG pf_base::Log::slow_savelog<9>   
+</code></pre>
 
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="base.global.htm">全局变量</a> |
+	<a href="base.string.htm">字符串 </a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>

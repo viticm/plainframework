@@ -37,7 +37,7 @@ PF_API void set_applicationtype(uint8_t type);
 
 }; //namespace global
 
-}; //namespace ps_base
+}; //namespace pf_base
 
 #define NET_MODULENAME pf_base::global::get_net_modulename()
 #define SCRIPT_MODULENAME pf_base::global::get_script_modulename()
