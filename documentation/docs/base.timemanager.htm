@@ -107,103 +107,276 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>base module time manager</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#macro">宏</a></li>
+<li><a href="#init">::init</a></li>
+<li><a href="#get_current_time">::get_current_time</a></li>
+<li><a href="#get_saved_time">::get_saved_time</a></li>
+<li><a href="#get_start_time">::get_start_time</a></li>
+<li><a href="#getsingleton">::getsingleton</a></li>
+<li><a href="#getsingleton_pointer">::getsingleton_pointer</a></li>
+<li><a href="#reset_time">::reset_time</a></li>
+<li><a href="#get_ansi_time">::get_ansi_time</a></li>
+<li><a href="#get_ctime">::get_ctime</a></li>
+<li><a href="#get_tm">::get_tm</a></li>
+<li><a href="#get_full_format_time">::get_full_format_time</a></li>
+<li><a href="#get_year">::get_year</a></li>
+<li><a href="#get_month">::get_month</a></li>
+<li><a href="#get_day">::get_day</a></li>
+<li><a href="#get_hour">::get_hour</a></li>
+<li><a href="#get_minute">::get_minute</a></li>
+<li><a href="#get_second">::get_second</a></li>
+<li><a href="#get_week">::get_week</a></li>
+<li><a href="#tm_todword">::tm_todword</a></li>
+<li><a href="#dword_totm">::dword_totm</a></li>
+<li><a href="#diff_dword_time">::diff_dword_time</a></li>
+<li><a href="#diff_day_count">::diff_day_count</a></li>
+<li><a href="#get_day_time">::get_day_time</a></li>
+<li><a href="#get_current_date">::get_current_date</a></li>
+<li><a href="#get_run_time">::get_run_time</a></li>
+<li><a href="#diff_time">::diff_time</a></li>
+<li><a href="#time_totm">::time_totm</a></li>
+<li><a href="#tm_totime">::tm_totime</a></li>
+<li><a href="#get_days">::get_days</a></li>
+<li><a href="#get_hours">::get_hours</a></li>
+<li><a href="#get_weeks">::get_weeks</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>时间管理器提供了各种时间获取的方法。</p>
 
-<p><a name="base"></a></p>
+<p><a name="macro"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>宏</h2>
+<blockquote>
+<p>TIME_MANAGER_POINTER</p>
+<p>由于时间管理器为单例，每个应用里只存在一个，所以在这里提供了一个获取时间管理器指针的宏。</p>
+</blockquote>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<p><b>Example #1 TIME_MANAGER_POINTER 范例</b></p>
 
-<p><a name="db"></a></p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  DEBUGPRINTF("time manager is %sactive", TIME_MANAGER_POINTER ? "" : "not ");  
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  DEBUGPRINTF("time manager is %sactive", TIME_MANAGER_POINTER ? "" : "not ");  
+  return 0;                                                                        
+}     
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time manager is not active</font> <br />
+<font color="green">time manager is active</font>
+</p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<p><a name="init"></a></p>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<h2>::init</h2>
 
-<p><a name="engine"></a></p>
+<blockquote>
+<p>bool init(); </p>
+<p>描述：时间管理器初始化函数，只有当时间管理器正确初始化后才能正常工作，切记。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：bool 成功返回true，失败返回false</p>
+</blockquote>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<p><b>Example #1 init 范例</b></p>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time manager init %s", result ? "success" : "failed");           
+  return 0;                                                                     
+}       
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time manager init success</font>
+</p>
 
-<p><a name="event"></a></p>
+<p><a name="get_current_time"></a></p>
 
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
+<h2>::get_current_time</h2>
 
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
+<blockquote>
+<p>uint32_t get_current_time(); </p>
+<p>描述：取从程序启动到现在经历的时间(ms)。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
 
-<p><a name="file"></a></p>
+<p><b>Example #1 get_current_time 范例</b></p>
 
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                       
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  pf_base::util::sleep(10);                                                     
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_current_time());            
+  return 0;                                                                     
+}       
+</code></pre>
+<p>以上例程的输出类似于（可能会有1-2毫秒的偏差）：</p>
+<p>
+<font color="green">time: 10</font>
+</p>
 
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
+<p><a name="get_saved_time"></a></p>
 
-<p><a name="net"></a></p>
+<h2>::get_saved_time</h2>
 
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
+<blockquote>
+<p>uint32_t get_saved_time(); </p>
+<p>描述：接口预留。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
 
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
+<p><b>Example #1 get_saved_time 范例</b></p>
 
-<p><a name="performance"></a></p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                       
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  pf_base::util::sleep(10);                                                     
+  //DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_saved_time());            
+  return 0;                                                                     
+}       
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+无
+</p>
 
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
+<p><a name="get_start_time"></a></p>
 
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
+<h2>::get_start_time</h2>
 
-<p><a name="script"></a></p>
+<blockquote>
+<p>uint32_t get_start_time(); </p>
+<p>描述：接口预留。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
 
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
+<p><b>Example #1 get_start_time 范例</b></p>
 
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                       
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  pf_base::util::sleep(10);                                                     
+  //DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_start_time());            
+  return 0;                                                                     
+}       
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+无
+</p>
 
-<p><a name="sys"></a></p>
+<p><a name="getsingleton"></a></p>
 
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
+<h2>::getsingleton</h2>
 
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
+<blockquote>
+<p>static TimeManager &getsingleton(); </p>
+<p>描述：获取时间管理器对象（单例）。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：TimeManager &</p>
+</blockquote>
 
-<p><a name="util"></a></p>
+<p><b>Example #1 getsingleton 范例</b></p>
 
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                       
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d",                                                       
+              pf_base::TimeManager::getsingleton().get_current_time());         
+  return 0;                                                                     
+}      
+</code></pre>
+<p>以上例程的输出类似于（可能会有1-2毫秒的偏差）：</p>
+<p>
+<font color="green">time: 1</font>
+</p>
 
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<p><a name="getsingleton_pointer"></a></p>
+
+<h2>::getsingleton_pointer</h2>
+
+<blockquote>
+<p>static TimeManager &getsingleton_pointer(); </p>
+<p>描述：获取时间管理器对象指针（单例）。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：TimeManager *</p>
+</blockquote>
+
+<p><b>Example #1 getsingleton_pointer 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                       
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                           
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d",                                                       
+              pf_base::TimeManager::getsingleton_pointer()->get_current_time());         
+  return 0;                                                                     
+}      
+</code></pre>
+<p>以上例程的输出类似于（可能会有1-2毫秒的偏差）：</p>
+<p>
+<font color="green">time: 1</font>
+</p>
 
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="base.hashmap.htm">hash map</a> |
+	<a href="base.tinytimer.htm">小型定时器 </a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>

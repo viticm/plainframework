@@ -263,7 +263,7 @@ int32_t main(int32_t argc, char * argv[]) {
 
 <blockquote>
 <p>void encrypt(const char *in, char *out, int32_t out_length); </p>
-<p>描述：加密字符串，加密后的字符串比原字符串小，需保证解密保存的字符串大小足够。
+<p>描述：解密字符串，解密后的字符串比原字符串小，需保证解密保存的字符串大小足够。
 解密由encrypt加密的字符串。
 </p>
 <p>参数：</p>
@@ -297,9 +297,86 @@ int32_t main(int32_t argc, char * argv[]) {
 <font color="green">decrypt: viticm</font>
 </p>
 
+<p><a name="safecopy"></a></p>
+
+<h2>pf_base::string::safecopy</h2>
+
+<blockquote>
+<p>char *safecopy(char *dest, const char *src, size_t size); </p>
+<p>描述：字符串安全拷贝函数。
+</p>
+<p>参数：</p>
+<p>char *dest 目标字符串。</p>
+<p>const char *src 需拷贝的字符串。</p>
+<p>size_t size 需拷贝的长度。</p>
+<p>返回值：目的字符串指针。</p>
+</blockquote>
+
+<p><b>Example #1 safecopy 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char dest[64] = {0};                                                             
+  const char src[] = "this is a test string";                                      
+  pf_base::string::safecopy(dest, src, sizeof(dest));                              
+  DEBUGPRINTF("str: %s", dest);                                                    
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">str: this is a test string</font>
+</p>
+
+<p><a name="charset_convert"></a></p>
+
+<h2>pf_base::string::charset_convert</h2>
+
+<blockquote>
+<p>int32_t charset_convert(const char *from,                                   
+                           const char *to,                                     
+                           char *save,                                         
+                           int32_t save_length,                                
+                           const char *src,                                    
+                           int32_t src_length) ; </p>
+<p>描述：字符串编码转换函数（基于iconv）。
+</p>
+<p>参数：</p>
+<p>const char *from 原编码。</p>
+<p>const char *to 新编码。</p>
+<p>char *save 转换后字符串保存的指针。</p>
+<p>int32_t save_length 转换字符串保存的长度。</p>
+<p>const char *src 需要转换的字符串指针。</p>
+<p>int32_t src_length 需要转换的字符串长度。</p>
+<p>返回值：int32_t 0 成功 -1 失败</p>
+</blockquote>
+
+<p><b>Example #1 charset_convert 范例</b></p>
+
+<pre><code>
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char dest[64] = {0};                                                             
+  const char src[] = "测试转换的编码";                                             
+  pf_base::string::charset_convert(                                                
+      "UTF-8", "GBK", dest, sizeof(dest) - 1, src, strlen(src));                   
+  DEBUGPRINTF("str: %s", dest);                                                    
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于（只有在输出环境为GBK编码才正常显示，否则为乱码）：</p>
+<p>
+<font color="green">str: 测试转换的编码</font>
+</p>
+
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="base.log.htm">日志</a> |
+	<a href="base.hashmap.htm">hash map </a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>

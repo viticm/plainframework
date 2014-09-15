@@ -107,103 +107,460 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>base module hash map</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#headerfile">头文件</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#init">::init</a></li>
+<li><a href="#add">::add</a></li>
+<li><a href="#set">::set</a></li>
+<li><a href="#get">::get</a></li>
+<li><a href="#isfind">::isfind</a></li>
+<li><a href="#remove">::remove</a></li>
+<li><a href="#clear">::clear</a></li>
+<li><a href="#getcount">::getcount</a></li>
+<li><a href="#get_maxcount">::get_maxcount</a></li>
+<li><a href="#begin">::begin</a></li>
+<li><a href="#end">::end</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>为了更好的使用hash map，框架提供了针对该容器的一个模板类，可以对容器进行各种方便的操作。</p>
 
-<p><a name="base"></a></p>
+<p><a name="headerfile"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>头文件</h2>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<blockquote>
+<p>pf/base/hashmap/template.h</p>
+</blockquote>
 
-<p><a name="db"></a></p>
+<p><a name="define"></a></p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<h2>定义</h2>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<pre><code>
+namespace pf_base {                                                                
+                                                                                   
+namespace hashmap {                                                                
+                                                                                   
+template < class T_key, class T_value>                                              
+class Template { 
+</code></pre>
 
-<p><a name="engine"></a></p>
+<p><a name="init"></a></p>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<h2>::init</h2>
+<blockquote>
+<p>void init(uint32_t count); </p>
+<p>描述：容器初始化。
+</p>
+<p>参数：</p>
+<p>uint32_t count 容器的大小。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
+<p><b>Example #1 init 范例</b></p>
 
-<p><a name="event"></a></p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                              
+  mymap.init(10);                                                                  
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+无
+</p>
 
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
+<p><a name="add"></a></p>
 
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
+<h2>::add</h2>
+<blockquote>
+<p>bool add(T_key key, T_value value); </p>
+<p>描述：增加一个容器元素。
+</p>
+<p>参数：</p>
+<p>T_key key 键。</p>
+<p>T_value value 值。</p>
+<p>返回值：bool 成功时返回true，否则为false</p>
+</blockquote>
 
-<p><a name="file"></a></p>
+<p><b>Example #1 add 范例</b></p>
 
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = mymap.add(1, 100);                                              
+  if (result == true) DEBUGPRINTF("mymap add success");                         
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap add success</font>
+</p>
 
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
+<p><a name="set"></a></p>
 
-<p><a name="net"></a></p>
+<h2>::set</h2>
+<blockquote>
+<p>bool set(T_key key, T_value value); </p>
+<p>描述：设置一个元素。
+</p>
+<p>参数：</p>
+<p>T_key key 键。</p>
+<p>T_value value 值。</p>
+<p>返回值：bool 成功时返回true，否则为false</p>
+</blockquote>
 
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
+<p><b>Example #1 add 范例</b></p>
 
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  result = mymap.set(1, 1000);                                                  
+  if (result == true) DEBUGPRINTF("mymap set success");                         
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap set success</font>
+</p>
 
-<p><a name="performance"></a></p>
+<p><a name="get"></a></p>
 
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
+<h2>::get</h2>
+<blockquote>
+<p>T_value get(T_key key); </p>
+<p>描述：根据键获取元素值。
+</p>
+<p>参数：</p>
+<p>T_key key 键。</p>
+<p>返回值：T_value</p>
+</blockquote>
 
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
+<p><b>Example #1 get 范例</b></p>
 
-<p><a name="script"></a></p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  result = mymap.set(1, 1000);                                                  
+  //if (result == true) DEBUGPRINTF("mymap set success");                       
+  DEBUGPRINTF("value: %d", mymap.get(1));                                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">value: 1000</font>
+</p>
 
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
+<p><a name="isfind"></a></p>
 
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
+<h2>::isfind</h2>
+<blockquote>
+<p>bool isfind(T_key key); </p>
+<p>描述：根据键判断元素是否存在。
+</p>
+<p>参数：</p>
+<p>T_key key 键。</p>
+<p>返回值：bool 存在则返回true，否则为false</p>
+</blockquote>
 
-<p><a name="sys"></a></p>
+<p><b>Example #1 isfind 范例</b></p>
 
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  result = mymap.set(1, 1000);                                                  
+  //if (result == true) DEBUGPRINTF("mymap set success");                       
+  int32_t key1 = 1, key2 = 3;                                                   
+  DEBUGPRINTF("key1: %d is %sfind, key2: %d is %sfind",                          
+              key1,                                                             
+              mymap.isfind(key1) ? "" : "not ",                                 
+              key2,                                                             
+              mymap.isfind(key2) ? "" : "not ");                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">key1: 1 is find, key2: 3 is not find</font>
+</p>
 
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
+<p><a name="remove"></a></p>
 
-<p><a name="util"></a></p>
+<h2>::remove</h2>
+<blockquote>
+<p>bool remove(T_key key); </p>
+<p>描述：根据键移除元素。
+</p>
+<p>参数：</p>
+<p>T_key key 键。</p>
+<p>返回值：bool 成功则返回true，否则为false</p>
+</blockquote>
 
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
+<p><b>Example #1 remove 范例</b></p>
 
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  result = mymap.set(1, 1000);                                                  
+  //if (result == true) DEBUGPRINTF("mymap set success");                       
+  int32_t key1 = 1, key2 = 3;                                                   
+  DEBUGPRINTF("key1: %d remove %s, key2: %d remove %s",                          
+              key1,                                                             
+              mymap.remove(key1) ? "success" : "failed",                        
+              key2,                                                             
+              mymap.remove(key2) ? "success" : "failed");                       
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">key1: 1 remove success, key2: 3 remove failed</font>
+</p>
+
+<p><a name="clear"></a></p>
+
+<h2>::clear</h2>
+<blockquote>
+<p>void clear(); </p>
+<p>描述：清空容器。
+</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 clear 范例</b></p>
+
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  mymap.clear();                                                                
+  result = mymap.set(1, 1000);                                                  
+  DEBUGPRINTF("mymap set %s", result ? "success" : "failed");                   
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap set failed</font>
+</p>
+
+<p><a name="getcount"></a></p>
+
+<h2>::getcount</h2>
+<blockquote>
+<p>uint32_t getcount() const; </p>
+<p>描述：获取容器当前的大小。
+</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 getcount 范例</b></p>
+
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  DEBUGPRINTF("mymap count: %d", mymap.getcount());                             
+  mymap.clear();                                                                
+  DEBUGPRINTF("mymap count: %d", mymap.getcount());                             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap count: 1</font>
+<font color="green">mymap count: 0</font>
+</p>
+
+<p><a name="get_maxcount"></a></p>
+
+<h2>::get_maxcount</h2>
+<blockquote>
+<p>uint32_t get_maxcount() const; </p>
+<p>描述：获取容器最大容量大小。
+</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_maxcount 范例</b></p>
+
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  bool result = true;                                                           
+  mymap.add(1, 100);                                                            
+  DEBUGPRINTF("mymap count: %d", mymap.get_maxcount());                             
+  mymap.clear();                                                                
+  DEBUGPRINTF("mymap count: %d", mymap.get_maxcount());                             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap count: 10</font>
+<font color="green">mymap count: 10</font>
+</p>
+
+<p><a name="begin"></a></p>
+
+<h2>::begin</h2>
+<blockquote>
+<p>iterator_t begin(); </p>
+<p>描述：获取容器开始的游标指针（结合end来遍历容器）。
+</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：iterator_t</p>
+</blockquote>
+
+<p><b>Example #1 begin 范例</b></p>
+
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  for (int32_t i = 0; i < 11; ++i) {                                            
+    mymap.add(i, i * 100);                                                      
+  }                                                                             
+  pf_base::hashmap::Template< int32_t, int32_t>::iterator_t iterator;           
+  for (iterator = mymap.begin(); iterator != mymap.end(); ++iterator) {         
+    DEBUGPRINTF("mymap first: %d, second: %d",                                  
+                iterator->first,                                                
+                iterator->second);                                              
+  }                                                                             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap first: 0, second: 0</font> <br />
+<font color="green">mymap first: 1, second: 100</font> <br />
+<font color="green">mymap first: 2, second: 200</font> <br />
+<font color="green">mymap first: 3, second: 300</font> <br />
+<font color="green">mymap first: 4, second: 400</font> <br />
+<font color="green">mymap first: 5, second: 500</font> <br />
+<font color="green">mymap first: 6, second: 600</font> <br />
+<font color="green">mymap first: 7, second: 700</font> <br />
+<font color="green">mymap first: 8, second: 800</font> <br />
+<font color="green">mymap first: 9, second: 900</font>
+</p>
+
+<p><a name="end"></a></p>
+
+<h2>::end</h2>
+<blockquote>
+<p>iterator_t end(); </p>
+<p>描述：获取容器结束的游标指针。
+</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：iterator_t</p>
+</blockquote>
+
+<p><b>Example #1 end 范例</b></p>
+
+<pre><code>
+#include "pf/base/hashmap/template.h"                                              
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::hashmap::Template< int32_t, int32_t> mymap;                             
+  mymap.init(10);                                                                  
+  for (int32_t i = 0; i < 11; ++i) {                                            
+    mymap.add(i, i * 100);                                                      
+  }                                                                             
+  pf_base::hashmap::Template< int32_t, int32_t>::iterator_t iterator;           
+  for (iterator = mymap.begin(); iterator != mymap.end(); ++iterator) {         
+    DEBUGPRINTF("mymap first: %d, second: %d",                                  
+                iterator->first,                                                
+                iterator->second);                                              
+  }                                                                             
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">mymap first: 0, second: 0</font> <br />
+<font color="green">mymap first: 1, second: 100</font> <br />
+<font color="green">mymap first: 2, second: 200</font> <br />
+<font color="green">mymap first: 3, second: 300</font> <br />
+<font color="green">mymap first: 4, second: 400</font> <br />
+<font color="green">mymap first: 5, second: 500</font> <br />
+<font color="green">mymap first: 6, second: 600</font> <br />
+<font color="green">mymap first: 7, second: 700</font> <br />
+<font color="green">mymap first: 8, second: 800</font> <br />
+<font color="green">mymap first: 9, second: 900</font>
+</p>
 
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="base.string.htm">字符串</a> |
+	<a href="base.timemanager.htm">时间管理器 </a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>
