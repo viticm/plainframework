@@ -113,7 +113,7 @@
 <li><a href="#total">总述</a></li>
 <li><a href="#macro">宏</a></li>
 <li><a href="#init">::init</a></li>
-<li><a href="#get_current_time">::get_current_time</a></li>
+<li><a href="#get_current_time">::get_tickcount</a></li>
 <li><a href="#get_saved_time">::get_saved_time</a></li>
 <li><a href="#get_start_time">::get_start_time</a></li>
 <li><a href="#getsingleton">::getsingleton</a></li>
@@ -135,7 +135,7 @@
 <li><a href="#diff_dword_time">::diff_dword_time</a></li>
 <li><a href="#diff_day_count">::diff_day_count</a></li>
 <li><a href="#get_day_time">::get_day_time</a></li>
-<li><a href="#get_current_date">::get_current_date</a></li>
+<li><a href="#get_current_date">::get_current_time</a></li>
 <li><a href="#get_run_time">::get_run_time</a></li>
 <li><a href="#diff_time">::diff_time</a></li>
 <li><a href="#time_totm">::time_totm</a></li>
@@ -209,19 +209,19 @@ int32_t main(int32_t argc, char * argv[]) {
 <font color="green">time manager init success</font>
 </p>
 
-<p><a name="get_current_time"></a></p>
+<p><a name="get_tickcount"></a></p>
 
-<h2>::get_current_time</h2>
+<h2>::get_tickcount</h2>
 
 <blockquote>
-<p>uint32_t get_current_time(); </p>
+<p>uint32_t get_tickcount(); </p>
 <p>描述：取从程序启动到现在经历的时间(ms)。</p>
 <p>参数：</p>
 <p>无</p>
 <p>返回值：uint32_t</p>
 </blockquote>
 
-<p><b>Example #1 get_current_time 范例</b></p>
+<p><b>Example #1 get_tickcount 范例</b></p>
 
 <pre><code>
 #include "pf/base/time_manager.h"                                                  
@@ -233,7 +233,7 @@ int32_t main(int32_t argc, char * argv[]) {
   if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
   result = TIME_MANAGER_POINTER->init();                                           
   pf_base::util::sleep(10);                                                     
-  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_current_time());            
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_tickcount());            
   return 0;                                                                     
 }       
 </code></pre>
@@ -372,6 +372,804 @@ int32_t main(int32_t argc, char * argv[]) {
 <p>以上例程的输出类似于（可能会有1-2毫秒的偏差）：</p>
 <p>
 <font color="green">time: 1</font>
+</p>
+
+<p><a name="reset_time"></a></p>
+
+<h2>::reset_time</h2>
+
+<blockquote>
+<p>void reset_time(); </p>
+<p>描述：时间重置，同步系统时间。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 reset_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                                                                                
+  TIME_MANAGER_POINTER->reset_time();                                              
+  return 0;                                                                        
+}     
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 1</font>
+</p>
+
+<p><a name="get_ansi_time"></a></p>
+
+<h2>::get_ansi_time</h2>
+
+<blockquote>
+<p>time_t get_ansi_time(); </p>
+<p>描述：获取当前的系统的标准时间，即时间戳。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：time_t</p>
+</blockquote>
+
+<p><b>Example #1 get_ansi_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_ansi_time());               
+  return 0;                                                                        
+}    
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 1410837133</font>
+</p>
+
+<p><a name="get_ctime"></a></p>
+
+<h2>::get_ctime</h2>
+
+<blockquote>
+<p>uint32_t get_ctime(); </p>
+<p>描述：获取时间戳，同<a href="#get_ansi_time">get_ansi_time</a>，只是返回类型不同。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_ctime 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_ctime());               
+  return 0;                                                                        
+}    
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 1410837348</font>
+</p>
+
+<p><a name="get_full_format_time"></a></p>
+
+<h2>::get_full_format_time</h2>
+
+<blockquote>
+<p>void get_full_format_time(char *format_time, uint32_t length); </p>
+<p>描述：获取时间戳，同<a href="#get_ansi_time">get_full_format_time</a>，只是返回类型不同。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_full_format_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  char date[DATE_LENGTH_MAX] = {0};                                             
+  TIME_MANAGER_POINTER->get_full_format_time(date, sizeof(date) - 1);           
+  DEBUGPRINTF("date: %s", date);                                                
+  return 0;                                                                     
+}   
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">date: 2014-09-16 11:24:41</font>
+</p>
+
+<p><a name="get_year"></a></p>
+
+<h2>::get_year</h2>
+
+<blockquote>
+<p>uint16_t get_year(); </p>
+<p>描述：获得当前的年。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint16_t</p>
+</blockquote>
+
+<p><b>Example #1 get_year 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("year: %d", TIME_MANAGER_POINTER->get_year());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">year: 2014</font>
+</p>
+
+<p><a name="get_month"></a></p>
+
+<h2>::get_month</h2>
+
+<blockquote>
+<p>uint8_t get_month(); </p>
+<p>描述：获得当前的月份，月份为tm结构的月份，使用时记得+1（以后该函数可能会修改）。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_month 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("month: %d", TIME_MANAGER_POINTER->get_month());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">month: 8</font>
+</p>
+
+<p><a name="get_day"></a></p>
+
+<h2>::get_day</h2>
+
+<blockquote>
+<p>uint8_t get_day(); </p>
+<p>描述：获得当前的天。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_day 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("day: %d", TIME_MANAGER_POINTER->get_day());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">day: 16</font>
+</p>
+
+<p><a name="get_hour"></a></p>
+
+<h2>::get_hour</h2>
+
+<blockquote>
+<p>uint8_t get_hour(); </p>
+<p>描述：获得当前的小时数。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_hour 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("hour: %d", TIME_MANAGER_POINTER->get_hour());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">hour: 11</font>
+</p>
+
+<p><a name="get_minute"></a></p>
+
+<h2>::get_minute</h2>
+
+<blockquote>
+<p>uint8_t get_minute(); </p>
+<p>描述：获得当前的分钟数。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_minute 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("minute: %d", TIME_MANAGER_POINTER->get_minute());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">minute: 36</font>
+</p>
+
+<p><a name="get_second"></a></p>
+
+<h2>::get_second</h2>
+
+<blockquote>
+<p>uint8_t get_second(); </p>
+<p>描述：获得当前的秒数。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_second 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("second: %d", TIME_MANAGER_POINTER->get_second());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">second: 22</font>
+</p>
+
+<p><a name="get_week"></a></p>
+
+<h2>::get_week</h2>
+
+<blockquote>
+<p>uint8_t get_week(); </p>
+<p>描述：获得当前的周（周几）。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint8_t</p>
+</blockquote>
+
+<p><b>Example #1 get_week 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("week: %d", TIME_MANAGER_POINTER->get_week());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">week: 2</font>
+</p>
+
+<p><a name="tm_todword"></a></p>
+
+<h2>::tm_todword</h2>
+
+<blockquote>
+<p>uint32_t tm_todword(); </p>
+<p>描述：获得当前的dword时间，由tm结构转换，dword结构为：年（-2000后的值）+月（两位）+日（两位）+时（两位）+分（两位），加号作为连接符。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 tm_todword 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("dword time: %d", TIME_MANAGER_POINTER->tm_todword());                    
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">dword time: 1409161148</font>
+</p>
+
+<p><a name="dword_totm"></a></p>
+
+<h2>::dword_totm</h2>
+
+<blockquote>
+<p>void dword_totm(uint32_t time, tm* _tm); </p>
+<p>描述：将一个dword时间转换为tm结构，参考<a href="#tm_todword">tm_todword</a>。</p>
+<p>参数：</p>
+<p>uint32_t time dword时间。</p>
+<p>tm* _tm tm结构指针。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 dword_totm 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  tm _tm;                                                                       
+  TIME_MANAGER_POINTER->dword_totm(1409161148, &_tm);                           
+  DEBUGPRINTF("tm_year: %d, tm_mon: %d, tm_mday: %d, tm_hour: %d, tm_min: %d",  
+              _tm.tm_year,                                                      
+              _tm.tm_mon,                                                       
+              _tm.tm_mday,                                                      
+              _tm.tm_hour,                                                      
+              _tm.tm_min);                                                      
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">tm_year: 114, tm_mon: 8, tm_mday: 16, tm_hour: 11, tm_min: 48</font>
+</p>
+
+<p><a name="diff_dword_time"></a></p>
+
+<h2>::diff_dword_time</h2>
+
+<blockquote>
+<p>uint32_t diff_dword_time(uint32_t time1, uint32_t time2); </p>
+<p>描述：比较两个dword时间的差值，返回分钟数。</p>
+<p>参数：</p>
+<p>uint32_t time1 dword时间1。</p>
+<p>uint32_t time2 dword时间2。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 diff_dword_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  uint32_t diff =                                                               
+    TIME_MANAGER_POINTER->diff_dword_time(1408161148, 1409161148);              
+  DEBUGPRINTF("diff: %d", diff);                                                
+  return 0;                                                                     
+}  
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">diff: 44640</font>
+</p>
+
+<p><a name="diff_day_count"></a></p>
+
+<h2>::diff_day_count</h2>
+
+<blockquote>
+<p>int32_t diff_day_count(time_t ansi_time1, time_t ansi_time2); </p>
+<p>描述：比较两个标准时间的天数差，可能返回负值。</p>
+<p>参数：</p>
+<p>time_t ansi_time1 时间1。</p>
+<p>time_t ansi_time2 时间2。</p>
+<p>返回值：int32_t</p>
+</blockquote>
+
+<p><b>Example #1 diff_day_count 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  int32_t diff = TIME_MANAGER_POINTER->diff_day_count(1410852968, 1409989000);  
+  DEBUGPRINTF("diff: %d", diff);                                                
+  return 0;                                                                     
+} 
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">diff: 9</font>
+</p>
+
+<p><a name="get_day_time"></a></p>
+
+<h2>::get_day_time</h2>
+
+<blockquote>
+<p>uint32_t get_day_time(); </p>
+<p>描述：获得当前的天时间，天时间格式为：年+月（2位）+日（2位），加号作为符号链接。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_day_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("day time: %d", TIME_MANAGER_POINTER->get_day_time());            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">day time: 20140916</font>
+</p>
+
+<p><a name="get_current_time"></a></p>
+
+<h2>::get_current_time</h2>
+
+<blockquote>
+<p>uint32_t get_current_time(); </p>
+<p>描述：获得当前的时间，从tm结构转换，但不是时间戳。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_current_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_current_time());            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 1921532059</font>
+</p>
+
+<p><a name="get_run_time"></a></p>
+
+<h2>::get_run_time</h2>
+
+<blockquote>
+<p>uint32_t get_run_time(); </p>
+<p>描述：获得应用启动后运行的时间，与tickcount不同。</p>
+<p>参数：</p>
+<p>无</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_run_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("time: %d", TIME_MANAGER_POINTER->get_run_time());            
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 0</font>
+</p>
+
+<p><a name="diff_time"></a></p>
+
+<h2>::diff_time</h2>
+
+<blockquote>
+<p>uint32_t diff_time(uint32_t time1, uint32_t time2); </p>
+<p>描述：两个时间的差值，毫秒。</p>
+<p>参数：</p>
+<p>uint32_t time1 时间1。</p>
+<p>uint32_t time2 时间2。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 diff_time 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  uint32_t diff = TIME_MANAGER_POINTER->diff_time(1921532059, 1911531059);      
+  DEBUGPRINTF("diff: %d", diff);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">diff: 1740346112</font>
+</p>
+
+<p><a name="time_totm"></a></p>
+
+<h2>::time_totm</h2>
+
+<blockquote>
+<p>void time_totm(uint32_t time, tm *_tm); </p>
+<p>描述：普通时间转tm结构。</p>
+<p>参数：</p>
+<p>uint32_t time 需转换的时间。</p>
+<p>tm *_tm 转换的tm时间指针。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 time_totm 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  tm _tm;                                                                       
+  TIME_MANAGER_POINTER->time_totm(1921532059, &_tm);                            
+  DEBUGPRINTF("tm_year: %d, tm_mon: %d, tm_mday: %d, tm_hour: %d, tm_min: %d",  
+              _tm.tm_year,                                                      
+              _tm.tm_mon,                                                       
+              _tm.tm_mday,                                                      
+              _tm.tm_hour,                                                      
+              _tm.tm_min);                                                      
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">tm_year: 114, tm_mon: 8, tm_mday: 16, tm_hour: 16, tm_min: 9</font>
+</p>
+
+<p><a name="tm_totime"></a></p>
+
+<h2>::tm_totime</h2>
+
+<blockquote>
+<p>void tm_totime(tm *_tm, uint32_t &time); </p>
+<p>描述：tm结构转普通时间。</p>
+<p>参数：</p>
+<p>tm *_tm 需转换的tm时间指针。</p>
+<p>uint32_t &time 普通时间。</p>
+<p>返回值：无</p>
+</blockquote>
+
+<p><b>Example #1 tm_totime 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  tm _tm;                                                                       
+  TIME_MANAGER_POINTER->time_totm(1921532059, &_tm);                            
+  uint32_t time;                                                                
+  TIME_MANAGER_POINTER->tm_totime(&_tm, time);                                  
+  DEBUGPRINTF("time: %d", time);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">time: 1921532059</font>
+</p>
+
+<p><a name="get_days"></a></p>
+
+<h2>::get_days</h2>
+
+<blockquote>
+<p>uint32_t get_days(); </p>
+<p>描述：取得以天为单位的时间值, 千位数代表年份，其他三位代表时间（天数）。</p>
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_days 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("days: %d", TIME_MANAGER_POINTER->get_days());                    
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">days: 14258</font>
+</p>
+
+<p><a name="get_hours"></a></p>
+
+<h2>::get_days</h2>
+
+<blockquote>
+<p>uint32_t get_hours(); </p>
+<p>描述：12723表示本年度第127天的5(23/4)点的第3(23%4)刻钟时间。</p>
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_hours 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("hours: %d", TIME_MANAGER_POINTER->get_hours());                    
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">hours: 25875</font>
+</p>
+
+<p><a name="get_weeks"></a></p>
+
+<h2>::get_weeks</h2>
+
+<blockquote>
+<p>uint32_t get_weeks(); </p>
+<p>描述：得以周为单位的时间值, 千位数代表年份，其他三位代表时间（周数）。</p>
+<p>参数：</p>
+<p>无。</p>
+<p>返回值：uint32_t</p>
+</blockquote>
+
+<p><b>Example #1 get_weeks 范例</b></p>
+
+<pre><code>
+#include "pf/base/time_manager.h"                                                  
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  bool result = true;                                                              
+  if (!TIME_MANAGER_POINTER) g_time_manager = new pf_base::TimeManager;            
+  result = TIME_MANAGER_POINTER->init();                                           
+  DEBUGPRINTF("weeks: %d", TIME_MANAGER_POINTER->get_weeks());                    
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">weeks: 14036</font>
 </p>
 
 <nav>
