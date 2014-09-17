@@ -107,103 +107,213 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>base module util</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#sleep">pf_base::util::sleep</a></li>
+<li><a href="#get_sizestr">pf_base::util::get_sizestr</a></li>
+<li><a href="#path_tounix">pf_base::util::path_tounix</a></li>
+<li><a href="#path_towindows">pf_base::util::path_towindows</a></li>
+<li><a href="#get_module_filename">pf_base::util::get_module_filename</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>基本工具集提供了常用的一系列方法，常用的罗列在此，不常用的大家可以自己去研究。</p>
 
-<p><a name="base"></a></p>
+<p><a name="#sleep"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>pf_base::util::sleep</h2>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<blockquote>
+<p>void sleep(uint32_t million_seconds); </p>
+<p>描述：程序休眠执行。
+</p>
+<p>参数：</p>
+<p>uint32_t million_seconds 需要暂停的时间（毫秒）。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<p><a name="db"></a></p>
+<p><b>Example #1 sleep 范例</b></p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<pre><code>
+#include "pf/base/util.h"                                                        
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  pf_base::util::sleep(1000); //暂停一秒                                               
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+无
+</p>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<p><a name="get_sizestr"></a></p>
 
-<p><a name="engine"></a></p>
+<h2>pf_base::util::get_sizestr</h2>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<blockquote>
+<p>void get_sizestr(uint64_t size, char *buffer, uint32_t length, int8_t type = -1); </p>
+<p>描述：</p>                                                                            
+<p>由byte类型获得单位大小字符串如：32bytes,32kb,32mb,32gb,32t</p>                      
+<p>type: -1 获得大于1最大单位字符串，如1023byte则返回1023bytes而非kb</p>           
+<p>type: 0 - 4 分别对应单位bytes、kb、mb、gb、t，                                  
+      不过规则是返回最至少大于0.01单位的字符串
+</p>
+<p>参数：</p>
+<p>uint64_t size 字节大小。</p>
+<p>char *buffer 获得的单位字符串存储的指针。</p>
+<p>uint32_t length 获得的单位字符串存储的长度。</p>
+<p>int8_t type 转换的类型，请查看描述。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
+<p><b>Example #1 get_sizestr 范例</b></p>
 
-<p><a name="event"></a></p>
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "main.h"                                                                  
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  uint64_t size = 1023;                                                            
+  char temp[64] = {0};                                                             
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1);                        
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 1);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  size = 1999999999;                                                               
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1);                        
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 1);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 2);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 3);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  pf_base::util::get_sizestr(size, temp, sizeof(temp) - 1, 4);                     
+  DEBUGPRINTF("temp: %s", temp);                                                   
+  return 0;                                                                        
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">temp: 1023.00bytes</font> <br />
+<font color="green">temp: 1.00kb</font> <br />
+<font color="green">temp: 1.86gb</font> <br />
+<font color="green">temp: 1953125.00kb</font> <br />
+<font color="green">temp: 1907.35mb</font> <br />
+<font color="green">temp: 1.86gb</font> <br />
+<font color="green">temp: 1.86gb</font>
+</p>
 
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
+<p><a name="path_tounix"></a></p>
 
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
+<h2>pf_base::util::path_tounix</h2>
 
-<p><a name="file"></a></p>
+<blockquote>
+<p>void path_tounix(char *buffer, uint16_t length); </p>
+<p>描述：</p>                                                                            
+<p>格式化unix路径地址。</p>                      
+<p>参数：</p>
+<p>char *buffer 需转换的字符串指针。</p>
+<p>uint16_t length 长度。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
+<p><b>Example #1 path_tounix 范例</b></p>
 
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char path[FILENAME_MAX] = {0};                                                
+  pf_base::string::safecopy(path, "public\\script\\lua/", sizeof(path));               
+  pf_base::util::path_tounix(path, sizeof(path) - 1);                           
+  DEBUGPRINTF("path: %s", path);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">path: public/script/lua/</font>
+</p>
 
-<p><a name="net"></a></p>
+<p><a name="path_towindows"></a></p>
 
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
+<h2>pf_base::util::path_towindows</h2>
 
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
+<blockquote>
+<p>void path_towindows(char *buffer, uint16_t length); </p>
+<p>描述：</p>                                                                            
+<p>格式化windows路径地址。</p>                      
+<p>参数：</p>
+<p>char *buffer 需转换的字符串指针。</p>
+<p>uint16_t length 长度。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<p><a name="performance"></a></p>
+<p><b>Example #1 path_towindows 范例</b></p>
 
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char path[FILENAME_MAX] = {0};                                                
+  pf_base::string::safecopy(path, "public/script/lua/", sizeof(path));          
+  pf_base::util::path_towindows(path, sizeof(path) - 1);                        
+  DEBUGPRINTF("path: %s", path);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">path: public\script\lua\</font>
+</p>
 
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
+<p><a name="get_module_filename"></a></p>
 
-<p><a name="script"></a></p>
+<h2>pf_base::util::get_module_filename</h2>
 
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
+<blockquote>
+<p>void get_module_filename(char *buffer, size_t size); </p>
+<p>描述：</p>                                                                            
+<p>取当前执行文件名。</p>                      
+<p>参数：</p>
+<p>char *buffer 保存的字符串指针。</p>
+<p>size_t size 长度。</p>
+<p>返回值：无</p>
+</blockquote>
 
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
+<p><b>Example #1 get_module_filename 范例</b></p>
 
-<p><a name="sys"></a></p>
-
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
-
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
-
-<p><a name="util"></a></p>
-
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
-
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<pre><code>
+#include "pf/base/util.h"                                                          
+#include "pf/base/string.h"                                                        
+#include "main.h"                                                               
+                                                                                   
+int32_t main(int32_t argc, char * argv[]) {                                        
+  char name[FILENAME_MAX] = {0};                                                
+  pf_base::util::get_module_filename(name, sizeof(name) - 1);                   
+  DEBUGPRINTF("name: %s", name);                                                
+  return 0;                                                                     
+}
+</code></pre>
+<p>以上例程的输出类似于：</p>
+<p>
+<font color="green">name: /home/viticm/work/plainframework1/applications/bin/pf_simple</font>
+</p>
 
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="base.tinytimer.htm">小型定时器</a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>
