@@ -107,99 +107,72 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>file module api</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#openex">pf_file::api::openex</a></li>
+<li><a href="#openmode_ex">pf_file::api::openmode_ex</a></li>
+<li><a href="#closeex">pf_file::api::closeex</a></li>
+<li><a href="#readex">pf_file::api::readex</a></li>
+<li><a href="#writeex">pf_file::api::writeex</a></li>
+<li><a href="#fcntlex">pf_file::api::fcntlex</a></li>
+<li><a href="#fcntlarg_ex">pf_file::api::fcntlarg_ex</a></li>
+<li><a href="#get_nonblocking_ex">pf_file::api::get_nonblocking_ex</a></li>
+<li><a href="#ioctlex">pf_file::api::ioctlex</a></li>
+<li><a href="#availableex">pf_file::api::availableex</a></li>
+<li><a href="#dupex">pf_file::api::dupex</a></li>
+<li><a href="#lseekex">pf_file::api::lseekex</a></li>
+<li><a href="#tellex">pf_file::api::tellex</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>文件API封装了跨平台下的文件操作函数，用法与系统函数一致，故此暂不提供具体示例。</p>
 
-<p><a name="base"></a></p>
+<p><a name="openex"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>::openex</h2>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<blockquote>
+<p>int32_t openex(const char *filename, int32_t flag);                     
+</p>
+<p>描述：打开文件函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>int32_t flag 标记。</p>
+<p>返回值：int32_t</p>
+</blockquote>
 
-<p><a name="db"></a></p>
+<p><a name="openmode_ex"></a></p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<h2>::openmode_ex</h2>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<blockquote>
+<p>int32_t openmode_ex(const char *filename, int32_t flag, int32_t mode);                     
+</p>
+<p>描述：以不同模式打开文件函数。</p>
+<p>参数：</p>
+<p>const char *filename 文件名。</p>
+<p>int32_t flag 标记。</p>
+<p>int32_t mode 模式。</p>
+<p>返回值：int32_t</p>
+</blockquote>
 
-<p><a name="engine"></a></p>
+<p><a name="closeex"></a></p>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<h2>::closeex</h2>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
-
-<p><a name="event"></a></p>
-
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
-
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
-
-<p><a name="file"></a></p>
-
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
-
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
-
-<p><a name="net"></a></p>
-
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
-
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
-
-<p><a name="performance"></a></p>
-
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
-
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
-
-<p><a name="script"></a></p>
-
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
-
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
-
-<p><a name="sys"></a></p>
-
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
-
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
-
-<p><a name="util"></a></p>
-
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
-
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<blockquote>
+<p>void closeex(int32_t fd);                     
+</p>
+<p>描述：关闭文件。</p>
+<p>参数：</p>
+<p>int32_t fd 文件描述符。</p>
+<p>返回值：void</p>
+</blockquote>
 
 <nav>
 	<a href="style-guide.htm">代码风格</a> |
