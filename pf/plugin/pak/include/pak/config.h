@@ -14,6 +14,8 @@
 #include "pf/base/config.h"
 #include "pf/sys/thread.h"
 
+#define PAK_MAGIC 0x1A4D504B //header 'PAK\1A
+
 #define PAK_FILE_IMPLODE 0x00000200 //Implode method (By PKWARE Data Compression Library)
 #define PAK_FILE_COMPRESS 0x00000100 //Compress methods (My various methods)
 #define PAK_FILE_COMPRESSED 0x0000FF00 //File is compressed 
