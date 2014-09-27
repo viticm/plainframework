@@ -75,7 +75,7 @@ void Turn::erase(const char *name, int16_t id) {
         connection::Login *loginconnection = 
           dynamic_cast<connection::Login *>(connectionpool->get(queue_[i].id));
         if (loginconnection) {
-          if (kPlayerStatusLoginProcessTurn == loginconnection->getstatus() && 
+          if (kConnectionStatusLoginProcessTurn == loginconnection->getstatus() && 
               loginconnection->getid() != id && //不删除自己
               0 == strcmp(loginconnection->getaccount(), name)) {
             CONNECTION_MANAGER_LOGIN_POINTER->remove(loginconnection);
@@ -116,7 +116,7 @@ uint16_t Turn::calculate_turnnumber(uint16_t queueposition) const {
         connection::Login *loginconnection = dynamic_cast<connection::Login *>(
             connectionpool->get(queue_[i].id));
         if (loginconnection && 
-            kPlayerStatusLoginProcessTurn == loginconnection->getstatus()) {
+            kConnectionStatusLoginProcessTurn == loginconnection->getstatus()) {
           ++turnnumber;
         }
       }
@@ -125,7 +125,7 @@ uint16_t Turn::calculate_turnnumber(uint16_t queueposition) const {
         connection::Login *loginconnection = dynamic_cast<connection::Login *>(
             connectionpool->get(queue_[i].id));
         if (loginconnection &&
-            kPlayerStatusLoginProcessTurn == loginconnection->getstatus()) {
+            kConnectionStatusLoginProcessTurn == loginconnection->getstatus()) {
           ++turnnumber;
         }
       }
@@ -133,7 +133,7 @@ uint16_t Turn::calculate_turnnumber(uint16_t queueposition) const {
         connection::Login *loginconnection = dynamic_cast<connection::Login *>(
             connectionpool->get(queue_[i].id));
         if (loginconnection && 
-            kPlayerStatusLoginProcessTurn == loginconnection->getstatus()) { 
+            kConnectionStatusLoginProcessTurn == loginconnection->getstatus()) { 
           ++turnnumber;
         }
       }

@@ -641,6 +641,7 @@ class Setting : public pf_base::Singleton<Setting> {
    void load_copy_scene_info();
    int16_t get_server_id_by_scene_id(int16_t id) const;
    int16_t get_server_id_by_share_memory_key(uint32_t key) const;
+   server_data_t *get_serverinfo(int16_t serverid);
 #endif /* } __SERVER__ */
 
  private:

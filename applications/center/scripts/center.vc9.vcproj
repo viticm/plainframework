@@ -218,6 +218,14 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="servercenter"
+						>
+						<File
+							RelativePath="..\src\message\handler\servercenter\script_execute.cc"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -227,6 +235,22 @@
 					RelativePath="..\src\engine\system.cc"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="script"
+				>
+				<Filter
+					Name="lua"
+					>
+					<File
+						RelativePath="..\src\script\lua\export.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\src\script\lua\net.cc"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -257,6 +281,30 @@
 					RelativePath="..\include\engine\system.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="script"
+				>
+				<File
+					RelativePath="..\include\script\config.h"
+					>
+				</File>
+				<Filter
+					Name="lua"
+					>
+					<File
+						RelativePath="..\include\script\lua\config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\script\lua\export.h"
+						>
+					</File>
+					<File
+						RelativePath="..\include\script\lua\net.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -290,6 +338,14 @@
 							>
 							<File
 								RelativePath="..\..\common\src\net\packet\serverserver\connect.cc"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="servercenter"
+							>
+							<File
+								RelativePath="..\..\common\src\net\packet\servercenter\script_execute.cc"
 								>
 							</File>
 						</Filter>
@@ -433,6 +489,18 @@
 								>
 							</File>
 						</Filter>
+						<Filter
+							Name="servercenter"
+							>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\servercenter\config.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\common\include\common\net\packet\servercenter\script_execute.h"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 				<Filter
@@ -459,6 +527,10 @@
 						</File>
 						<File
 							RelativePath="..\..\common\include\common\script\lua\log.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\common\include\common\script\lua\macro.h"
 							>
 						</File>
 					</Filter>

@@ -19,6 +19,7 @@ namespace servercenter {
 
 enum packetid_enum {
   kFirst = SERVERCENTER_PACKETID_MIN,
+  kScriptExecute,
   kLast,
   kMax = SERVERCENTER_PACKETID_MAX,
 };

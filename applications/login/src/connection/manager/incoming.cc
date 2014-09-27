@@ -43,7 +43,7 @@ pf_net::connection::Base *Incoming::accept() {
     if (loginconnection) {
       uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
       loginconnection->set_connecttime(currenttime);
-      loginconnection->setstatus(kPlayerStatusLoginConnect);
+      loginconnection->setstatus(kConnectionStatusLoginConnect);
       uint32_t uint32host = 
         static_cast<uint32_t>(loginconnection->getsocket()->getuint64host());
       const char *host = loginconnection->getsocket()->host_;
@@ -76,7 +76,7 @@ bool Incoming::heartbeat(uint32_t time) {
         connection::Login *loginconnection = 
           dynamic_cast<connection::Login *>(connection);
         Assert(loginconnection);
-        if (kPlayerStatusLoginConnect == loginconnection->getstatus()) {
+        if (kConnectionStatusLoginConnect == loginconnection->getstatus()) {
           if (time - loginconnection->get_connecttime() > 
               LOGIN_PLAYER_AUTH_TIME_MAX) {
             remove(connection);

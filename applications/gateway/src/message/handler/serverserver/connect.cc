@@ -7,10 +7,9 @@ uint32_t ConnectHandler::execute(Connect* packet,
   __ENTER_FUNCTION
     USE_PARAM(connection);
     FAST_LOG(kApplicationLogFile,
-             "[%s.message.handler.serverver]"
+             "[message.handler.serverver]"
              " (ConnectHandler::execute) success"
              " server id: %d",
-             APPLICATION_NAME,
              packet->get_serverid());
     return kPacketExecuteStatusContinue;
   __LEAVE_FUNCTION

@@ -33,6 +33,7 @@ class System : public pf_engine::Kernel,
 
  public:
    pf_db::Manager *get_dbmanager();
+   pf_net::Manager *get_netmanager();
 
  private:
    bool init_setting();

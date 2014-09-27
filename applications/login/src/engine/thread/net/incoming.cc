@@ -18,6 +18,7 @@ bool Incoming::init(uint16_t connectionmax,
           connectionmax, listenport, listenip))
       return false;
     isactive_ = connection::manager::Incoming::init_pool(connectionmax);
+    connection::manager::Incoming::set_performance_active(true);
     return isactive_;
   __LEAVE_FUNCTION
     return false;

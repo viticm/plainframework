@@ -9,6 +9,9 @@
 #include "common/net/packet/login_togateway/askauth.h"
 #include "common/net/packet/login_togateway/playeronline.h"
 #endif
+#if defined(_CENTER) || defined(_SERVER)
+#include "common/net/packet/servercenter/script_execute.h"
+#endif
 /* } packets */
 
 #include "common/net/packetfactory.h"
@@ -87,12 +90,13 @@ bool __stdcall registerfactories() {
 
 #endif /* } */
 
-#if defined(_LOGIN) || defined(_PAP_NET_CENTER) /* { */
+#if defined(_LOGIN) || defined(_CENTER) /* { */
 
 #endif /* } */
 
 #if defined(_SERVER) || defined(_CENTER) /* { */
-
+    NET_PACKET_FACTORYMANAGER_POINTER->addfactory(
+        new servercenter::ScriptExecuteFactory());
 #endif /* } */
 
 #if defined(_CLIENT) || defined(_SERVER) /* { */

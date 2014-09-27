@@ -35,6 +35,10 @@ SET (SOURCEFILES_MESSAGE_HANDLER_SERVERSERVER_LIST
 	../src/message/handler/serverserver/connect.cc
 )
 
+SET (SOURCEFILES_MESSAGE_HANDLER_SERVERCENTER_LIST
+	../src/message/handler/servercenter/script_execute.cc
+)
+
 SET (SOURCEFILES_MESSAGE_HANDLER_LIST
 )
 
@@ -43,6 +47,14 @@ SET (SOURCEFILES_MESSAGE_LIST
 
 SET (SOURCEFILES_ENGINE_LIST
 	../src/engine/system.cc
+)
+
+SET (SOURCEFILES_SCRIPT_LUA_LIST
+	../src/script/lua/export.cc
+	../src/script/lua/net.cc
+)
+
+SET (SOURCEFILES_SCRIPT_LIST
 )
 
 SET (SOURCEFILES_LIST
@@ -58,6 +70,16 @@ SET (HEADERFILES_ENGINE_LIST
 	../include/engine/system.h
 )
 
+SET (HEADERFILES_SCRIPT_LUA_LIST
+	../include/script/lua/config.h
+	../include/script/lua/export.h
+	../include/script/lua/net.h
+)
+
+SET (HEADERFILES_SCRIPT_LIST
+	../include/script/config.h
+)
+
 SET (HEADERFILES_LIST
 	../include/main.h
 )
@@ -67,6 +89,10 @@ SET (RESOURCEFILES_LIST
 
 SET (COMMON_SRC_NET_PACKET_SERVERSERVER_LIST
 	../../common/src/net/packet/serverserver/connect.cc
+)
+
+SET (COMMON_SRC_NET_PACKET_SERVERCENTER_LIST
+	../../common/src/net/packet/servercenter/script_execute.cc
 )
 
 SET (COMMON_SRC_NET_PACKET_LIST
@@ -121,6 +147,11 @@ SET (COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST
 	../../common/include/common/net/packet/serverserver/connect.h
 )
 
+SET (COMMON_INCLUDE_NET_PACKET_SERVERCENTER_LIST
+	../../common/include/common/net/packet/servercenter/config.h
+	../../common/include/common/net/packet/servercenter/script_execute.h
+)
+
 SET (COMMON_INCLUDE_NET_PACKET_LIST
 	../../common/include/common/net/packet/config.h
 )
@@ -135,6 +166,7 @@ SET (COMMON_INCLUDE_SCRIPT_LUA_LIST
 	../../common/include/common/script/lua/export.h
 	../../common/include/common/script/lua/file.h
 	../../common/include/common/script/lua/log.h
+	../../common/include/common/script/lua/macro.h
 )
 
 SET (COMMON_INCLUDE_SCRIPT_LIST
@@ -153,15 +185,21 @@ SET (COMMON_LIST
 
 if (WIN32)
 	source_group(SourceFiles\\message\\handler\\serverserver FILES ${SOURCEFILES_MESSAGE_HANDLER_SERVERSERVER_LIST})
+	source_group(SourceFiles\\message\\handler\\servercenter FILES ${SOURCEFILES_MESSAGE_HANDLER_SERVERCENTER_LIST})
 	source_group(SourceFiles\\message\\handler FILES ${SOURCEFILES_MESSAGE_HANDLER_LIST})
 	source_group(SourceFiles\\message FILES ${SOURCEFILES_MESSAGE_LIST})
 	source_group(SourceFiles\\engine FILES ${SOURCEFILES_ENGINE_LIST})
+	source_group(SourceFiles\\script\\lua FILES ${SOURCEFILES_SCRIPT_LUA_LIST})
+	source_group(SourceFiles\\script FILES ${SOURCEFILES_SCRIPT_LIST})
 	source_group(SourceFiles FILES ${SOURCEFILES_LIST})
 	source_group(HeaderFiles\\application FILES ${HEADERFILES_APPLICATION_LIST})
 	source_group(HeaderFiles\\engine FILES ${HEADERFILES_ENGINE_LIST})
+	source_group(HeaderFiles\\script\\lua FILES ${HEADERFILES_SCRIPT_LUA_LIST})
+	source_group(HeaderFiles\\script FILES ${HEADERFILES_SCRIPT_LIST})
 	source_group(HeaderFiles FILES ${HEADERFILES_LIST})
 	source_group(ResourceFiles FILES ${RESOURCEFILES_LIST})
 	source_group(common\\src\\net\\packet\\serverserver FILES ${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST})
+	source_group(common\\src\\net\\packet\\servercenter FILES ${COMMON_SRC_NET_PACKET_SERVERCENTER_LIST})
 	source_group(common\\src\\net\\packet FILES ${COMMON_SRC_NET_PACKET_LIST})
 	source_group(common\\src\\net FILES ${COMMON_SRC_NET_LIST})
 	source_group(common\\src\\script\\lua FILES ${COMMON_SRC_SCRIPT_LUA_LIST})
@@ -172,6 +210,7 @@ if (WIN32)
 	source_group(common\\include\\define\\net FILES ${COMMON_INCLUDE_DEFINE_NET_LIST})
 	source_group(common\\include\\define FILES ${COMMON_INCLUDE_DEFINE_LIST})
 	source_group(common\\include\\net\\packet\\serverserver FILES ${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST})
+	source_group(common\\include\\net\\packet\\servercenter FILES ${COMMON_INCLUDE_NET_PACKET_SERVERCENTER_LIST})
 	source_group(common\\include\\net\\packet FILES ${COMMON_INCLUDE_NET_PACKET_LIST})
 	source_group(common\\include\\net FILES ${COMMON_INCLUDE_NET_LIST})
 	source_group(common\\include\\script\\lua FILES ${COMMON_INCLUDE_SCRIPT_LUA_LIST})
@@ -183,15 +222,21 @@ endif()
 
 ADD_EXECUTABLE(center
 	${SOURCEFILES_MESSAGE_HANDLER_SERVERSERVER_LIST}
+	${SOURCEFILES_MESSAGE_HANDLER_SERVERCENTER_LIST}
 	${SOURCEFILES_MESSAGE_HANDLER_LIST}
 	${SOURCEFILES_MESSAGE_LIST}
 	${SOURCEFILES_ENGINE_LIST}
+	${SOURCEFILES_SCRIPT_LUA_LIST}
+	${SOURCEFILES_SCRIPT_LIST}
 	${SOURCEFILES_LIST}
 	${HEADERFILES_APPLICATION_LIST}
 	${HEADERFILES_ENGINE_LIST}
+	${HEADERFILES_SCRIPT_LUA_LIST}
+	${HEADERFILES_SCRIPT_LIST}
 	${HEADERFILES_LIST}
 	${RESOURCEFILES_LIST}
 	${COMMON_SRC_NET_PACKET_SERVERSERVER_LIST}
+	${COMMON_SRC_NET_PACKET_SERVERCENTER_LIST}
 	${COMMON_SRC_NET_PACKET_LIST}
 	${COMMON_SRC_NET_LIST}
 	${COMMON_SRC_SCRIPT_LUA_LIST}
@@ -202,6 +247,7 @@ ADD_EXECUTABLE(center
 	${COMMON_INCLUDE_DEFINE_NET_LIST}
 	${COMMON_INCLUDE_DEFINE_LIST}
 	${COMMON_INCLUDE_NET_PACKET_SERVERSERVER_LIST}
+	${COMMON_INCLUDE_NET_PACKET_SERVERCENTER_LIST}
 	${COMMON_INCLUDE_NET_PACKET_LIST}
 	${COMMON_INCLUDE_NET_LIST}
 	${COMMON_INCLUDE_SCRIPT_LUA_LIST}

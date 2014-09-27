@@ -14,12 +14,13 @@
 #ifdef __SERVER__
 
 typedef enum {
-  kPlayerStatusLoginEmpty = 1,
-  kPlayerStatusLoginProcessTurn, //登陆排队中
-  kPlayerStatusLoginConnect, //登陆连接中
-  kPlayerStatusLoginServerReady, //登陆服务器已准备
-  kPlayerStatusLoginNormal, //登陆正常
-} playerstatus_t;
+  kConnectionStatusLoginEmpty = 1,
+  kConnectionStatusLoginProcessTurn, //登陆排队中
+  kConnectionStatusLoginConnect, //登陆连接中
+  kConnectionStatusLoginServerReady, //登陆服务器已准备
+  kConnectionStatusLoginNormal, //登陆正常
+  kConnectionStatusGameServerReady, //游戏服务器已准备
+} connectionstatus_t;
 
 typedef enum {
   kServerTypeServer = 0, //游戏服务器

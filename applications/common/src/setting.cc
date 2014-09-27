@@ -1599,6 +1599,18 @@ int16_t Setting::get_server_id_by_share_memory_key(uint32_t key) const {
     return -1;
 }
 
+server_data_t *Setting::get_serverinfo(int16_t serverid) {
+  __ENTER_FUNCTION
+    server_data_t *serverdata = NULL;
+    Assert(serverid < OVER_SERVER_MAX && serverid >= 0);
+    int16_t index = server_info_.hash_server[serverid];
+    Assert(index >= 0 && index < GROUP_SERVER_MAX);
+    serverdata = &(server_info_.data[index]);
+    return serverdata;
+  __LEAVE_FUNCTION
+    return NULL;
+}
+
 #endif /* } __SERVER__ */
 
 //class end --

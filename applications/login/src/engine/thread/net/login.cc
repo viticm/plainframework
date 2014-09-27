@@ -96,8 +96,8 @@ bool Login::move_queueplayer() {
         dynamic_cast<connection::Login *>(pool_->get(connectionid));
       Assert(loginconnection);
       if (0 == strcmp(loginconnection->getaccount(), name) &&
-          kPlayerStatusLoginProcessTurn == loginconnection->getstatus()) {
-        loginconnection->setstatus(kPlayerStatusLoginNormal);
+          kConnectionStatusLoginProcessTurn == loginconnection->getstatus()) {
+        loginconnection->setstatus(kConnectionStatusLoginNormal);
         inc_normalcount();
         login_toclient::TurnStatus message;
         message.set_turnstatus(kLoginTurnStatusNormal);

@@ -36,7 +36,7 @@ void Login::clear() {
   __ENTER_FUNCTION
     memset(account_, 0, sizeof(account_));
     rolenumber_ = 0;
-    status_ = kPlayerStatusLoginEmpty;
+    status_ = kConnectionStatusLoginEmpty;
     kicktime_ = 0;
     connecttime_ = 0;
     gatewaytime_ = 0;
@@ -62,14 +62,14 @@ bool Login::heartbeat(uint32_t time) {
                     " didn't receive message for long time. Kicked!");
       return false;
     }
-    if (kPlayerStatusLoginProcessTurn == getstatus()) {
+    if (kConnectionStatusLoginProcessTurn == getstatus()) {
       if (time > last_sendmessage_turntime_ + CONNECTION_TURNMESSAGE_TIME_MAX) {
         last_sendmessage_turntime_ = time;
         uint32_t turnnumber = 0;
         turnnumber = 
           CONNECTION_QUEUE_TURN_POINTER->calculate_turnnumber(queueposition_);
         TurnStatus message;
-        message.set_turnstatus(kPlayerStatusLoginProcessTurn);
+        message.set_turnstatus(kConnectionStatusLoginProcessTurn);
         message.set_turnnumber(turnnumber);
         sendpacket(&message);
       }

@@ -4,6 +4,8 @@
 #include "common/net/packetfactory.h"
 #include "common/setting.h"
 #include "common/script/lua/export.h"
+#include "common/engine/macro.h"
+#include "script/lua/export.h"
 #include "engine/system.h"
 
 engine::System *g_engine_system = NULL;
@@ -71,6 +73,7 @@ bool System::init() {
               SETTING_POINTER->server_info_.center_data.port);
     setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
               SETTING_POINTER->server_info_.net_connectionmax);
+    ENGINE_SET_PUBLICPATH(); //设置公用目录，有需要的应用才调用此宏
     if (!SCRIPT_LUASYSTEM_POINTER) 
       g_script_luasystem = new pf_script::lua::System();
     SCRIPT_LUASYSTEM_POINTER->set_function_registers(
@@ -86,10 +89,12 @@ bool System::init() {
         common::net::isvalid_packetid);
     uint16_t factorysize = common::net::get_facctorysize();
     NET_PACKET_FACTORYMANAGER_POINTER->setsize(factorysize);
-    bool result = Kernel::init();
+    if (!Kernel::init()) return false;
     NET_PACKET_FACTORYMANAGER_POINTER->init();
+    ENGINE_SET_SCRIPTVALUE(); //设置脚本变量，同上
+    if (!script::lua::export_globals()) return false;
     SCRIPT_LUASYSTEM_POINTER->loadscript("/preload.lua");
-    return result;
+    return true;
   __LEAVE_FUNCTION
     return false;
 }
@@ -103,6 +108,20 @@ bool System::init_setting() {
     return result;
   __LEAVE_FUNCTION
     return false;
+}
+
+pf_net::Manager *System::get_netmanager() {
+  __ENTER_FUNCTION
+    pf_net::Manager *netmanager = NULL;
+    bool is_usethread = getconfig_boolvalue(ENGINE_CONFIG_NET_RUN_ASTHREAD);
+    if (is_usethread) {
+      netmanager = dynamic_cast<pf_net::Manager *>(net_thread_);
+    } else {
+      netmanager = net_manager_;
+    }
+    return netmanager;
+  __LEAVE_FUNCTION
+    return NULL;
 }
 
 } //namespace engine

@@ -55,14 +55,14 @@ bool Login::processinput() {
       connection::Login *loginconnection = 
         dynamic_cast<connection::Login *>(get(connectionid));
       Assert(loginconnection);
-      if (kPlayerStatusLoginServerReady == loginconnection->getstatus()) {
+      if (kConnectionStatusLoginServerReady == loginconnection->getstatus()) {
         loginconnection->set_readykick_count(
             loginconnection->get_readykick_count() + 1);
         if (loginconnection->get_readykick_count() > READY_HEARTBEAT_MAX)
           remove(loginconnection);
       }
-      if (loginconnection->getstatus() != kPlayerStatusLoginNormal ||
-          loginconnection->getstatus() != kPlayerStatusLoginServerReady) {
+      if (loginconnection->getstatus() != kConnectionStatusLoginNormal ||
+          loginconnection->getstatus() != kConnectionStatusLoginServerReady) {
         continue;
       }
       int32_t _socketid = loginconnection->getsocket()->getid();
@@ -105,14 +105,14 @@ bool Login::processinput() {
       connection::Login *loginconnection = 
         dynamic_cast<connection::Login *>(get(connection_idset_[i]));
       Assert(loginconnection);
-      if (kPlayerStatusLoginServerReady == loginconnection->getstatus()) {
+      if (kConnectionStatusLoginServerReady == loginconnection->getstatus()) {
         loginconnection->set_readykick_count(
             loginconnection->get_readykick_count());
         if (loginconnection->get_readykick_count() > READY_HEARTBEAT_MAX)
           remove(loginconnection);
       }
-      if (loginconnection->getstatus() != kPlayerStatusLoginNormal ||
-          loginconnection->getstatus() != kPlayerStatusLoginServerReady) {
+      if (loginconnection->getstatus() != kConnectionStatusLoginNormal ||
+          loginconnection->getstatus() != kConnectionStatusLoginServerReady) {
         continue;
       }
       int32_t socketid = loginconnection->getsocket()->getid();
@@ -159,7 +159,7 @@ bool Login::remove(pf_net::connection::Base *connection) {
       dynamic_cast<connection::Login *>(connection);
     Assert(loginconnection);
     //bool result = false;
-    if (kPlayerStatusLoginNormal == loginconnection->getstatus()) {
+    if (kConnectionStatusLoginNormal == loginconnection->getstatus()) {
       PlayerLeave *message = dynamic_cast<PlayerLeave *>(
           NET_PACKET_FACTORYMANAGER_POINTER->createpacket(kPlayerLeave));
       if (message) {
@@ -170,8 +170,8 @@ bool Login::remove(pf_net::connection::Base *connection) {
                                                       kServerTypeGateway);
       }
     }
-    if (kPlayerStatusLoginNormal == loginconnection->getstatus() ||
-        kPlayerStatusLoginServerReady == loginconnection->getstatus()) {
+    if (kConnectionStatusLoginNormal == loginconnection->getstatus() ||
+        kConnectionStatusLoginServerReady == loginconnection->getstatus()) {
       dec_normalcount();
     }
     SLOW_LOG(NET_MODULENAME,
@@ -192,7 +192,7 @@ bool Login::remove(const char *account, int16_t id) {
       connection::Login *loginconnection = 
         dynamic_cast<connection::Login *>(get(connection_idset_[i]));
       if (loginconnection) {
-        if (kPlayerStatusLoginNormal == loginconnection->getstatus() &&
+        if (kConnectionStatusLoginNormal == loginconnection->getstatus() &&
             loginconnection->getid() != id && //自身连接不删除
             0 == strcmp(loginconnection->getaccount(), account)) {
           remove(loginconnection);
