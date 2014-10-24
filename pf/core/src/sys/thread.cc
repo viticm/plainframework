@@ -91,11 +91,11 @@ DWORD Thread::get_id() {
   return id_;
 }
 
-Thread::enum_thread_status Thread::get_status() {
+Thread::status_t Thread::get_status() {
   return status_;
 }
 
-void Thread::set_status(enum_thread_status status) {
+void Thread::set_status(status_t status) {
   __ENTER_FUNCTION
     status_ = status;
   __LEAVE_FUNCTION

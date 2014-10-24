@@ -35,12 +35,12 @@ void Server::run() {
              get_current_serverid());
     while (isactive()) {
       if (!timer_.isstart()) {
-        timer_.start(60000, TIME_MANAGER_POINTER->get_current_time());
+        timer_.start(60000, TIME_MANAGER_POINTER->get_tickcount());
       }
       try {
         pf_base::util::sleep(1); 
         connection::manager::Server::tick();
-        if (timer_.counting(TIME_MANAGER_POINTER->get_current_time())) {
+        if (timer_.counting(TIME_MANAGER_POINTER->get_tickcount())) {
           SLOW_LOG(NET_MODULENAME,
                    "[engine.thread.net] (Server::run)"
                    " connection count map ->"

@@ -40,7 +40,7 @@ class Logic {
                  data_.key, 
                  pf_sys::memory::share::kSmptShareMemory);
      pool_->set_head_version(0);
-     last_checktime_ = TIME_MANAGER_POINTER->get_current_time();
+     last_checktime_ = TIME_MANAGER_POINTER->get_tickcount();
      lastversion_ = 0;
      bool result = init_after();
      return result;
@@ -50,7 +50,7 @@ class Logic {
    bool init_after();
    bool tick() {
      __ENTER_FUNCTION
-       uint32_t time = TIME_MANAGER_POINTER->get_current_time();
+       uint32_t time = TIME_MANAGER_POINTER->get_tickcount();
        if (fabs(static_cast<double>(time - last_checktime_)) > 
            ARCHIVE_DETECT_IDLE) {
          last_checktime_ = time;

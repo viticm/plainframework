@@ -88,7 +88,7 @@ int32_t main(int32_t argc, char *argv[]) {
 void signal_handler(int32_t signal) {
   //处理前台模式信号
   static uint32_t last_signaltime = 0;
-  uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+  uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
   if (signal == SIGINT) {
     if (currenttime - last_signaltime > 10 * 1000) {
       DEBUGPRINTF(
@@ -117,7 +117,7 @@ void signal_handler(int32_t signal) {
 #elif __WINDOWS__ /* }{ */
 BOOL WINAPI signal_handler(DWORD event) {
   static uint32_t last_signaltime = 0;
-  uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+  uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
   switch (event) {
     case CTRL_C_EVENT: {
       if (currenttime - last_signaltime > 10 * 1000) {

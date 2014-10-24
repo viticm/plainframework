@@ -22,7 +22,7 @@ bool Logic<globaldata_t>::init_after() {
       return false;
     }
     if (g_cmd_model == kCmdModelClearAll) return true;
-    final_savetime_ = TIME_MANAGER_POINTER->get_current_time();
+    final_savetime_ = TIME_MANAGER_POINTER->get_tickcount();
     uint32_t poolsize_max = pool_->get_max_size();
     USE_PARAM(poolsize_max);
     Assert(1 == poolsize_max);
@@ -76,7 +76,7 @@ bool Logic<globaldata_t>::fullflush(bool force, bool servercrash) {
   __ENTER_FUNCTION
     USE_PARAM(servercrash);
     USE_PARAM(force);
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     uint32_t savetime_interval = 
       SETTING_POINTER->share_memory_info_.center_data_save_interval;
     if (currenttime > final_savetime_ + savetime_interval) {
@@ -96,7 +96,7 @@ bool Logic<globaldata_t>::tickflush() {
       return false;
     }
     if (!SETTING_POINTER) return false;
-    uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
     if (fabs(static_cast<double>(currenttime - final_savetime_)) < 
         SETTING_POINTER->share_memory_info_.center_data_save_interval) {
       return true; //如果时间不到保存，则直接返回

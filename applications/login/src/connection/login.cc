@@ -28,7 +28,7 @@ bool Login::init() {
 
 void Login::resetkick() {
   __ENTER_FUNCTION
-    kicktime_ = TIME_MANAGER_POINTER->get_current_time();
+    kicktime_ = TIME_MANAGER_POINTER->get_tickcount();
   __LEAVE_FUNCTION
 }
 

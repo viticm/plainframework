@@ -1474,7 +1474,7 @@ BZFILE * bzopen_or_bzdopen
 #ifdef BZ_STRICT_ANSI
       fp = NULL;
 #else
-      fp = _fdopen(fd,mode2);
+      fp = fdopen(fd, mode2);
 #endif
    }
    if (fp == NULL) return NULL;

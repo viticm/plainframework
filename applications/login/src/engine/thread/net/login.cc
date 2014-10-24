@@ -36,7 +36,7 @@ void Login::run() {
     while (isactive()) {
       bool result = false;
       pf_base::util::sleep(10);
-      uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
       result = dotick(currenttime);
       Assert(result);
 #ifdef _EXEONECE

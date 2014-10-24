@@ -1,0 +1,77 @@
+#include "pak/interface.h"
+#include "pak/file.h"
+#include "pak/util.h"
+#include "main.h"
+
+int32_t main(int32_t argc, char * argv[]) {
+  uint64_t result = 0;
+  pak::file::removeex("test.pak");
+  pak::archive_t *archive = pak::archivecreate("test.pak", 
+                                               result, 
+                                               0x10000, 
+                                               PAK_TYPE_NORMAL);
+  if (NULL == archive) return -1;
+  pak::fileadd(archive, 
+               "files\\filelist.txt", 
+               "files\\filelist.txt",
+               PAK_FILE_ENCRYPTED | PAK_FILE_COMPRESS, 
+               0, 
+               pak::kFileTypeData);
+  ERRORPRINTF("pak::fileadd end 1.file");
+  pak::fileadd(archive, 
+               "files\\global.txt", 
+               "2.file",
+               PAK_FILE_ENCRYPTED | PAK_FILE_COMPRESS, 
+               0, 
+               pak::kFileTypeData);
+  ERRORPRINTF("pak::fileadd end 2.file");
+  pak::archive_t *clonearchive = archive->createclone(result);
+  pak::file_t *file = pak::fileopen(clonearchive, "files\\filelist.txt", result);
+  DEBUGPRINTF("result: %d", result);
+  if (!file) return -1;
+  char *buffer = new char[1024 * 1024];
+  if (!buffer) return -1;
+  memset(buffer, 0, 1024 * 1024);
+  uint64_t readed, size;
+  size = pak::filesize(file);
+  ERRORPRINTF("last error: %d", pak::util::get_lasterror());
+  ERRORPRINTF("size: %d", size);
+  pak::fileread(file, buffer, size, &readed);
+  DEBUGPRINTF("buffer: %s, readed: %d", buffer, readed);
+  pak::fileeof(file);
+  pak::fileclose(file);
+  archive->destoryclone(clonearchive);
+  pak::archiveclose(archive);
+  DEBUGPRINTF("archiveopen %s", "test.pak");
+  archive = pak::archiveopen("test.pak", result, true);
+  DEBUGPRINTF("result: %d", result);
+  if (!archive) return -1;
+  DEBUGPRINTF("archive not NULL");
+  file = pak::fileopen(archive, "files\\filelist.txt", result);
+  if (!file) return -1;
+  pak::fileread(file, buffer, size, &readed);
+  DEBUGPRINTF("1 buffer: %s, readed: %d", buffer, readed);
+  return 0;
+}
+/**
+#include "pak/compress.h"
+
+int32_t main(int32_t argc, char ** argv) {
+  FILE *fp = fopen("test.pak", "rb+");
+  if (NULL == fp) return -1;
+  fseek(fp, 3681834 + 61, SEEK_SET);
+  char buffer[1024 * 1024] = {0};
+  char *temp = buffer;
+  int32_t count = fread(buffer, 1, 17826 - 61, fp);
+  if (count != 17826 - 61) return -1;
+  count = (17826 - 61 ) / 27;
+  char out[4096] = {0};
+  int32_t outsize = 4096;
+  for (int32_t i = 0; i < count; ++i) {
+    ERRORPRINTF("i: %d, count: %d", i, count);
+    pak::compress::de_smart(out, &outsize, temp, 27);
+    temp += 27;
+  }
+  return 0;
+}
+**/

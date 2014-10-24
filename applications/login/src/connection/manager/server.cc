@@ -89,7 +89,7 @@ bool Server::heartbeat(uint32_t time) {
       if (false == allserver_connected) { //第一次正常开启写入服务器日志
         SLOW_LOG(NET_MODULENAME, 
                  "[connection.manager] (Server::heartbeat)"
-                 " first all server is connented");
+                 " first all server is connected");
         allserver_connected = true;
       }
       return true;
@@ -220,7 +220,7 @@ bool Server::send_queue_tocenter() {
 void Server::notify_totalcount_togateway() {
   __ENTER_FUNCTION
     using namespace common::net::packet::login_togateway;
-    uint32_t now = TIME_MANAGER_POINTER->get_current_time();
+    uint32_t now = TIME_MANAGER_POINTER->get_tickcount();
     if (!onlinetimer_.isstart()) {
       onlinetimer_.start(1000 * 300, now);
     }

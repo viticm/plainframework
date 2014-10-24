@@ -11,7 +11,7 @@ namespace script {
 
 namespace lua {
 
-int32_t net_globalexcute(lua_State *L) {
+int32_t net_globalexecute(lua_State *L) {
   __ENTER_FUNCTION
     using namespace common::net::packet::servercenter;
     SCRIPT_LUA_CHECKARGC(L, 1);
@@ -30,7 +30,7 @@ int32_t net_globalexcute(lua_State *L) {
 }
 
 static const struct luaL_Reg nettable[] = { 
-  {"globalexcute", net_globalexcute},
+  {"globalexcute", net_globalexecute},
   {NULL, NULL}
 };
 

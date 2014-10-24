@@ -71,8 +71,6 @@ bool System::init() {
               SETTING_POINTER->server_info_.center_data.ip);
     setconfig(ENGINE_CONFIG_NET_LISTEN_PORT,
               SETTING_POINTER->server_info_.center_data.port);
-    setconfig(ENGINE_CONFIG_NET_CONNECTION_MAX,
-              SETTING_POINTER->server_info_.net_connectionmax);
     ENGINE_SET_PUBLICPATH(); //设置公用目录，有需要的应用才调用此宏
     if (!SCRIPT_LUASYSTEM_POINTER) 
       g_script_luasystem = new pf_script::lua::System();

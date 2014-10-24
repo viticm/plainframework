@@ -41,7 +41,7 @@ pf_net::connection::Base *Incoming::accept() {
     connection::Login *loginconnection = 
       dynamic_cast<connection::Login *>(connection); 
     if (loginconnection) {
-      uint32_t currenttime = TIME_MANAGER_POINTER->get_current_time();
+      uint32_t currenttime = TIME_MANAGER_POINTER->get_tickcount();
       loginconnection->set_connecttime(currenttime);
       loginconnection->setstatus(kConnectionStatusLoginConnect);
       uint32_t uint32host = 
@@ -59,7 +59,7 @@ pf_net::connection::Base *Incoming::accept() {
 bool Incoming::heartbeat(uint32_t time) {
   __ENTER_FUNCTION
     bool result = false;
-    if (0 == time) time = TIME_MANAGER_POINTER->get_current_time();
+    if (0 == time) time = TIME_MANAGER_POINTER->get_tickcount();
     uint16_t count = getcount();
     uint16_t i;
     for (i = 0; i < count; ++i) {

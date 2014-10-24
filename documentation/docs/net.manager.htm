@@ -107,103 +107,135 @@
 
 <section class="content">
 
-<h1>模块</h1>
+<h1>net module manager</h1>
 
 <ul>
 <li><a href="#total">总述</a></li>
-<li><a href="#base">基础</a></li>
-<li><a href="#db">数据库</a></li>
-<li><a href="#engine">引擎</a></li>
-<li><a href="#event">事件</a></li>
-<li><a href="#file">文件</a></li>
-<li><a href="#net">网络</a></li>
-<li><a href="#performance">性能</a></li>
-<li><a href="#script">脚本</a></li>
-<li><a href="#sys">系统</a></li>
-<li><a href="#util">工具</a></li>
+<li><a href="#define">定义</a></li>
+<li><a href="#init">::init</a></li>
+<li><a href="#heartbeat">::heartbeat</a></li>
+<li><a href="#tick">::tick</a></li>
+<li><a href="#loop">::loop</a></li>
+<li><a href="#isactive">::isactive</a></li>
+<li><a href="#setactive">::setactive</a></li>
+<li><a href="#set_performance_active">::set_performance_active</a></li>
+<li><a href="#broadcast">::broadcast</a></li>
 </ul>
 
 <p><a name="total"></a></p>
 
 <h2>总述</h2>
 
-<p><img src="../images/pf_modules.png" /></p>
-<p>上图为plain framework（简称简约框架）所有的模块，包括基础、数据库、引擎、事件、文件、网络、性能、脚本、系统、工具模块，各个模块的详细介绍请看以下的独立说明。</p>
+<p>网络管理器实际为网络连接管理器，提供了网络常用的管理接口（LINUX默认为epoll模式，WINDOWS默认为select模式）。</p>
 
-<p><a name="base"></a></p>
+<p><a name="define"></a></p>
 
-<h2>基础模块</h2>
-<p><img src="../images/pf_base_module.png" /></p>
+<h2>定义</h2>
 
-<p>基础模块提供了基本的操作，包括时间、容器、字符串、日志、输入/输出流。</p>
+<pre><code>
+namespace pf_net {                                                              
+                                                                                
+#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */                                 
+class PF_API Manager : public connection::manager::Epoll {                         
+#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */                                
+class PF_API Manager : public connection::manager::Iocp {                          
+#else /* }{ */                                                                     
+class PF_API Manager : public connection::manager::Select {                     
+#endif /* } */
+</code></pre>
 
-<p><a name="db"></a></p>
+<p><a name="init"></a></p>
 
-<h2>数据库模块</h2>
-<p><img src="../images/pf_db_module.png" /></p>
+<h2>::init</h2>
+<blockquote>
+<p>virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,               
+                     uint16_t listenport = 0,                                   
+                     const char *listenip = NULL); </p>
+<p>描述：初始化函数。</p>
+<p>参数：</p>
+<p>uint16_t connectionmax 最大支持的连接数量。</p>
+<p>uint16_t listenport 监听的端口。</p>
+<p>const char *listenip 监听的IP。</p>
+<p>返回：bool</p>
+</blockquote>
 
-<p>数据库模块提供了基本的数据操作接口，提供了查询以及结果集获取的方法。</p>
+<p><a name="heartbeat"></a></p>
 
-<p><a name="engine"></a></p>
+<h2>::heartbeat</h2>
+<blockquote>
+<p>virtual bool heartbeat(uint32_t time = 0); </p>
+<p>描述：心跳函数。</p>
+<p>参数：</p>
+<p>uint32_t time 心跳时间。</p>
+<p>返回：bool</p>
+</blockquote>
 
-<h2>引擎模块</h2>
-<p><img src="../images/pf_engine_module.png" /></p>
+<p><a name="tick"></a></p>
 
-<p>引擎模块作为整个框架的核心，具有举足轻重的地位，我们的应用也是在引擎的扩展上衍生出来的。
-这一点从框架给出的例子中可以看出：<a href="simpletutorials.htm">简明教程</a>。</p>
+<h2>::tick</h2>
+<blockquote>
+<p>virtual void tick(); </p>
+<p>描述：循环处理（外部可重写）函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
 
-<p><a name="event"></a></p>
+<p><a name="loop"></a></p>
 
-<h2>事件模块</h2>
-<p><img src="../images/pf_event_module.png" /></p>
+<h2>::loop</h2>
+<blockquote>
+<p>void loop(); </p>
+<p>描述：循环处理函数。</p>
+<p>参数：无</p>
+<p>返回：无</p>
+</blockquote>
 
-<p>事件模块主要提供了事件的管理器，事件的增加以及事件监听方法的增加/删除操作，在这里事件分为慢速和快速事件。</p>
+<p><a name="isactive"></a></p>
 
-<p><a name="file"></a></p>
+<h2>::isactive</h2>
+<blockquote>
+<p>bool isactive(); </p>
+<p>描述：网络是否激活函数。</p>
+<p>参数：无</p>
+<p>返回：bool</p>
+</blockquote>
 
-<h2>文件模块</h2>
-<p><img src="../images/pf_file_module.png" /></p>
+<p><a name="setactive"></a></p>
 
-<p>文件模块主要封装了系统的API操作，方便跨平台使用，封装了excel格式的文本文件（数据库）读取，并提供了操作ini配置文件的类。</p>
+<h2>::setactive</h2>
+<blockquote>
+<p>void setactive(bool active); </p>
+<p>描述：设置网络是否激活函数。</p>
+<p>参数：</p>
+<p>bool active 是否激活。</p>
+<p>返回：无</p>
+</blockquote>
 
-<p><a name="net"></a></p>
+<p><a name="set_performance_active"></a></p>
 
-<h2>网络模块</h2>
-<p><img src="../images/pf_net_module.png" /></p>
+<h2>::set_performance_active</h2>
+<blockquote>
+<p>void set_performance_active(bool active); </p>
+<p>描述：设置网络性能监控是否激活函数。</p>
+<p>参数：</p>
+<p>bool active 是否激活。</p>
+<p>返回：无</p>
+</blockquote>
 
-<p>网络模块提供了网络连接、网络包、网络管理器、连接管理器、套接字等常用的接口，包括服务器/客户端的接口。</p>
+<p><a name="broadcast"></a></p>
 
-<p><a name="performance"></a></p>
-
-<h2>性能模块</h2>
-<p><img src="../images/pf_performance_module.png" /></p>
-
-<p>性能模块现提供了输出系统负载和当前进程的ID、CPU占用、FPS（帧率）、虚拟内存占用、物理内存占用、在线人数、网络连接数、网络流量的输出接口。</p>
-
-<p><a name="script"></a></p>
-
-<h2>脚本模块</h2>
-<p><img src="../images/pf_script_module.png" /></p>
-
-<p>脚本模块提供了脚本缓存，并封装了lua常用的接口。</p>
-
-<p><a name="sys"></a></p>
-
-<h2>系统模块</h2>
-<p><img src="../images/pf_sys_module.png" /></p>
-
-<p>系统模块封装了与提供直接相关的公用接口，内存操作、进程操作、线程操作、断言。</p>
-
-<p><a name="util"></a></p>
-
-<h2>工具模块</h2>
-<p><img src="../images/pf_util_module.png" /></p>
-
-<p>工具模块为一些公用的或者引用外部的一些扩展方法或者类的集合。</p>
+<h2>::broadcast</h2>
+<blockquote>
+<p>void broadcast(packet::Base *packet, int32_t status = -1); </p>
+<p>描述：广播函数。</p>
+<p>参数：</p>
+<p>packet::Base *packet 数据包指针。</p>
+<p>int32_t status 指定的连接状态。（如无此参数则默认全部连接）</p>
+<p>返回：无</p>
+</blockquote>
 
 <nav>
-	<a href="style-guide.htm">代码风格</a> |
-	<a href="license.htm">许可 </a>
+	<a href="net.socket.htm">套接字</a>
 </nav>
 <footer>
     <p><a href="#">Dayle Rees</a>.</p>
