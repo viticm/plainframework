@@ -17,70 +17,70 @@ extern int32_t g_pak_compressiontype;
 
 namespace pak {
 
-archive_t *archivecreate(const char *filename, 
-                         uint64_t &result, 
-                         uint64_t hashtable_size, 
-                         uint64_t usetype); //if type is normal, the hashtable_size will enough max
+PF_API archive_t *archivecreate(const char *filename, 
+                                uint64_t &result, 
+                                uint64_t hashtable_size, 
+                                uint64_t usetype); //if type is normal, the hashtable_size will enough max
 
-archive_t *archiveopen(const char *filename, 
-                       uint64_t &result, 
-                       bool writeflag = true);
+PF_API archive_t *archiveopen(const char *filename, 
+                              uint64_t &result, 
+                              bool writeflag = true);
 
-bool archiveclose(archive_t *archive);
+PF_API bool archiveclose(archive_t *archive);
 
-bool fileadd(archive_t *archive, 
-             const char *realname, 
-             const char *aliasname,
-             uint64_t flags,
-             uint64_t quality,
-             uint64_t filetype);
+PF_API bool fileadd(archive_t *archive, 
+                    const char *realname, 
+                    const char *aliasname,
+                    uint64_t flags,
+                    uint64_t quality,
+                    uint64_t filetype);
 
-bool fileadd_frommemory(archive_t *archive,
-                        const char *aliasname,
-                        const char *content,
-                        uint64_t size,
-                        uint64_t flags,
-                        uint64_t quality,
-                        uint64_t filetype);
+PF_API bool fileadd_frommemory(archive_t *archive,
+                               const char *aliasname,
+                               const char *content,
+                               uint64_t size,
+                               uint64_t flags,
+                               uint64_t quality,
+                               uint64_t filetype);
 
-bool fileremove(archive_t *archive, const char *aliasname);
+PF_API bool fileremove(archive_t *archive, const char *aliasname);
 
-bool filerename(archive_t *archive, const char *oldname, const char* newname);
+PF_API bool filerename(archive_t *archive, const char *oldname, const char* newname);
 
-file_t *fileopen(archive_t *archive, const char *name, uint64_t &result);
+PF_API file_t *fileopen(archive_t *archive, const char *name, uint64_t &result);
 
-uint64_t fileclose(file_t *file);
+PF_API uint64_t fileclose(file_t *file);
 
-bool fileread(file_t *file, 
-              void *buffer, 
-              uint64_t toread, 
-              uint64_t *readed = NULL);
+PF_API bool fileread(file_t *file, 
+                     void *buffer, 
+                     uint64_t toread, 
+                     uint64_t *readed = NULL);
 
-uint64_t filesize(file_t *file);
+PF_API uint64_t filesize(file_t *file);
 
-uint64_t file_setpointer(file_t *file, int64_t offset, uint64_t method);
+PF_API uint64_t file_setpointer(file_t *file, int64_t offset, uint64_t method);
 
-uint64_t fileposition(file_t *file);
+PF_API uint64_t fileposition(file_t *file);
 
-uint64_t fileskip(file_t *file, int64_t count);
+PF_API uint64_t fileskip(file_t *file, int64_t count);
 
-uint64_t fileseek(file_t *file, int64_t count);
+PF_API uint64_t fileseek(file_t *file, int64_t count);
 
-uint64_t filetell(file_t *file);
+PF_API uint64_t filetell(file_t *file);
 
-bool fileeof(file_t *file);
+PF_API bool fileeof(file_t *file);
 
-search_t *search_firstfile(archive_t *archive, 
-                           const char *mask, 
-                           findfile_data_t *findfile_data);
+PF_API search_t *search_firstfile(archive_t *archive, 
+                                  const char *mask, 
+                                  findfile_data_t *findfile_data);
 
-bool search_nextfile(search_t *find, findfile_data_t *findfile_data);
+PF_API bool search_nextfile(search_t *find, findfile_data_t *findfile_data);
 
-bool search_close(search_t *find);
+PF_API bool search_close(search_t *find);
 
-uint64_t set_compressiontype(int32_t type);
+PF_API uint64_t set_compressiontype(int32_t type);
 
-uint64_t get_compressiontype();
+PF_API uint64_t get_compressiontype();
 
 }; //namespace pak
 

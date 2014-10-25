@@ -486,12 +486,12 @@ int32_t smart(char *out,
 }
 
 static decompress_table_t decompress_table[] = {
-  {PAK_COMPRESSION_WAVE_MONO, de_wave_mono},
-  {PAK_COMPRESSION_WAVE_STEREO, de_wave_stereo},
-  {PAK_COMPRESSION_HUFFMANN, de_huff},
-  {PAK_COMPRESSION_ZLIB, de_zlib},
+  {PAK_COMPRESSION_BZIP2, de_bzip2},
   {PAK_COMPRESSION_PKWARE, de_pklib},
-  {PAK_COMPRESSION_BZIP2, de_bzip2}
+  {PAK_COMPRESSION_ZLIB, de_zlib},
+  {PAK_COMPRESSION_HUFFMANN, de_huff},
+  {PAK_COMPRESSION_WAVE_STEREO, de_wave_stereo},
+  {PAK_COMPRESSION_WAVE_MONO, de_wave_mono},
 };
 
 int32_t de_smart(char *out, 

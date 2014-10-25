@@ -5,7 +5,7 @@
 
 int32_t main(int32_t argc, char * argv[]) {
   uint64_t result = 0;
-  pak::file::removeex("test.pak");
+  /**
   pak::archive_t *archive = pak::archivecreate("test.pak", 
                                                result, 
                                                0x10000, 
@@ -40,7 +40,6 @@ int32_t main(int32_t argc, char * argv[]) {
   memset(buffer, 0, 1024 * 1024);
   uint64_t readed, size;
   size = pak::filesize(file);
-  ERRORPRINTF("last error: %d", pak::util::get_lasterror());
   ERRORPRINTF("size: %d", size);
   pak::fileread(file, buffer, size, &readed);
   DEBUGPRINTF("buffer: %s, readed: %d", buffer, readed);
@@ -49,11 +48,16 @@ int32_t main(int32_t argc, char * argv[]) {
   archive->destoryclone(clonearchive);
   pak::archiveclose(archive);
   DEBUGPRINTF("1 archiveclose");
-  archive = pak::archiveopen("test.pak", result, true);
+  **/
+  uint64_t size, readed;
+  char *buffer = new char[1024 * 1024];
+  if (!buffer) return -1;
+  memset(buffer, 0, 1024 * 1024);
+  pak::archive_t *archive = pak::archiveopen("test.pak", result, true);
   DEBUGPRINTF("result: %d", result);
   if (!archive) return -1;
   DEBUGPRINTF("archive not NULL");
-  file = pak::fileopen(archive, "files\\filelist.txt", result);
+  pak::file_t *file = pak::fileopen(archive, "files\\filelist.txt", result);
   if (!file) return -1;
   pak::fileread(file, buffer, size, &readed);
   DEBUGPRINTF("1 buffer: %s, readed: %d", buffer, readed);
@@ -85,5 +89,8 @@ int32_t main(int32_t argc, char * argv[]) {
   pak::fileclose(file);
   pak::fileeof(file);
   pak::archiveclose(archive);
+#if __WINDOWS__
+  system("pause");
+#endif
   return 0;
 }

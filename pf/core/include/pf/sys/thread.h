@@ -97,6 +97,6 @@ class lock_guard {
 }; //namespace pf_sys
 
 //thread lock
-extern pf_sys::ThreadLock g_thread_lock;
+PF_API extern pf_sys::ThreadLock g_thread_lock;
 
 #endif //PF_THREAD_H_

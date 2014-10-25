@@ -23,7 +23,7 @@ void *createex(const char *_filename,
     void *result = HANDLE_INVALID_VALUE;
     char filename[FILENAME_MAX] = {0};
     pf_base::string::safecopy(filename, _filename, sizeof(filename));
-    pf_base::util::path_tounix(filename, strlen(filename));
+    pf_base::util::path_tounix(filename, static_cast<uint16_t>(strlen(filename)));
 #if __LINUX__
     //the fileopen mode: "a" add content to the end, "w" can rewrite data
     switch (creation) {
@@ -45,7 +45,13 @@ void *createex(const char *_filename,
     }
 #elif __WINDOWS__
     result = 
-      CreateFile(filename, mode, sharing, secondattribute, creation, flag, file);
+      CreateFile(filename, 
+                 static_cast<DWORD>(mode), 
+                 static_cast<DWORD>(sharing), 
+                 (LPSECURITY_ATTRIBUTES)secondattribute, 
+                 static_cast<DWORD>(creation), 
+                 static_cast<DWORD>(flag), 
+                 file);
 #endif
     //DEBUGPRINTF("filename: %s fp: 0x%08x", filename, result);
     if (HANDLE_INVALID_VALUE == result)
@@ -79,7 +85,7 @@ uint64_t getszie(void *fp, uint64_t *offsethigh) {
     fstat(_fp, &fileinfo);
     result = fileinfo.st_size;
 #elif __WINDOWS__
-    result = GetFileSize(fp, offsethigh);
+    result = GetFileSize(fp, reinterpret_cast<LPDWORD>(offsethigh));
 #endif
     return result;
   __LEAVE_FUNCTION
@@ -99,7 +105,10 @@ uint64_t setpointer(void *fp,
       offset |= (*(off64_t *)offsethigh) << 32;
     result = fseek(_fp, offset, method);
 #elif __WINDOWS__
-    result = SetFilePointer(fp, offsetlow, offsethigh, method);
+    result = SetFilePointer(fp, 
+                            static_cast<LONG>(offsetlow), 
+                            reinterpret_cast<PLONG>(offsethigh), 
+                            static_cast<DWORD>(method));
 #endif
     return result;
   __LEAVE_FUNCTION
@@ -113,7 +122,7 @@ bool setend(void *fp) {
     FILE *_fp = reinterpret_cast<FILE *>(fp);
     result = (0 == fseek(_fp, 0, SEEK_END));
 #elif __WINDOWS__
-    result = SetEndOfFile(fp);
+    result = 1 == SetEndOfFile(fp);
 #endif
   __LEAVE_FUNCTION
     return false;
@@ -137,7 +146,11 @@ bool readex(void *fp,
       result = true;
     }
 #elif __WINDOWS__
-    result = 1 == ReadFile(fp, buffer, length, length, _read, overlapped);
+    result = 1 == ReadFile(fp, 
+                           buffer, 
+                           static_cast<DWORD>(length), 
+                           (LPDWORD)_read, 
+                           (LPOVERLAPPED)overlapped);
 #endif
     if (false == result)
       util::set_lasterror(PAK_ERROR_FILE_READ);
@@ -164,7 +177,11 @@ bool writeex(void *fp,
       result = true;
     }
 #elif __WINDOWS__
-    result = 1 == WriteFile(fp, buffer, length, length, _write, overlapped);
+    result = 1 == WriteFile(fp, 
+                            buffer, 
+                            static_cast<DWORD>(length), 
+                            (LPDWORD)_write, 
+                            (LPOVERLAPPED)overlapped);
 #endif
    if (false == result)
       util::set_lasterror(PAK_ERROR_FILE_WRITE);
@@ -190,7 +207,7 @@ void get_temppath(uint64_t length, char *temp) {
 #if __LINUX__
   strncpy(temp, P_tmpdir, length);
 #elif __WINDOWS__
-  GetTempPath(length, temp);
+  GetTempPath(static_cast<DWORD>(length), temp);
 #endif
 }
 
@@ -207,7 +224,7 @@ void get_temp_filename(const char *temp_directorypath,
       strcpy(delimiter, tempname);
     }
 #elif __WINDOWS__
-    GetTempFileName(temp_directorypath, filename, something, delimiter);
+    GetTempFileName(temp_directorypath, filename, static_cast<UINT>(something), delimiter);
 #endif
   __LEAVE_FUNCTION
 }

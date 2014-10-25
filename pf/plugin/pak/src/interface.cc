@@ -97,7 +97,7 @@ archive_t *archivecreate(const char *filename,
       header->hashtable_size = hashtable_size;
       header->blocktable_size = hashtable_size;
       header->blocksize = 3;
-      header->type = usetype;
+      header->type = static_cast<uint8_t>(usetype);
       header->listfile_cache_max = 1024 * 1024;
 
       archive->paksize = header->archivesize;
@@ -440,7 +440,7 @@ archive_t *archiveopen(const char *filename,
     if (result != PAK_ERROR_NONE) {
       util::freearchive(archive);
       if (fp != HANDLE_INVALID_VALUE) file::closeex(fp);
-      util::set_lasterror(result);
+      util::set_lasterror(static_cast<int32_t>(result));
       archive = NULL;
     }
     return archive;
@@ -468,7 +468,7 @@ bool archiveclose(archive_t *archive) {
       util::savetables(archive);
     }
 #if __WINDOWS__
-    DeleteCriticalSection(&archive->section);
+    //DeleteCriticalSection(&archive->section);
 #endif
     util::freearchive(archive);
     return true;
@@ -522,12 +522,12 @@ bool fileadd(archive_t *archive,
                                       aliasname,
                                       flags,
                                       quality,
-                                      filetype,
+                                      static_cast<int32_t>(filetype),
                                       &replaced);
     }
     //Add the file into listfile also
     if (PAK_ERROR_NONE == error && false == replaced)
-      error = listfile_nodeadd(archive, aliasname);
+      error = static_cast<int32_t>(listfile_nodeadd(archive, aliasname));
     //Cleanup and exit
     if (fp != HANDLE_INVALID_VALUE) file::closeex(fp);
     if (error != PAK_ERROR_NONE) util::set_lasterror(error);
@@ -569,12 +569,12 @@ bool fileadd_frommemory(archive_t *archive,
                                       aliasname, 
                                       flags, 
                                       quality, 
-                                      filetype, 
+                                      static_cast<int32_t>(filetype), 
                                       &replaced);
     }
     //Add the file into listfile also
     if (PAK_ERROR_NONE == error && false == replaced)
-      error = listfile_nodeadd(archive, aliasname);
+      error = static_cast<int32_t>(listfile_nodeadd(archive, aliasname));
     //Cleanup and exit
     if (error != PAK_ERROR_NONE) util::set_lasterror(error);
     bool result = PAK_ERROR_NONE == error;
@@ -634,7 +634,7 @@ bool fileremove(archive_t *archive, const char *aliasname) {
       archive->flag |= PAK_FLAG_CHANGED;
     }
     //Resolve error and exit
-    if (error != PAK_ERROR_NONE) util::set_lasterror(error);
+    if (error != PAK_ERROR_NONE) util::set_lasterror(static_cast<int32_t>(error));
     bool result = PAK_ERROR_NONE == error;
     return result;
   __LEAVE_FUNCTION
@@ -685,7 +685,7 @@ bool filerename(archive_t *archive, const char *oldname, const char* newname) {
     }
     //Rename the file in the list file 
     if (PAK_ERROR_NONE == error)
-      error = listfile_noderename(archive, oldname, newname);
+      error = static_cast<int32_t>(listfile_noderename(archive, oldname, newname));
     if (error != PAK_ERROR_NONE) util::set_lasterror(error);
     bool result = PAK_ERROR_NONE == error;
     return result;
@@ -1144,7 +1144,7 @@ search_t *search_firstfile(archive_t *archive,
     //Cleanup 
     if (error != PAK_ERROR_NONE) {
       SAFE_FREE(search);
-      util::set_lasterror(error);
+      util::set_lasterror(static_cast<int32_t>(error));
     }
     return search;
   __LEAVE_FUNCTION

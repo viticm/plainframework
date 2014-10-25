@@ -38,7 +38,7 @@ static int32_t reloadcache(listfile_cache_t* cache) {
       cache->begin = cache->position = &cache->buffer[0];
       cache->end = cache->begin + cache->buffersize;
     }
-    return cache->buffersize;
+    return static_cast<int32_t>(cache->buffersize);
   __LEAVE_FUNCTION
     return -1;
 }
@@ -136,9 +136,9 @@ uint64_t listfile_normaladd(archive_t *archive, const char *filename) {
         used = *((uint64_t *)listfile_compress + 1);
       }
     }
-    int32_t outlength = file_savedlength;
+    int32_t outlength = static_cast<int32_t>(file_savedlength);
     if (PAK_ERROR_NONE == error) {
-      compress::de_zlib(listfile_cache, &outlength, listfile_compress + 8, used);
+      compress::de_zlib(listfile_cache, &outlength, listfile_compress + 8, static_cast<int32_t>(used));
     }
     if (PAK_ERROR_NONE == error) _filesize = cachesize = outlength;
     if (PAK_ERROR_NONE == error) {
@@ -401,12 +401,12 @@ uint64_t attributefile_normalload(archive_t *archive) {
         used = *((uint64_t *)attributefile_compress + 1);
       }
     }
-    int32_t outlength = file_savedlength;
+    int32_t outlength = static_cast<int32_t>(file_savedlength);
     if (PAK_ERROR_NONE == error) {
       compress::de_zlib(attributefile_cache, 
                         &outlength, 
                         attributefile_compress + file_headerlength, 
-                        used);
+                        static_cast<int32_t>(used));
       if (outlength != static_cast<int32_t>(file_savedlength)) 
         error = PAK_ERROR_FILE_CORRUPT;
     }

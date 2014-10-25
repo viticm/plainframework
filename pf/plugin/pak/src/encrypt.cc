@@ -189,7 +189,7 @@ uint64_t detect_fileseed1(uint64_t *block, uint64_t decrypted) {
 uint64_t detect_fileseed2(uint64_t *block, uint32_t dwords, ...) {
   __ENTER_FUNCTION
     va_list arglist;
-    uint64_t decrypted[0x10];
+    uint64_t decrypted[0x10] = {0};
     uint64_t saveseed1;
     uint64_t temp;
     uint64_t i, j;

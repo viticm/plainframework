@@ -129,8 +129,8 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="../include;../misc"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUA_BUILD_AS_DLL;_CRT_SECURE_NO_WARNINGS;LUA_COMPAT_MODULE"
+				AdditionalIncludeDirectories="../include;../misc;../../../../pf/core/include;../../../../pf/dependencies"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PF_BUILD_AS_DLL;PF_CORE;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="false"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -140,6 +140,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4819"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -152,8 +153,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ConfigurationName)\$(ProjectName).dll"
-				ImportLibrary="..\bin\$(ConfigurationName)\$(ProjectName).lib"
+				AdditionalDependencies="zlib.lib iconv.lib lua.lib pf_core.lib"
+				OutputFile="..\dll\$(ConfigurationName)\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\..\..\..\pf\dependencies\dll\Release;..\..\..\..\pf\dependencies\lib\ReleaseLib;..\..\..\..\pf\core\lib\Release"
+				GenerateDebugInformation="true"
+				ImportLibrary="..\dll\$(ConfigurationName)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -175,7 +179,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy ..\dll\$(ConfigurationName)\$(ProjectName).dll .\..\..\dll\$(ConfigurationName)\ /S /R /Y"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -390,38 +394,38 @@
 			Name="misc"
 			>
 			<File
-				RelativePath="..\misc\crc32.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\misc\crc32.h"
-				>
-			</File>
-			<File
-				RelativePath="..\misc\md5.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\misc\md5.h"
 				>
 			</File>
+			<File
+				RelativePath="..\misc\crc32.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\misc\md5.cpp"
+				>
+			</File>
 			<Filter
 				Name="bzip2"
 				>
-				<File
-					RelativePath="..\misc\bzip2\blocksort.c"
-					>
-				</File>
-				<File
-					RelativePath="..\misc\bzip2\bzlib.c"
-					>
-				</File>
 				<File
 					RelativePath="..\misc\bzip2\bzlib.h"
 					>
 				</File>
 				<File
 					RelativePath="..\misc\bzip2\bzlib_private.h"
+					>
+				</File>
+				<File
+					RelativePath="..\misc\bzip2\blocksort.c"
+					>
+				</File>
+				<File
+					RelativePath="..\misc\bzip2\bzlib.c"
 					>
 				</File>
 				<File
@@ -449,11 +453,11 @@
 				Name="huffman"
 				>
 				<File
-					RelativePath="..\misc\huffman\huff.cpp"
+					RelativePath="..\misc\huffman\huff.h"
 					>
 				</File>
 				<File
-					RelativePath="..\misc\huffman\huff.h"
+					RelativePath="..\misc\huffman\huff.cpp"
 					>
 				</File>
 			</Filter>

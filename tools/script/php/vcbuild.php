@@ -89,6 +89,7 @@ $g_scriptdirs = array(
   "center applications/center/scripts",
   "pf_simple applications/pf_simple/scripts",
   "pf_core pf/core/scripts",
+  "plugin_pak pf/plugin/pak/scripts",
 
 ); //not use EOF, if you want it work not just use output
 
