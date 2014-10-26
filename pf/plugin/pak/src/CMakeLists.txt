@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 LINK_DIRECTORIES(
   "./" #run dir
   "../../../dependencies/dll" #linux
+  "../../../core/dll" #linux
 )
 
 SET(EXECUTABLE_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH_BIN})
@@ -100,7 +101,7 @@ endif()
 
 
 SET(LIBRARY_OUTPUT_PATH ${TF_CURRENT_BINARY_PATH})
-ADD_LIBRARY(plugin_pak SHARED
+ADD_LIBRARY(plugin_pak32 SHARED
 	${INCLUDE_PAK_LIST}
 	${INCLUDE_LIST}
 	${SRC_LIST}
@@ -117,11 +118,14 @@ ADD_LIBRARY(plugin_pak SHARED
 if (WIN32)
 TARGET_LINK_LIBRARIES(plugin_pak ws2_32.lib odbc32.lib odbccp32.lib lua.lib iconv.lib zlib.lib)
 else()
-TARGET_LINK_LIBRARIES(plugin_pak pthread odbc iconv lua zlib)
   if(USE_32BITS)
+    message(STATUS "using 32bits")
+    TARGET_LINK_LIBRARIES(plugin_pak32 pf_core32 iconv32 lua32 zlib32)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686 -fPIC")
   else()
+    message(STATUS "using 64bits")
+    TARGET_LINK_LIBRARIES(plugin_pak32 pf_core32 iconv64 lua64 zlib64)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686 -fPIC")
   endif(USE_32BITS)

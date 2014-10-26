@@ -61,22 +61,17 @@ ADD_EXECUTABLE(pak_simple
 
 ##update_end
 
-if(USE_32BITS)
-  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-else()
-  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-endif(USE_32BITS)
-
 if (WIN32)
 TARGET_LINK_LIBRARIES(pak_simple ws2_32.lib odbc32.lib odbccp32.lib pf_core.lib  lua.lib iconv.lib plugin_pak.lib zlib.lib)
 else()
-TARGET_LINK_LIBRARIES(pak_simple pthread odbc pf_core lua iconv plugin_pak zlib)
   if(USE_32BITS)
+    message(STATUS "using 32bits")
+    TARGET_LINK_LIBRARIES(pak_simple pf_core32 lua32 iconv32 plugin_pak32 zlib32)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
   else()
+    message(STATUS "using 64bits")
+    TARGET_LINK_LIBRARIES(pak_simple pf_core64 lua64 iconv64 plugin_pak64 zlib64)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
     SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
   endif(USE_32BITS)

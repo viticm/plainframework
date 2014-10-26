@@ -25,7 +25,10 @@ void Thread::start() {
   __ENTER_FUNCTION
     if (status_ != kReady) return;
 #if __LINUX__
-    int32_t result = pthread_create(&id_, NULL, ps_thread_process, this);
+    int32_t result = pthread_create(reinterpret_cast<pthread_t *>(&id_), 
+                                    NULL, 
+                                    ps_thread_process, 
+                                    this);
     if (result != 0) {
       char msg[32] = {0};
       snprintf(msg, 
