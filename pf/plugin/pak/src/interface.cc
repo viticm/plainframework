@@ -873,8 +873,8 @@ bool fileread(file_t *file,
           return false;
         }
         //there have a bug of memory lost
-        char _buffer[512] = {0};
-        snprintf(_buffer, sizeof(_buffer) - 1, "%s", "string..."); //#20141024 remove this will get a hard bug of memory lost
+        //char _buffer[512] = {0};
+        //snprintf(_buffer, sizeof(_buffer) - 1, "%s", "string..."); //#20141024 remove this will get a hard bug of memory lost
         file->archive->blockcache.file = file;
         file->offset += bytes;
       }
