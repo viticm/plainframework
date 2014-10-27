@@ -5,6 +5,7 @@
 #@date 2014-10-27
 
 pak_tool="./pak_tool"
+NEW_PAK_HASHTABLE_SIZE=65536
 
 #help text, the script desc
 #@param void
@@ -37,15 +38,28 @@ function warning_message() {
   echo -e "\e[0;33;1mwarning: ${message}\e[0m"
 }
 
+#format the path
+#@param path
+#@return void
+function format_path() {
+  local path=${1}
+  local _path=`echo $path | sed -e 's;../;;g'`
+  if [[ $path != $_path ]] ; then
+    echo $path
+  else 
+    echo $path | sed -e 's;./;;g'
+  fi
+}
+
 #generate pak file
 #@param name
 #@param path
 #@return void
 function generate_pak() {
-  name=${1}
-  path=${2}
+  local name=${1}
+  local path=${2}
   if [ ! -x $name ] ; then
-    $pak_tool create $name 65536 patch
+    $pak_tool create $name $NEW_PAK_HASHTABLE_SIZE patch
   fi
   if [ ! -d $path ] ; then
     error_message "the path: ${path} not exists"
@@ -53,7 +67,7 @@ function generate_pak() {
   files=`find $path -type f`
   for file in $files 
   do
-    file=`echo $file | sed -e "s;\./;;"`
+    file=`format_path $file`
     echo $pak_tool add $name $file
     $pak_tool add $name $file
     if [[ $? != 0 ]] ; then
