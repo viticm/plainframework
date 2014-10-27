@@ -59,6 +59,7 @@ int32_t main(int32_t argc, char * argv[]) {
   DEBUGPRINTF("archive not NULL");
   pak::file_t *file = pak::fileopen(archive, "files\\filelist.txt", result);
   if (!file) return -1;
+  size = pak::filesize(file);
   pak::fileread(file, buffer, size, &readed);
   DEBUGPRINTF("1 buffer: %s, readed: %d", buffer, readed);
   pak::fileeof(file);
