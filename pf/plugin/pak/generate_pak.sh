@@ -38,19 +38,6 @@ function warning_message() {
   echo -e "\e[0;33;1mwarning: ${message}\e[0m"
 }
 
-#format the path
-#@param path
-#@return void
-function format_path() {
-  local path=${1}
-  local _path=`echo $path | sed -e 's;../;;g'`
-  if [[ $path != $_path ]] ; then
-    echo $path
-  else 
-    echo $path | sed -e 's;./;;g'
-  fi
-}
-
 #generate pak file
 #@param name
 #@param path
@@ -64,16 +51,7 @@ function generate_pak() {
   if [ ! -d $path ] ; then
     error_message "the path: ${path} not exists"
   fi
-  files=`find $path -type f`
-  for file in $files 
-  do
-    file=`format_path $file`
-    echo $pak_tool add $name $file
-    $pak_tool add $name $file
-    if [[ $? != 0 ]] ; then
-      error_message "$pak_tool add $name $file error"
-    fi
-  done
+  $pak_tool add $name $path
 }
 
 #the script main function, like c/c++

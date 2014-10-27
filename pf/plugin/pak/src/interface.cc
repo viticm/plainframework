@@ -1,5 +1,6 @@
 #include "pf/base/string.h"
 #include "pf/base/util.h"
+#include "pf/base/md5.h"
 #include "pf/sys/thread.h"
 #include "pak/encrypt.h"
 #include "pak/file.h"
