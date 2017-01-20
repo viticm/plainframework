@@ -1,3 +1,4 @@
+#include "pf/basic/logger.h"
 #include "pf/sys/memory/dynamic_allocator.h"
 
 namespace pf_sys {
@@ -5,46 +6,47 @@ namespace pf_sys {
 namespace memory {
 
 DynamicAllocator::DynamicAllocator() {
-  __ENTER_FUNCTION
-    pointer_ = NULL;
-    length_ = 0;
-  __LEAVE_FUNCTION
+  pointer_ = NULL;
+  size_ = 0;
 }
 
 DynamicAllocator::~DynamicAllocator() {
-  __ENTER_FUNCTION
-    free();
-  __LEAVE_FUNCTION
+  free();
 }
 
-void *DynamicAllocator::malloc(int64_t length) {
-  __ENTER_FUNCTION
-    if (length_ == length) return pointer_;
-    if (pointer_) free();
-#if __LINUX__
-    pointer_ = reinterpret_cast<void *>(new char[length]);
-#elif __WINDOWS__
-    pointer_ = reinterpret_cast<void *>(new char[static_cast<uint32_t>(length)]);
-#endif
-    if (pointer_ != NULL) length_ = length;
-    return pointer_;
-  __LEAVE_FUNCTION
-    return NULL;
+void *DynamicAllocator::malloc(size_t size) {
+  if (size_ == size) return pointer_;
+  void *pointer = reinterpret_cast<void *>(new char[size]);
+  if (is_null(pointer)) {
+    Assert(false);
+    return nullptr;
+  }
+  memset(pointer, 0, size);
+  if (!is_null(pointer_)) {
+    size_t copysize = size > size_ ? size_ : size;
+    memcpy(pointer, pointer_, copysize);
+    free();
+  }
+  pointer_ = pointer;
+  size_ = size;
+  return pointer_;
+}
+
+size_t DynamicAllocator::size() const {
+  return size_;
 }
 
 void DynamicAllocator::free() {
-  __ENTER_FUNCTION
-    char *pointer = reinterpret_cast<char*>(pointer_);
-    SAFE_DELETE_ARRAY(pointer);
-    length_ = 0;
-  __LEAVE_FUNCTION
+  char *pointer = reinterpret_cast<char*>(pointer_);
+  if (!is_null(pointer)) {
+    delete[] pointer;
+    pointer_ = nullptr;
+  }
+  size_ = 0;
 }
 
-void *DynamicAllocator::getpointer() {
-  __ENTER_FUNCTION
-    return pointer_;
-  __LEAVE_FUNCTION
-    return NULL;
+void *DynamicAllocator::get() {
+  return pointer_;
 }
 
 }; //namespace memory

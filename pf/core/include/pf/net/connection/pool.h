@@ -13,7 +13,7 @@
 
 #include "pf/net/connection/config.h"
 #include "pf/sys/thread.h"
-#include "pf/net/connection/base.h"
+#include "pf/net/connection/basic.h"
 
 namespace pf_net {
 
@@ -27,20 +27,24 @@ class PF_API Pool {
 
  public:
    bool init(uint32_t maxcount = NET_CONNECTION_POOL_SIZE_DEFAULT);
-   Base *get(int16_t id);
-   Base *create(bool clear = true); //new
-   bool init_data(uint16_t index, Base *connection);
+   Basic *get(int16_t id);
+   Basic *create(bool clear = true); //new
+   bool init_data(uint16_t index, Basic *connection);
    void remove(int16_t id); //delete
    void lock();
    void unlock();
-   uint32_t get_maxcount() const { return maxcount_; }   
+   uint32_t get_max_size() const { return max_size_; }
+   uint32_t size() const { return size_; }
+   bool create_default_connections();
 
  private:
-   Base **connections_; //注意，这是一个指向Base对象的数组指针
+   //Basic **connections_; //注意，这是一个指向Base对象的数组指针
+   std::vector< std::unique_ptr< Basic > > connections_;
+   bool ready_;
    uint32_t position_;
-   pf_sys::ThreadLock lock_;
-   uint32_t count_;
-   uint32_t maxcount_;
+   std::mutex mutex_;
+   uint32_t size_;
+   uint32_t max_size_;
 
 };
 

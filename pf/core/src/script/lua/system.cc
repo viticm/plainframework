@@ -1,216 +1,447 @@
-#include "pf/base/log.h"
+#include "pf/basic/logger.h"
+#include "pf/basic/util.h"
+#include "pf/basic/time_manager.h"
+#include "pf/sys/memory/dynamic_allocator.h"
 #include "pf/script/lua/system.h"
 
-pf_script::lua::System *g_script_luasystem = NULL;
+#ifdef PF_OPEN_LUA
 
-template <> 
-pf_script::lua::System 
-  *pf_base::Singleton<pf_script::lua::System>::singleton_ = NULL;
+using namespace pf_script::lua;
 
-namespace pf_script {
-
-namespace lua {
-
-System *System::getsingleton_pointer() {
-  return singleton_;
+bool System::init() {
+  if (0 == stack_size_) {
+#if LUA_VERSION_NUM >= 502
+    stack_size_ = 1024 * 100;
+#else
+    stack_size_ = 1024 * 4;
+#endif
+  }
+  lua_state_ = is_null(lua_state_) ? luaL_newstate() : lua_state_;
+  if (is_null(lua_state_)) {
+    on_scripterror(kErrorCodeCreate);
+    return false;
+  }
+  if (lua_checkstack(lua_state_, stack_size_) != 1) {
+    on_scripterror(kErrorCodeResize);
+    return false;
+  }
+  open_libs();
+  setglobal("ROOTPATH", filebridge_.get_rootpath());
+  setglobal("WORKPATH", filebridge_.get_rootpath());
+  return true;
 }
 
-System &System::getsingleton() {
-  Assert(singleton_);
-  return *singleton_;
+bool System::bootstrap(const std::string &filename) {
+  return load(filename);
 }
 
-System::System() {
-  //do nothing
+void System::release() {
+  unregister_refs();
+  if (is_null(lua_state_)) return;
+  lua_close(lua_state_);
+  lua_state_ = nullptr;
 }
 
-System::~System() {
-  //do nothing
-}
-
-void System::registerfunctions() {
-  __ENTER_FUNCTION
-    if (function_registers_) function_registers_();
-  __LEAVE_FUNCTION
-}
-
-void System::set_function_registers(function_registers function) {
-  function_registers_ = function;
-}
-
-int32_t System::call_noclosure(lua_State *L) {
-  __ENTER_FUNCTION
-    int32_t argc = lua_gettop(L);
-    AssertEx(argc >= 2, "params lest than 2");
-    if (!is_paramnumber(L, 1, "call_noclosure")) {
-      lua_pushnumber(L, -1);
-      return 1;
+bool System::load(const std::string &filename) {
+  using namespace pf_sys;
+  if (is_null(lua_state_)) return false;
+#if LUA_VERSION_NUM >= 900 //This way has some error(loadfile no error code).
+  char fullpath[FILENAME_MAX]{0};
+  filebridge_.get_fullpath(fullpath, filename.c_str(), sizeof(fullpath) - 1);
+  SLOW_DEBUGLOG("test", "full: %s", fullpath);
+  luaL_dofile(lua_state_, fullpath);
+#else
+  uint64_t size;
+  if (!filebridge_.open(filename.c_str())) {
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                  "[script.lua] (System::load) open file %s failed",
+                  filename.c_str());
+    return false;
+  }
+  size = filebridge_.size();
+  memory::DynamicAllocator memory;
+  if (!memory.malloc(static_cast<size_t>(size + 4))) {
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                  "[script.lua] (System::load) memory for file %s failed",
+                  filename.c_str());
+    filebridge_.close();
+    return false;
+  }
+  if (filebridge_.read(memory.get(), size) != size) {
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                  "[script.lua] (System::load) read file %s failed",
+                  filename.c_str());
+    filebridge_.close();
+    return false;
+  }
+  char *memory_pointer = reinterpret_cast<char *>(memory.get());
+  memory_pointer[size + 1] = '\0';
+  filebridge_.close();
+  try {
+    const char *temp_pointer = 
+      reinterpret_cast<const char *>(memory.get());
+    if (!loadbuffer(temp_pointer, size)) {
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                    "[script.lua] (System::load) load file %s"
+                    " buffer cache failed",
+                    filename.c_str());
+      return false;
     }
-    if (!is_paramstring(L, 2, "call_noclosure")) {
-      lua_pushnumber(L, -1);
-      return 1;
+  } catch (...) {
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                  "[script.lua] (System::load) load file %s"
+                  " buffer cache have a exception",
+                  filename.c_str());
+    return false;
+  }
+  if (!executecode()) {
+    SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                  "[script.lua] (System::load) execute code"
+                  " failed from file %s",
+                  filename.c_str());
+    return false;
+  }
+#endif //LUA_VERSION_NUM >= 500
+  return true;
+}
+
+void System::setglobal(const std::string &name, const var_t &var) {
+  using namespace pf_basic;
+  if (is_null(lua_state_)) return;
+  lua_getglobal(lua_state_, name.c_str());
+  switch (var.type) {
+    case type::kVariableTypeBool:
+      lua_pushboolean(lua_state_, var._bool());
+      break;
+    case type::kVariableTypeString:
+      lua_pushstring(lua_state_, var.string());
+      break;
+    case type::kVariableTypeInt32:
+    case type::kVariableTypeUint32:
+    case type::kVariableTypeInt16:
+    case type::kVariableTypeUint16:
+    case type::kVariableTypeInt8:
+    case type::kVariableTypeUint8:
+    case type::kVariableTypeInt64:
+    case type::kVariableTypeUint64:
+    case type::kVariableTypeFloat:
+    case type::kVariableTypeDouble:
+      lua_pushnumber(lua_state_, var._double());
+      break;
+    default:
+      lua_pushnil(lua_state_);
+      break;
+  }
+  lua_setglobal(lua_state_, name.c_str());
+}
+
+void System::getglobal(const std::string &name, var_t &var) {
+  if (is_null(lua_state_)) return;
+  lua_getglobal(lua_state_, name.c_str());
+  if (1 == lua_isnumber(lua_state_, -1)) {
+    var = lua_tonumber(lua_state_, -1);
+  } else if (1 == lua_isstring(lua_state_, -1)) {
+    var = lua_tostring(lua_state_, -1);
+  }
+  lua_pop(lua_state_, 1);
+}
+
+bool System::call(const std::string &str) {
+  using namespace pf_basic;
+  int32_t result = 1;
+  if (!lua_state_) {
+    on_scripterror(kErrorCodeStateIsNil);
+    return false;
+  }
+  std::vector<std::string> array;
+  string::explode(str.c_str(), array, "\t", true, true);
+  if (array.size() < 1) return false;
+  std::vector<std::string> _array;
+  string::explode(array[0].c_str(), _array, ".", true, true);
+  if (2 == _array.size()) {
+    const char *table = _array[0].c_str();
+    const char *field = _array[1].c_str();
+    if (!get_ref(table, field)) register_ref(table, field);
+    if (!get_ref(table, field)) {
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                    "[script.lua] (System::call) can't get ref,"
+                    " string: %s, table: %s, field: %s",
+                    str.c_str(),
+                    table,
+                    field);
+      return false;
     }
-    if (!SCRIPT_LUASYSTEM_POINTER) {
-      lua_pushnumber(L, -1);
-      return 1;
+  } else {
+    lua_getglobal(lua_state_, array[0].c_str());
+    if (lua_isnil(lua_state_, -1)) {
+      SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                    "[script.lua] (System::call) can't get global value,"
+                    " function: %s, string: %s",
+                    str.c_str(),
+                    array[0].c_str());
+      return false;
     }
-    int32_t scriptid = static_cast<int32_t>(lua_tonumber(L, 1));
-    const char *functionname = lua_tostring(L, 2);
-    try {
-      SCRIPT_LUASYSTEM_POINTER->enter_runstep(scriptid, functionname);
-      bool loaded = false;
-      cache::Base *cachedata = reinterpret_cast<cache::Base *>(
-          SCRIPT_LUASYSTEM_POINTER->getscript_byid(scriptid));
-      if (NULL == cachedata) {
-        cachedata = getscript_filedata(scriptid);
-        if (cachedata) {
-          SCRIPT_LUASYSTEM_POINTER->addscript(scriptid, cachedata);
-          loaded = true;
-        } else {
-          lua_pushnumber(L, -1);
-          SCRIPT_LUASYSTEM_POINTER->leave_runstep(scriptid, functionname);
-          return 1;
-        }
+  }
+  for (int32_t i = 1; i < static_cast<int32_t>(array.size()); ++i) {
+    char value[512] = {0};
+    string::safecopy(value, array[i].c_str(), sizeof(value));
+    if ('\"' == value[0] && 
+        '\"' == value[strlen(value) - 1]) {
+      value[strlen(value) - 1] = '\0';
+      lua_pushstring(lua_state_, value + 1);
+    } else {
+      lua_pushnumber(lua_state_, 
+                     static_cast<lua_Number>(atof(value)));
+    }
+  }
+  int32_t call_result = 
+    lua_pcall(lua_state_, (int32_t)array.size() - 1, result, 0);
+  if (call_result != 0) {
+    on_scripterror(kErrorCodeExecute, result);
+    return false;
+  }
+  return true;
+}
+
+bool System::call(const std::string &name, 
+                  const var_array_t &params, 
+                  var_array_t &results) {
+  using namespace pf_basic;
+  if (!lua_state_) {
+    on_scripterror(kErrorCodeStateIsNil);
+    return false;
+  }
+  lua_getglobal(lua_state_, name.c_str());
+  uint32_t paramcount = static_cast<uint32_t>(params.size());
+  uint32_t resultcount = static_cast<uint32_t>(results.size());
+  for (uint32_t i = 0; i < paramcount; ++i) {
+    int8_t type = params[i].type;
+    switch (type) {
+      case type::kVariableTypeInvalid:
+        lua_pushnil(lua_state_);
+        break;
+      case type::kVariableTypeString:
+        lua_pushstring(lua_state_, params[i].string());
+        break;
+      case type::kVariableTypeBool:
+        lua_pushboolean(lua_state_, params[i]._bool());
+        break;
+      default:
+        lua_pushnumber(lua_state_, params[i]._double());
+        break;
+    }
+  }
+  int32_t call_result = lua_pcall(lua_state_, paramcount, resultcount, 0);
+  if (call_result != 0) {
+    on_scripterror(kErrorCodeExecute, resultcount);
+    return false;
+  } else {
+    for (uint32_t i = 0; i < resultcount; ++i) {
+      int8_t type = results[i].type;
+      switch (type) {
+        case type::kVariableTypeString:
+          results[i] = lua_tostring(lua_state_, i - 1);
+          break;
+        case type::kVariableTypeBool:
+          results[i] = lua_toboolean(lua_state_, i - 1);
+          break;
+        default:
+          results[i] = lua_tonumber(lua_state_, i - 1);
+          break;
       }
-      const char *filename = cachedata->get_filename();
-      if (lua_reloadscript_always_) loaded = true;
-      if (loaded && filename) {
-        bool result = SCRIPT_LUASYSTEM_POINTER->loadscript(filename);
-        if (!result) {
-          FAST_ERRORLOG(kErrorLogFile, 
-                        "[script.lua] (Interface::call_noclosure)"
-                        " load script: %s failed", 
-                        filename);
-          lua_pushnumber(L, -1);
-          SCRIPT_LUASYSTEM_POINTER->leave_runstep(scriptid, functionname);
-          return 1;
-        }
-        if (false == lua_reloadscript_always_) {
-          FAST_LOG(kDebugLogFile,
-                   "[script.lua] (Interface::call_noclosure)"
-                   " script(%d), function(%s)",
-                   scriptid,
-                   functionname);
-        }
-      }
-      if (cachedata && filename) {
-        char functionname_x[128] = {0};
-        snprintf(functionname_x,
-                 sizeof(functionname_x) - 1,
-                 "x%.6d_%s",
-                 scriptid,
-                 functionname);
-        char *functionname_x_pointer = functionname_x;
-        mark_scriptname(L, filename);
-        if (!SCRIPT_LUASYSTEM_POINTER->verify_function(
-              L, (const char **)&functionname_x_pointer)) {
-          FAST_ERRORLOG(kErrorLogFile,
-                        "[script.lua] (Interface::call_noclosure)"
-                        " SCRIPT_LUASYSTEM_POINTER->verify_function(%s) error",
-                        functionname_x);
-          lua_pushnumber(L, -1);
-          SCRIPT_LUASYSTEM_POINTER->leave_runstep(scriptid, functionname);
-          return 1;
-        }
-        try {
-          lua_getglobal(L, functionname_x_pointer);
-          int32_t paramindex_begin = 3;
-          for (int32_t index = paramindex_begin; index < argc; ++index) {
-            switch (lua_type(L, index)) {
-              case LUA_TUSERDATA:
-                Assert(false);
-                break;
-              case LUA_TNIL:
-                lua_pushnil(L);
-                break;
-              case LUA_TNUMBER: {
-                int32_t number = static_cast<int32_t>(lua_tonumber(L, index));
-                lua_pushnumber(L, number);
-                break;
-              }
-              case LUA_TSTRING: {
-                const char *str = lua_tostring(L, index);
-                lua_pushstring(L, str);
-                break;
-              }
-              case LUA_TTABLE:
-                Assert(false);
-                break;
-              case LUA_TFUNCTION: 
-                lua_pushcfunction(L, lua_tocfunction(L, index));
-                break;
-              default:
-                lua_pushnil(L);
-                break;
-            } //switch
-          } //for
-          int32_t _result = -1;
-          int32_t call_result = 
-            lua_pcall(L, argc - paramindex_begin, _result, NULL);
-          int32_t argnow = lua_gettop(L);
-          _result = argnow - argc;
-          for (int32_t index = 1; index <= _result; ++index) {
-            switch (lua_type(L, index)) {
-              case LUA_TUSERDATA:
-                Assert(false);
-                break;
-              case LUA_TNIL:
-                lua_pushnil(L);
-                break;
-              case LUA_TNUMBER: {
-                int32_t number = static_cast<int32_t>(lua_tonumber(L, index));
-                lua_pushnumber(L, number);
-                break;
-              }
-              case LUA_TSTRING: {
-                const char *str = lua_tostring(L, index);
-                lua_pushstring(L, str);
-                break;
-              }
-              case LUA_TTABLE:
-                Assert(false);
-                break;
-              case LUA_TFUNCTION: 
-                lua_pushcfunction(L, lua_tocfunction(L, index));
-                break;
-              default:
-                lua_pushnil(L);
-                break;
-            } //switch
-          } //for
-          if (call_result != 0) {
-            FAST_ERRORLOG(kErrorLogFile,
-                          "[script.lua] (Interface::call_noclosure) error"
-                          " call_result: %d, file: %s, functionname: %s",
-                          call_result,
-                          filename,
-                          functionname_x_pointer);
-            SCRIPT_LUASYSTEM_POINTER->leave_runstep(scriptid, functionname);
-            return _result;
-          }
-        } catch(...) {
-          FAST_ERRORLOG(kErrorLogFile,
-                        "[script.lua] (Interface::call_noclosure) error"
-                        "lua_call get a exception, file: %s, functionname: %s",
-                        filename,
-                        functionname);
-        }
-      }
-    } catch (...) {
-      FAST_ERRORLOG(kErrorLogFile,
-                    "[script.lua] (Interface::call_noclosure) error"
-                    "lua_call get a exception, scriptid: %d, functionname: %s",
-                    scriptid,
-                    functionname);
-
     }
-    lua_pushnumber(L, -1);
-    return 1;
-  __LEAVE_FUNCTION
-    lua_pushnumber(L, -1);
-    return 1;
+  }
+  return true;
 }
 
-} //namespace lua
+bool System::loadbuffer(const char *buffer, size_t size) {
+ if (luaL_loadbuffer(lua_state_, 
+                      buffer, 
+                      size, 
+                      NULL) != 0) {
+    on_scripterror(kErrorCodeLoadBuffer);
+    return false;
+  }
+  return true;
+}
 
-} //namespace pf_script
+bool System::register_table(
+    const char *name, const struct luaL_Reg regtable[]) {
+  if (is_null(lua_state_)) return false;
+  lua_getglobal(lua_state_, name);
+  if (lua_isnil(lua_state_, -1)) lua_newtable(lua_state_); //没有才创建
+  for (; regtable->name != NULL; ++regtable) {
+    lua_pushstring(lua_state_, regtable->name);
+    lua_pushcfunction(lua_state_, regtable->func);
+    lua_settable(lua_state_, -3);
+  }
+  lua_setglobal(lua_state_, name);
+  return true;
+}
+
+bool System::register_ref(const std::string &table, const std::string &field) {
+  lua_getglobal(lua_state_, table.c_str());
+  if (lua_isnil(lua_state_, -1 )) return false;
+  lua_getfield(lua_state_, -1, field.c_str());
+  if (lua_isnil(lua_state_, -1 )) return false;
+  pf_basic::type::variable_t key = table;
+  key += ".";
+  key += field;
+  if (refs_.find(key.string()) != refs_.end()) return false;
+  int32_t index = luaL_ref(lua_state_, LUA_REGISTRYINDEX);
+  refs_[key.string()] = index;
+  lua_pop(lua_state_, 1);
+  return true;
+}
+
+bool System::get_ref(const std::string &table, const std::string &field) {
+  pf_basic::type::variable_t key = table;
+  key += ".";
+  key += field;
+  if (refs_.find(key.string()) == refs_.end()) return false;
+  int32_t index = refs_[key.string()];
+  if (LUA_NOREF == index) return false;
+  lua_rawgeti(lua_state_, LUA_REGISTRYINDEX, index);
+  if (lua_isnil(lua_state_, -1 )) return false;
+  return true;
+}
+
+bool System::unregister_ref(const std::string &table, const std::string &field) {
+  pf_basic::type::variable_t key = table;
+  key += ".";
+  key += field;
+  if (refs_.find(key.string()) == refs_.end()) return false;
+  int32_t index = refs_[key.string()];
+  if (LUA_NOREF == index) return false;
+  luaL_unref(lua_state_, LUA_REGISTRYINDEX, index);
+  refs_.erase(refs_.find(key.string()));
+  return true;
+}
+
+void System::unregister_refs() {
+  std::map<std::string, int32_t>::iterator _iterator;
+  for (_iterator = refs_.begin(); _iterator != refs_.end(); ++_iterator) {
+    luaL_unref(lua_state_, LUA_REGISTRYINDEX, _iterator->second);
+  }
+  refs_.clear();
+}
+
+void System::gccheck(int32_t freetime) {
+  if (!lua_state_) return;
+  int32_t delta = 0;
+  int32_t turn = 0;
+  uint32_t memorycount1;
+  uint32_t memorycount2;
+  int32_t havetime = freetime;
+  int32_t reclaim = 0;
+  uint32_t start_tickcount = TIME_MANAGER_POINTER->get_tickcount();
+  for (turn = 0; turn < 3; ++turn) {
+    memorycount1 = lua_gc(lua_state_, LUA_GCCOUNT, 0);
+    reclaim = havetime * 1;
+    if (1 == lua_gc(lua_state_, LUA_GCSTEP, reclaim)) {
+      lua_gc(lua_state_, LUA_GCRESTART, 0);
+    }
+    memorycount2 = lua_gc(lua_state_, LUA_GCCOUNT, 0);
+    delta += memorycount1 - memorycount2;
+    uint32_t current_tickcount = TIME_MANAGER_POINTER->get_tickcount();
+    havetime -= (current_tickcount - start_tickcount);
+    if (havetime < 40 || delta <= reclaim) break;
+  }
+  if (delta > 1024 * 1024 * 500) {
+    char temp[128] = {0};
+    uint64_t size = static_cast<uint64_t>(delta);
+    pf_basic::util::get_sizestr(size, temp, sizeof(temp) - 1);
+    FAST_DEBUGLOG(SCRIPT_MODULENAME,
+                  "[script.lua] System::checkgc success,"
+                  " freetime: %d, memory: %s",
+                  freetime,
+                  temp);
+  }
+}
+
+void System::setfield(
+    const std::string &table, const std::string &field, const var_t &var) {
+  using namespace pf_basic;
+  lua_getglobal(lua_state_, table.c_str());
+  if (lua_isnil(lua_state_, -1)) lua_newtable(lua_state_);
+  if (lua_istable(lua_state_, -1) != 1) return;
+  lua_pushstring(lua_state_, field.c_str());
+  switch (var.type) {
+    case type::kVariableTypeBool:
+      lua_pushboolean(lua_state_, var._bool());
+      break;
+    case type::kVariableTypeString:
+      lua_pushstring(lua_state_, var.string());
+      break;
+    case type::kVariableTypeInt32:
+    case type::kVariableTypeUint32:
+    case type::kVariableTypeInt16:
+    case type::kVariableTypeUint16:
+    case type::kVariableTypeInt8:
+    case type::kVariableTypeUint8:
+    case type::kVariableTypeInt64:
+    case type::kVariableTypeUint64:
+    case type::kVariableTypeFloat:
+    case type::kVariableTypeDouble:
+      lua_pushnumber(lua_state_, var._double());
+      break;
+    default:
+      lua_pushnil(lua_state_);
+      break;
+  }
+  lua_settable(lua_state_, -3);
+  lua_setglobal(lua_state_, table.c_str());
+}
+
+void System::getfield(
+    const std::string &table, const std::string &field, var_t &var) {
+  if (is_null(lua_state_)) return;
+  lua_getglobal(lua_state_, table.c_str());
+  if (lua_istable(lua_state_, -1) != 1) return;
+  lua_getfield(lua_state_, -1, field.c_str());
+  if (1 == lua_isnumber(lua_state_, -1)) {
+    var = lua_tonumber(lua_state_, -1);
+  } else if (1 == lua_isstring(lua_state_, -1)) {
+    var = lua_tostring(lua_state_, -1);
+  }
+  lua_pop(lua_state_, 1);
+  lua_pop(lua_state_, 1);
+}
+
+bool System::executecode() {
+  if (is_null(lua_state_)) {
+    on_scripterror(kErrorCodeExecute);
+    return false;
+  }
+  auto state = lua_pcall(lua_state_, 0, LUA_MULTRET, 0);
+  if (state != 0) {
+    on_scripterror(kErrorCodeExecute, state);
+    return false;
+  }
+  return true;
+}
+
+void System::open_libs() {
+  if (is_null(lua_state_)) return;
+  luaopen_base(lua_state_);
+  luaL_openlibs(lua_state_);
+}
+
+void System::on_scripterror(int32_t error) {
+  auto err_str = lua_tostring(lua_state_, lua_gettop(lua_state_));
+  SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                "[script.lua] (System::on_scripterror) code: %d, message: %s",
+                error,
+                err_str);
+}
+
+void System::on_scripterror(int32_t error1, int32_t error2) {
+  auto err_str = lua_tostring(lua_state_, lua_gettop(lua_state_));
+  SLOW_ERRORLOG(SCRIPT_MODULENAME,
+                "[script.lua] (System::on_scripterror) code: %d[%d], message: %s",
+                error1,
+                error2, 
+                err_str);
+}
+
+#endif //PF_OPEN_LUA

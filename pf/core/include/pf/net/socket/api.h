@@ -13,12 +13,12 @@
 
 #include "pf/net/socket/config.h"
 
-#if __LINUX__
+#if OS_UNIX
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#elif __WINDOWS__
+#elif OS_WIN
 #include <winsock.h>
 #endif
 #include <errno.h>

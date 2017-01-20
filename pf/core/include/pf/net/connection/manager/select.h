@@ -11,10 +11,11 @@
 #ifndef PF_NET_CONNECTION_MANAGER_SELECT_H_
 #define PF_NET_CONNECTION_MANAGER_SELECT_H_
 
-#if !(__LINUX__ && defined(_PF_NET_EPOLL)) && \
-  !(__WINDOWS__ && defined(_PF_NET_IOCP))
+#if !(OS_UNIX && defined(PF_OPEN_EPOLL)) && \
+  !(OS_WIN && defined(PF_OPEN_IOCP))
 #include "pf/net/connection/manager/config.h"
-#include "pf/net/connection/manager/base.h"
+#include "pf/net/connection/manager/interface.h"
+#include "pf/net/protocol/interface.h"
 
 namespace pf_net {
 
@@ -22,31 +23,28 @@ namespace connection {
 
 namespace manager {
 
-class PF_API Select : public Base {
+class PF_API Select : public Interface {
 
  public:
    Select();
-   ~Select();
+   virtual ~Select();
 
  public:
-   virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX,
-                     uint16_t listenport = 0,
-                     const char *listenip = NULL);
+   virtual bool init(uint16_t connectionmax = NET_CONNECTION_MAX);
    virtual bool select(); //网络侦测
-   virtual bool processinput(); //数据接收接口
-   virtual bool processoutput(); //数据发送接口
-   virtual bool processexception(); //异常连接处理
-   virtual bool processcommand(); //消息执行
-   virtual bool set_poll_maxcount(uint16_t maxcount);
+   virtual bool process_input(); //数据接收接口
+   virtual bool process_output(); //数据发送接口
+   virtual bool process_exception(); //异常连接处理
+   virtual bool process_command(); //消息执行
    virtual bool heartbeat(uint32_t time = 0);
 
  public:
    //增加连接socket
-   virtual bool addsocket(int32_t socketid, int16_t connectionid);
+   virtual bool socket_add(int32_t socketid, int16_t connectionid);
    //将拥有fd句柄的玩家(服务器)数据从当前系统中清除
-   virtual bool removesocket(int32_t socketid);
+   virtual bool socket_remove(int32_t socketid);
 
- protected:
+ private:
   //网络相关数据
    enum {
      kSelectFull = 0, //当前系统中拥有的完整句柄数据

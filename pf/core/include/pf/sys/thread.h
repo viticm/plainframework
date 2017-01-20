@@ -4,99 +4,73 @@
  * @link https://github.com/viticm/plainframework for the canonical source repository
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
- * @user viticm<viticm.it@gmail.com>
- * @date 2014/06/18 17:39
- * @uses useful thread classes
- */
-#ifndef PF_THREAD_H_
-#define PF_THREAD_H_
+ * @user viticm<viticm.ti@gmail.com>
+ * @date 2016/05/07 20:07
+ * @uses The thread module.
+ *     Pool refer: https://github.com/progschj/ThreadPool.
+*/
+#ifndef PF_SYS_THREAD_H_
+#define PF_SYS_THREAD_H_
 
-#include "pf/base/config.h"
+#include "pf/sys/config.h"
+#include "pf/basic/global.h"
 
 namespace pf_sys {
 
-class PF_API Thread {
+class PF_API ThreadPool {
  public:
-   typedef enum { //线程的四种状态 (准备、运行中、退出中、已退出)
-     kReady,
-     kRunning,
-     kExiting,
-     kExit,
-   } status_t;
-
- public:
-   Thread();
-   virtual ~Thread();
-   void start();
-   virtual void stop();
-   void exit(void *retval = NULL);
-   virtual void run();
-#if __WINDOWS__
-   DWORD get_id();
-#elif __LINUX__
-   uint64_t get_id();
-#endif
-   status_t get_status();
-   void set_status(status_t status);
-
+   ThreadPool(size_t);
+   template<class F, class... Args>
+   auto enqueue(F&& f, Args&&... args) 
+   -> std::future<typename std::result_of<F(Args...)>::type>;
+   ~ThreadPool();
  private:
-#if __LINUX__
-   uint64_t id_;
-#elif __WINDOWS__
-   DWORD id_;
-#endif
-   status_t status_;
-#if __WINDOWS__
-   HANDLE thread_handle_;
-#endif
+   // need to keep track of threads so we can join them
+   std::vector< std::thread > workers_;
+   // the task queue
+   std::queue< std::function<void()> > tasks_;
+   // synchronization
+   std::mutex queue_mutex_;
+   std::condition_variable condition_;
+   bool stop_;
+};
+ 
+
+// 用于需要回收的线程数量统计，只要线程任务没有完成，主线程就会等待
+class PF_API ThreadCollect {
+
+ public:
+   ThreadCollect();
+   ~ThreadCollect();
+
+ public:
+   static int32_t count();
 
 };
 
-#if __LINUX__
-PF_API void *ps_thread_process(void *derived_thread);
-#elif __WINDOWS__
-PF_API DWORD WINAPI ps_thread_process(void *derived_thread);
-#endif
-
-class PF_API ThreadLock {
- public:
-#if __LINUX__
-   pthread_mutex_t mutex_;
-#elif __WINDOWS__
-   CRITICAL_SECTION lock_;
-#endif
-   ThreadLock();
-   ~ThreadLock();
-   void lock();
-   void unlock();
-};
-
-PF_API uint64_t get_current_thread_id();
-
-//global variable
-extern uint16_t g_thread_quit_count;
-
-template <typename Mutex>
-class lock_guard {
+template <class T>
+class unique_lock {
 
  public:
-   explicit lock_guard(Mutex &m) : m_(m) {
+   explicit unique_lock(T &m) : m_(m) {
      m_.lock();
-   }
-   ~lock_guard() {
+   };
+   ~unique_lock() {
      m_.unlock();
-   }
+   };
 
  private:
-   Mutex &m_;
-   explicit lock_guard(lock_guard &);
-   lock_guard &operator = (lock_guard &);
+   T &m_;
+
+ private:
+   explicit unique_lock(unique_lock &);
+   unique_lock &operator = (unique_lock &);
 
 };
+
 
 }; //namespace pf_sys
 
-//thread lock
-PF_API extern pf_sys::ThreadLock g_thread_lock;
+#include "pf/sys/thread.tcc"
 
-#endif //PF_THREAD_H_
+#endif //PF_SYS_THREAD_H_

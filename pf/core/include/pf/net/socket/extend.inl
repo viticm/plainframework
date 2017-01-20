@@ -12,14 +12,14 @@
 #define PF_NET_SOCKET_EXTEND_INL_
 
 #include "pf/file/api.h"
-#include "pf/base/util.h"
-#include "pf/base/log.h"
-#if __LINUX__
+#include "pf/basic/util.h"
+#include "pf/basic/logger.h"
+#if OS_UNIX
 #include <sys/epoll.h>
 #include <poll.h>
 #endif
 
-#if __LINUX__ /* { */
+#if OS_UNIX /* { */
 typedef struct {
   enum {
     kEventIn = EPOLLIN,
@@ -34,7 +34,7 @@ typedef struct {
 } polldata_t;
 #endif /* } */
 
-#if __LINUX__ /* { */
+#if OS_UNIX /* { */
 
 inline int32_t poll_create(polldata_t& polldata, int32_t maxcount) {
   int32_t fd = epoll_create(maxcount);
@@ -55,7 +55,7 @@ inline int32_t poll_add(polldata_t& polldata,
   struct epoll_event _epoll_event;
   memset(&_epoll_event, 0, sizeof(_epoll_event));
   _epoll_event.events = mask;
-  _epoll_event.data.u64 = pf_base::util::touint64(
+  _epoll_event.data.u64 = pf_basic::util::touint64(
       static_cast<uint32_t>(fd), static_cast<uint32_t>(connectionid));
   int32_t result = epoll_ctl(polldata.fd, EPOLL_CTL_ADD, fd, &_epoll_event);
   return result;
@@ -92,7 +92,7 @@ inline int32_t poll_wait(polldata_t& polldata, int32_t timeout) {
 
 inline int32_t poll_destory(polldata_t& polldata) {
   pf_file::api::closeex(polldata.fd);
-  SAFE_DELETE_ARRAY(polldata.events);
+  safe_delete_array(polldata.events);
   return 0;
 }
 

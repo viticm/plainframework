@@ -1,0 +1,37 @@
+cn:
+项目管理器文件说明
+
+项目的标准配置，如果没有下面的配置则视作不是PF项目：
+  include/ -- 头文件目录
+  src/     -- 源文件目录
+
+PF项目文件统一为*.pprojct的文件，该文件为JSON配置，各项参数如下
+
+Version: 1.2
+  当前项目的版本号，请注意和VC的新版本规则一致，保留两位小数
+
+Type: "library"
+  字符串类型，可取值为[library|executable].表示项目的类型，是库还是执行文件。
+	
+LinkDirectories:
+  依赖的库文件路径，相对于项目文件下的src目录的有效路径。
+	
+IncludeDirectories:
+  依赖的头文件路径，相对于项目文件下的src目录的有效路径。
+
+ExtraSources:
+  扩展的源码文件或者目录，注意目录优先级高于文件，如果一个文件同时存在于该文件夹下，则只需要填写文件夹即可。
+  这些文件和路径，相对于项目文件所在的有效路径。
+
+SourceFilter:
+  源码过滤列表，只要匹配到有关的目录或文件将不会加入到项目中。
+
+OutputPath:
+  生成的文件目录，WINDOWS和linux稍微有些区别，不过影响不大。
+
+Definitions:
+  宏定义列表
+	
+Dependencies:
+  依赖库文件名，注意不包括文件扩展名，如.lib或.so等等。
+

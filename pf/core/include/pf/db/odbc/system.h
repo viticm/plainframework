@@ -11,8 +11,10 @@
 #ifndef PF_DB_ODBC_SYSTEM_H_
 #define PF_DB_ODBC_SYSTEM_H_
 
+#ifdef PF_OPEN_ODBC
+
 #include "pf/db/odbc/config.h"
-#include "pf/db/odbc/interface.h"
+#include "pf/basic/tinytimer.h"
 
 namespace pf_db {
 
@@ -28,11 +30,11 @@ class PF_API System {
      kDBOptionTypeQuery,
      kDBOptionTypeInitEmpty, //db at init state
    };
-#if __WINDOWS__
+#if OS_WIN
    enum odbc_error_t {
      kODBCErrorSamePrimaryKey = 2601, //repeat primary key
    };
-#elif __LINUX__
+#elif OS_UNIX
    enum odbc_error_t {
      kODBCErrorSamePrimaryKey = 1026, //repeat primary key
    };
@@ -40,7 +42,7 @@ class PF_API System {
 
  public:
    System();
-   ~System();
+   virtual ~System();
 
  public:
    bool init(const char *connectionname,
@@ -55,12 +57,15 @@ class PF_API System {
    virtual bool add_new();
    virtual bool _delete();
    virtual bool save();
+   int32_t get_columncount() const;
    db_query_t *get_internal_query();
+   bool getresult() const;
    virtual bool query();
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    bool check_db_connect(); //check the connect if work, 
                             //and repeat 5 times when fails
    Interface *getinterface();
+   int8_t gettype(int32_t column_index);
 
 
  protected:
@@ -68,6 +73,7 @@ class PF_API System {
    bool result_;
    dboption_type_t op_type_;
    Interface *odbc_interface_;
+   pf_basic::TinyTimer timer_;
 
  protected:
    int32_t get_internal_affect_count();
@@ -79,5 +85,7 @@ class PF_API System {
 }; //namespace odbc
 
 }; //namespace pf_db
+
+#endif //PF_OPEN_ODBC
 
 #endif //PF_DB_ODBC_SYSTEM_H_

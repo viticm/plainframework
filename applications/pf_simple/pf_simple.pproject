@@ -1,0 +1,46 @@
+/**
+  Plain framework project file.
+  Version:              The project current version.
+  Type:                 Project type [library|executable].
+  LinkDirectories:      Link directories as the Dependencies directories.
+  IncludeDirectories:   Include directories.
+  ExtraSources:         Extra source file or directories.
+  SourceFilters:        Source directory or filename filter(not active).
+  OutputPath:           The project output path.
+  Definitions:          Macros definitions.
+  Dependencies:         Dependencies library.
+**/
+{
+  "Version": 1.00,
+  "Type": "executable",
+  "LinkDirectories": [
+    "./",
+    "./../../../pf/core/dll",
+    "./../../../pf/dependencies/dll"
+  ],
+  "IncludeDirectories": [
+    "../../../pf/core/include",
+    "../include",
+    "../../../pf/dependencies/lua/5.3.0/include",
+    "/usr/local/unixODBC/include"
+  ],
+  "ExtraSources": [
+
+  ],
+  "DisableSpecificWarnings": "4819;",
+  "OutputPath": "../../bin",
+  "Definitions": [
+    "PF_BUILD_AS_DLL",
+    "PF_OPEN_ICONV",
+    "PF_OPEN_EPOLL",
+    "PF_OPEN_ODBC",
+    "PF_OPEN_LUA"
+  ],
+  "SourceFilters": [
+  ],
+  "Dependencies": [
+    "pf_core",
+    "lua",
+    "iconv"
+  ]
+}

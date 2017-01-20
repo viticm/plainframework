@@ -1,79 +1,22 @@
 /**
- * PAP Engine ( https://github.com/viticm/pap )
+ * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework )
  * $Id config.h
- * @link https://github.com/viticm/pap for the canonical source repository
- * @copyright Copyright (c) 2013-2013 viticm( viticm@126.com )
+ * @link https://github.com/viticm/plainframework for the canonical source repository
+ * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
- * @user viticm<viticm@126.com>
- * @date 2013-12-31 17:34:43
- * @uses server and client net model base config file
- */
+ * @user viticm<viticm.ti@gmail.com>
+ * @date 2016/06/26 12:28
+ * @uses The net 
+*/
 #ifndef PF_NET_CONFIG_H_
 #define PF_NET_CONFIG_H_
 
-#include "pf/base/config.h"
+#include "pf/basic/config.h"
 
-#define NET_OVER_SERVER_MAX 256
-#define NET_ONESTEP_ACCEPT_DEFAULT 50 //Ã¿Ö¡½ÓÊÜĞÂÁ¬½ÓµÄÄ¬ÈÏÖµ
-#define NET_MANAGER_FRAME 100 //ÍøÂçÖ¡ÂÊ£¬Ö»ÔÚepollÏÂÉúĞ§
-
-extern bool g_net_stream_usepacket; //true Ê¹ÓÃ°ü¶ÔÏó´¦Àí false²»Ê¹ÓÃ
-
-namespace pf_net {
-
-namespace packet {
-class Base;
-class Factory;
-class FactoryManager;
-}; //namespace packet
-
-namespace connection {
-class Base;
-class Server;
-class Pool;
-
-namespace manager {
-class Base;
-#if __LINUX__ && defined(_PF_NET_EPOLL) /* { */
-class Epoll;
-#elif __WINDOWS__ && defined(_PF_NET_IOCP) /* }{ */
-class Iocp;
-#else /* }{ */
-class Select;
-#endif /* } */
-
-}; //namespace manager
-
-}; //namespace connection
-
-namespace socket {
-
-class Base;
-class Server;
-class Stream;
-class InputStream;
-class OutputStream;
-
-typedef struct {
-  char *buffer;
-  uint32_t bufferlength;
-  uint32_t bufferlength_max;
-  uint32_t headlength;
-  uint32_t taillength;
-} streamdata_t;
-
-typedef struct {
-  unsigned char *in;
-  uint32_t insize;
-  unsigned char *out;
-  uint32_t outsize;
-  unsigned char const *key;
-  uint32_t keysize;
-  uint32_t param[2];
-} encodeparam_t;
-
-}; //namespace socket
-
-}; //namespace pf_net
+#define NET_ONESTEP_ACCEPT_DEFAULT 50 //æ¯å¸§æ¥å—æ–°è¿æ¥çš„é»˜è®¤å€¼
+#define NET_MANAGER_FRAME 100         //ç½‘ç»œå¸§ç‡
+#define NET_MANAGER_CACHE_SIZE 1024   //ç½‘ç»œç®¡ç†å™¨é»˜è®¤ç¼“å­˜å¤§å°
+#define NET_PACKET_FACTORYMANAGER_ALLOCMAX (1024 * 100)
+#define NET_MODULENAME "net" 
 
 #endif //PF_NET_CONFIG_H_

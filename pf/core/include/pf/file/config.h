@@ -5,15 +5,17 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.it@gmail.com>
- * @date 2014/06/19 14:15
+ * @date 2016/05/29 18:02
  * @uses common file base config
  */
 #ifndef PF_FILE_CONFIG_H_
 #define PF_FILE_CONFIG_H_
 
-#include "pf/base/config.h"
+#include "pf/basic/config.h"
 
 //定义此宏则文件数据库读取的字符串将从GBK转为UTF-8
 #define FILE_DATABASE_CONVERT_GBK_TO_UTF8
+//文件数据标识，只有该类型的二进制文件才会认为正确
+#define FILE_DATABASE_INDENTIFY 0XDDBBCC00 
 
 #endif //PF_FILE_CONFIG_H_

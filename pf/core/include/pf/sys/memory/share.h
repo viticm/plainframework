@@ -5,17 +5,15 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/06/30 14:59
+ * @date 2016/05/21 23:05
  * @uses system share memory model
+ *       cn: 这个类需要重新设计，以简洁易懂为原则加上C++11的一些优美写法
  */
 #ifndef PF_SYS_MEMORY_SHARE_H_
 #define PF_SYS_MEMORY_SHARE_H_
 
 #include "pf/sys/memory/config.h"
-#include "pf/base/log.h"
-
-#define SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX 5000
-#define SYS_MEMORY_SHARE_OBJECT_MAX 20
+#include "pf/basic/logger.h"
 
 namespace pf_sys {
 
@@ -23,37 +21,22 @@ namespace memory {
 
 namespace share {
 
-typedef struct dataheader_struct {
-  uint64_t key;
-  uint32_t size;
-  uint32_t version;
-  dataheader_struct();
-  ~dataheader_struct();
-} dataheader_t;
-
-typedef enum {
-  kSmptShareMemory,
-} pooltype_t;
-
-typedef enum {
-  kUseFree = 0,
-  kUseReadyFree = 1,
-  kUseFreed = 2,
-  kUseHoldData = 3,
-} use_t; //共享内存的使用状态
-
-//static define --
+//Type defines.
+using mutex_t = std::atomic<int8_t>;
+using header_t = struct header_struct;
+using dataheader_t = struct dataheader_struct;
+typedef bool (__stdcall *function_node_save)(void *, void *);
 
 namespace api {
 
-#if __LINUX__
-PF_API int32_t create(uint32_t key, uint32_t size);
-PF_API int32_t open(uint32_t key, uint32_t size);
+#if OS_UNIX
+PF_API int32_t create(uint32_t key, size_t size);
+PF_API int32_t open(uint32_t key, size_t size);
 PF_API void close(int32_t handle);
 PF_API char *map(int32_t handle);
-#elif __WINDOWS__
-PF_API HANDLE create(uint32_t key, uint32_t size);
-PF_API HANDLE open(uint32_t key, uint32_t size);
+#elif OS_WIN
+PF_API HANDLE create(uint32_t key, size_t size);
+PF_API HANDLE open(uint32_t key, size_t size);
 PF_API void close(HANDLE handle);
 PF_API char *map(HANDLE handle);
 #endif
@@ -64,261 +47,311 @@ PF_API void unmap(char *pointer);
 class PF_API Base {
 
  public:
-   int32_t cmd_model_; //命令行模式，几种模式在config.h定义
    Base();
    ~Base();
 
  public:
-   bool create(uint32_t key, uint32_t size);
-   void destory();
-   bool attach(uint32_t key, uint32_t size);
-   char *get_data_pointer();
-   char *get_data(uint32_t size, uint32_t index);
-   uint32_t get_size() const;
+   bool create(uint32_t key, size_t size);
+   void release();
+   bool attach(uint32_t key, size_t size);
+   char *get() { return data_; };
+   char *get(uint32_t index, size_t size);
+   header_t *header() { return reinterpret_cast<header_t *>(header_); };
    bool dump(const char *filename);
-   bool merge_from_file(const char *filename);
-   void set_head_version(uint32_t version);
-   uint32_t get_head_version() const;
+   bool merge(const char *filename);
+   size_t size() const { return size_; };
+
  private:
-   uint32_t size_;
-   char *data_pointer_;
+   size_t size_;
+   char *data_;
    char *header_;
-#if __LINUX__
+#if OS_UNIX
    int32_t handle_;
-#elif __WINDOWS__
+#elif OS_WIN
    HANDLE handle_;
 #endif
-  
-};
-
-template <typename T> //template class must be in one file
-class UnitManager {
- 
- public:
-   T* data_[SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX];
-   int32_t count_;
-
- public:
-   UnitManager() {
-     __ENTER_FUNCTION
-       count_ = 0;
-       memset(data_, 0, sizeof(T *) * SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX);
-     __LEAVE_FUNCTION
-   };
-   ~UnitManager() {
-     //do nothing
-   };
-   void init() {
-     __ENTER_FUNCTION
-       count_ = 0;
-     __LEAVE_FUNCTION
-   };
-   bool heartbeat(uint32_t time = 0);
-   bool add_data(T *data) {
-     __ENTER_FUNCTION
-       Assert(count_ < SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX);
-       if (count_ >= SYS_MEMORY_SHARE_MANAGER_UNITDATA_MAX) return false;
-       data_[count_] = data;
-       ++count_;
-       data_->set_id(count_);
-       return true;
-     __LEAVE_FUNCTION
-       return false;
-   };
-   bool delete_data(T *data) {
-     __ENTER_FUNCTION
-       uint32_t id = data->get_id();
-       Assert(id < static_cast<uint32_t>(count_));
-       if (id >= static_cast<uint32_t>(count_)) return false;
-       data_[id] = data_[count_ - 1];
-       data->set_id(ID_INVALID);
-       --count_;
-     __LEAVE_FUNCTION
-       return false;
-   };
-   T *get_data(uint16_t id) {
-     __ENTER_FUNCTION
-       Assert(id < static_cast<uint32_t>(count_));
-       if (id >= static_cast<uint32_t>(count_)) return false;
-       return data_[id];
-     __LEAVE_FUNCTION
-       return false;
-   };
 
 };
 
-template<typename T> //模板类只能定义在一个文件内
+struct PF_API header_struct {
+  uint32_t key;
+  size_t size;
+  uint32_t version;
+  uint32_t pool_position;
+  mutex_t mutex;
+  header_struct();
+  ~header_struct();
+  void clear();
+  void lock(int8_t flag);
+  void unlock(int8_t flag);
+};
+
+PF_API void lock(mutex_t &mutex, int8_t type);
+PF_API void unlock(mutex_t &mutex, int8_t type);
+
+template <typename T>
+class unique_lock {
+
+ public:
+   explicit unique_lock(T &m, int8_t flag) 
+     : m_(m), flag_(flag) {
+     m_.lock(flag_);
+   };
+   ~unique_lock() {
+     m_.unlock(flag_);
+   };
+
+ private:
+   T &m_;
+   int8_t flag_;
+
+ private:
+   explicit unique_lock(unique_lock &);
+   unique_lock &operator = (unique_lock &);
+
+};
+
+struct PF_API dataheader_struct {
+  uint32_t key;
+  int8_t usestatus;
+  mutex_t mutex;
+  uint32_t version;
+  int32_t pool_id;
+  dataheader_struct();
+  ~dataheader_struct();
+  void clear();
+  dataheader_t &operator = (const dataheader_t &object);
+  dataheader_t *operator = (const dataheader_t *object);
+};
+
+template <typename T>
+struct data_template {
+
+ public:
+   data_template() : extend_size(0) {};
+   ~data_template() {}
+
+ public:
+   dataheader_t header;
+   size_t extend_size;
+   T data;
+
+ public:
+   void lock(int8_t flag) { share::lock(header.mutex, flag); };
+   void unlock(int8_t flag) { share::unlock(header.mutex, flag); };
+   void set_pool_id(int32_t id) { header.pool_id = id; };
+   int32_t get_pool_id() const { return header.pool_id; };
+   void set_usestatus(int8_t status, int8_t flag);
+   int8_t get_usestatus(int8_t flag);
+   int8_t single_usestatus() const { return header.usestatus; };
+   size_t get_extend_size() const { return extend_size; };
+   void set_extend_size(size_t size) { extend_size = size; };
+   uint32_t key() const { return header.key; };
+   void set_key(uint32_t key) { header.key = key; };
+   void init() { clear(); };
+   void clear() {
+     header.clear();
+     data.clear();
+   };
+   void header_clear() { header.clear(); };
+   data_template &operator = (const data_template &object);
+   data_template *operator = (const data_template *object);
+};
+
+template <typename T>
 class UnitPool {
 
  public:
-   UnitPool() {
-     __ENTER_FUNCTION
-       obj_ = NULL;
-       ref_obj_pointer_ = NULL;
-       max_size_ = 0;
-       position_ = -1;
-     __LEAVE_FUNCTION
-   };
-   ~UnitPool() {
-     __ENTER_FUNCTION
-       SAFE_DELETE(ref_obj_pointer_);
-       SAFE_DELETE_ARRAY(obj_);
-     __LEAVE_FUNCTION
-   };
-   bool init(uint32_t max_count, uint32_t key, uint8_t pooltype) {
-     __ENTER_FUNCTION
-       ref_obj_pointer_ = new Base();
-       Assert(ref_obj_pointer_);
-       if (!ref_obj_pointer_) return false;
-       ref_obj_pointer_->cmd_model_ = g_cmd_model;
-       bool result = true;
-       result = ref_obj_pointer_->attach(
-           key, 
-           sizeof(T) * max_count + sizeof(dataheader_t));
-       if (kSmptShareMemory == pooltype && !result) {
-         result = ref_obj_pointer_->create(
-             key, 
-             sizeof(T) * max_count + sizeof(dataheader_t));
-       } else if(!result) {
-         return false;
-       }
+   UnitPool();
+   ~UnitPool();
 
-       if (!result && kCmdModelClearAll == ref_obj_pointer_->cmd_model_) {
-         return true;
-       } else if(!result) {
-         SLOW_ERRORLOG(
-             "sharememory", 
-             "[sys][sharememory] (UnitPool::init) failed");
-         Assert(result);
-         return result;
-       }
-       max_size_ = max_count;
-       position_ = 0;
-       obj_ = new T*[max_size_];
-       uint32_t i;
-       for (i = 0; i < max_size_; ++i) {
-         obj_[i] = reinterpret_cast<T *>
-                   (ref_obj_pointer_->get_data(sizeof(T), i));
-         if (NULL == obj_[i]) {
-           Assert(false);
-           return false;
-         }
-       }
-       key_ = key;
-       return true;
-     __LEAVE_FUNCTION
-       return false;
-   };
-   bool release() {
-     __ENTER_FUNCTION
-       Assert(ref_obj_pointer_);
-       ref_obj_pointer_->destory();
-       return true;
-     __LEAVE_FUNCTION
-       return false;
-   };
-   T *new_obj() {
-     __ENTER_FUNCTION
-       Assert(position_ < max_size_);
-       if (position_ >= max_size_) return NULL;
-       T *obj = obj_[position_];
-       obj->set_pool_id(static_cast<uint32_t>(position_)); //this function 
-                                                           //must define in T*
-       ++position_;
-       return obj;
-     __LEAVE_FUNCTION
-       return NULL;
-   };
-   void delete_obj(T *obj) {
-     __ENTER_FUNCTION
-       Assert(obj != NULL);
-       Assert(position_ > 0);
-       if (NULL == obj || position_ <= 0) return;
-       uint32_t delete_index = obj->get_pool_id(); //this function 
-                                                   //must define in T*
-       Assert(delete_index < position_);
-       if (delete_index >= position_) return;
-       --position_;
-       T *_delete_obj = obj_[delete_index];
-       obj_[delete_index] = obj_[position_];
-       obj_[position_] = _delete_obj;
-       obj_[delete_index]->set_pool_id(delete_index);
-       obj_[position_]->set_pool_id(ID_INVALID);
-     __LEAVE_FUNCTION
-   };
-   T *get_obj(int32_t index) {
-     __ENTER_FUNCTION
-       Assert(index >= 0 && static_cast<uint32_t>(index) < max_size_);
-       return obj_[index];
-     __LEAVE_FUNCTION
-       return NULL;
-   };
-   uint32_t get_max_size() {
-     __ENTER_FUNCTION
-       return max_size_;
-     __LEAVE_FUNCTION
-       return 0;
-   };
-   int32_t get_position() {
-     __ENTER_FUNCTION
-       return position_;
-     __LEAVE_FUNCTION
-       return -1;
-   };
-   uint32_t get_key() {
-     __ENTER_FUNCTION
-       return key_;
-     __LEAVE_FUNCTION
-       return 0;
-   };
-   bool dump(const char *filename) {
-     __ENTER_FUNCTION
-       Assert(ref_obj_pointer_);
-       if (!ref_obj_pointer_) return false;
-       return ref_obj_pointer_->dump(filename);
-     __LEAVE_FUNCTION
-       return false;
-   };
-   bool merge_from_file(const char *filename) {
-     __ENTER_FUNCTION
-       Assert(ref_obj_pointer_);
-       if (!ref_obj_pointer_) return false;
-       ref_obj_pointer_->merge_from_file(filename);
-     __LEAVE_FUNCTION
-       return false;
-   };
-   uint32_t get_head_version() {
-     __ENTER_FUNCTION
-       Assert(ref_obj_pointer_);
-       if (!ref_obj_pointer_) return false;
-       ref_obj_pointer_->get_head_version();
-     __LEAVE_FUNCTION
-       return 0;
-   };
-   void set_head_version(uint32_t version) {
-     __ENTER_FUNCTION
-       Assert(ref_obj_pointer_);
-       if (!ref_obj_pointer_) return;
-       ref_obj_pointer_->set_head_version(version);
-     __LEAVE_FUNCTION
-   };
+ public:
+   bool init(uint32_t key, size_t size, uint8_t type = kSmptDefault);
+   void release();
+   T *new_obj();
+   T *get_obj(int32_t index);
+   void delete_obj(T *obj);
+   uint32_t size() const { return size_; };
+   uint32_t key() const { return key_; };
+   bool dump(const char *filename);
+   bool merge(const char *filename);
+   bool full() const { return size_ - 1 == get_position(); };
+   uint32_t get_version() const;
+   void set_version(uint32_t version);
+   void set_data_extend_size(size_t size) { data_extend_size_ = size; };
+   size_t get_data_extend_size() const { return data_extend_size_; };
+   void set_header_extend_size(size_t size) { header_extend_size_ = size; };
+   size_t get_header_extend_size() const { return header_extend_size_; } ;
+   int32_t get_position() const;
+   void set_position(int32_t position);
+   header_t *get_header();
 
- private:
-   T **obj_;
-   uint32_t max_size_;
-   int32_t position_;
-   Base *ref_obj_pointer_;
+ protected:
+   T ** objs_;
+   std::shared_ptr<Base> ref_obj_pointer_;
+   size_t size_;
    uint32_t key_;
+   size_t data_extend_size_;    //Data extend size, unit real size: sizeof(T) + extend_size
+   size_t header_extend_size_;  //Header extend size, node is sizeof(header_t) + 
+                                //header_extend_size_ + 
+                                //(sizeof(T) + data_extend_size_) * size
+   bool ready_;
 
 };
 
-PF_API void lock(atword_t *flag, int8_t type);
-PF_API void unlock(atword_t *flag, int8_t type);
+//[header|group0,group1]
+
+
+//One item size:
+//same_header: sizeof(group_item_header_t) + header_size + size * data_size;
+//not same_header: sizeof(group_item_header_t) + (header_size + data_size) * size;
+struct group_item_struct {
+  
+  int16_t index;
+  
+  size_t size; //Data count.
+
+  uint32_t position;
+
+  size_t header_size;
+
+  size_t data_size;
+
+  bool same_header;
+
+  std::string name; //The group item name.
+
+  group_item_struct() : 
+    index{0},
+    size{0},
+    position{0},
+    header_size{0},
+    data_size{0},
+    same_header{true},
+    name{""} {}
+};
+
+struct group_header_struct {
+
+  uint8_t flag;
+
+  group_header_struct() : 
+    flag{0} {}
+};
+
+struct group_item_header_struct {
+
+  //The item memory position.
+  int16_t pool_position;
+
+  //Lock.
+  mutex_t mutex;
+
+  //Save version.
+  uint32_t version;
+
+  //Status.
+  int8_t status;
+
+  void lock(int8_t type) {
+    share::lock(mutex, type);
+  };
+  void unlock(int8_t type) {
+    share::unlock(mutex, type);
+  };
+
+  group_item_header_struct() :
+    pool_position{0} {}
+};
+
+using group_item_t = struct group_item_struct;
+using group_header_t = struct group_header_struct;
+using group_item_header_t = struct group_item_header_struct;
+
+class GroupPool {
+
+ public:
+   explicit GroupPool(uint32_t key, const std::vector<group_item_t> &group);
+   ~GroupPool() {}
+
+ public:
+   bool init(bool create);
+   char *get_data(int16_t index);
+   group_header_t *header();
+   uint32_t key() const { return key_; };
+   size_t size() const { return size_; };
+   group_item_header_t *item_header(int16_t index);
+   char *item_data_header(int16_t index, int16_t data_index);
+   char *item_data(int16_t index, int16_t data_index);
+
+ public:
+   //Free all.
+   void free();
+
+ public:  //分配与归还内存块，根据每组数据实现
+   char *alloc(int16_t index, int16_t &data_index);
+   int16_t free(int16_t index, int16_t data_index); //return swap index.
+
+ private:
+   std::map< int16_t, group_item_t > group_conf_;
+   std::unique_ptr< Base > ref_obj_pointer_;
+   uint32_t key_;
+   size_t size_; //Full memory size.
+   bool ready_;
+};
+
+template <typename T>
+class Node {
+
+ public:
+   Node();
+   ~Node();
+
+ public:
+   bool init(uint32_t key, size_t size);
+   void clear();
+   bool init_after();
+
+ public:
+   bool empty() const;
+   bool full() const;
+   size_t size() const;
+   size_t max_size() const;
+   size_t hold_count() const;
+   uint32_t key() const { return key_; };
+   UnitPool<T> *pool_ptr() { return pool_; };
+
+ public:
+   T *get(uint32_t index);
+   T *get();
+   void release();
+   void set_pool_position(uint32_t position);
+   void set_read_flag(int8_t flag) { read_flag_ = flag; };
+   void set_write_flag(int8_t flag) { write_flag_ = flag; };
+   void set_recover(bool recover) { recover_ = recover; };
+   void set_minutes(uint32_t index, uint32_t minutes);
+
+ public:
+   template <class F, class... Args>
+   auto handle(F&& f, Args&&... args)
+   -> std::future<typename std::result_of<F(Args...)>::type>;
+   
+ private:
+   bool ready_;
+   int8_t read_flag_;
+   int8_t write_flag_;
+   std::shared_ptr< UnitPool< T > > pool_;
+   uint32_t key_;
+   bool recover_;
+
+};
 
 }; //namespace share
 
 }; //namespace memory
 
 }; //namespace pf_sys
+
+#include "pf/sys/memory/share.tcc"
 
 #endif //PF_SYS_MEMORY_SHARE_H_

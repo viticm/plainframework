@@ -13,19 +13,19 @@
 
 #include "pf/util/compressor/config.h"
 
-#if __WINDOWS__ /* { */
-#undef __LINUX__
-#elif __LINUX__ /* }{ */
-#undef __WINDOWS__
+#if OS_WIN /* { */
+#undef OS_UNIX
+#elif OS_UNIX /* }{ */
+#undef OS_WIN
 #endif /* } */
 
 #include "pf/util/compressor/minilzo.h"
 
-#ifndef __WINDOWS__
-#define __WINDOWS__ (defined(_MSC_VER) || defined(__ICL))
+#ifndef OS_WIN
+#define OS_WIN (defined(_MSC_VER) || defined(__ICL))
 #endif
-#ifndef __LINUX__
-#define __LINUX__ !(__WINDOWS__)
+#ifndef OS_UNIX
+#define OS_UNIX !(OS_WIN)
 #endif
 
 #define UTIL_COMPRESSOR_MINI_GET_OUTLENGTH(in) ((in)+(in)/16+64+3)

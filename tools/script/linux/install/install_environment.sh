@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 current_user=`whoami`
 systembit=`getconf LONG_BIT`
 current_dir=`pwd`
+sudo_str=""
 
 #help text, the script desc
 #@param void
@@ -44,9 +45,11 @@ function success_message() {
   echo -e "\e[0;32;1msuccess: ${message}\e[0m"
 }
 
-if [[ $current_user != "root" ]] ; then
-  error_message "run this script need root privileges"  
-fi
+function check_privileges() {
+  if [[ $current_user != "root" ]] ; then
+    error_message "run this script need root privileges"  
+  fi
+}
 
 #install unix odb
 #@param void
@@ -61,11 +64,11 @@ function install_odbc() {
   tar -xzvf unixODBC-${version}.tar.gz
   cd unixODBC-${version}
   ./configure --prefix=/usr/local/unixODBC --sysconfdir=/etc
-  make && make install
+  make && $sudo_str make install
   if [[ 64 == $systembit ]] ; then
-    cp /usr/local/unixODBC/lib/libodbc* /lib64/
+    $sudo_str cp /usr/local/unixODBC/lib/libodbc* /lib64/
   else
-    cp /usr/local/unixODBC/lib/libodbc* /lib/
+    $sudo_str cp /usr/local/unixODBC/lib/libodbc* /lib/
   fi
   [[ 0 == $? ]] && success_message "install unix odbc[$version] complete"
 }
@@ -81,15 +84,21 @@ function install_mysql_driver() {
   [[ ! -f ./${driver_so} ]] && 
     error_message "mysql driver[$driver_so] not found"
   [[ ! -f ./${odbc_ini} ]] && warning_message "${odbc_ini} not found"
-  [[ ! -d $driver_dir ]] && mkdir -p $driver_dir
-  cp ./${driver_so} $driver_dir
-  [[ -f ./${odbc_ini} ]] && cp ./${odbc_ini} /etc
+  [[ ! -d $driver_dir ]] && $sudo_str mkdir -p $driver_dir
+  $sudo_str cp ./${driver_so} $driver_dir
+  [[ -f ./${odbc_ini} ]] && $sudo_str cp ./${odbc_ini} /etc
   [[ 0 == $? ]] && success_message "install mysql odbc driver complete"
 }
 
 #the script main function, like c/c++
 function main() {
   cmd=${1}
+  cmd1=${2}
+  if [[ "--sudo" == $cmd1 ]] ; then
+    sudo_str="sudo"
+  else
+    check_privileges
+  fi
   case "${cmd}" in
     --help ) help_text;;
     -h) help_text;;

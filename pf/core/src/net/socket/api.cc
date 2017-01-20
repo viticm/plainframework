@@ -12,9 +12,9 @@ namespace socket {
 
 namespace api {
 
-#if __LINUX__
+#if OS_UNIX
 //extern int32_t errno;
-#elif __WINDOWS__
+#elif OS_WIN
 int32_t error;
 #endif
 char errormessage[FILENAME_MAX] = {'\0'};
@@ -24,7 +24,7 @@ int32_t socketex(int32_t domain, int32_t type, int32_t protocol) {
   int32_t socketid = sys_socket(domain, type, protocol); //remember it
 
   if (socketid == ID_INVALID) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EPROTONOSUPPORT :
       case EMFILE : 
@@ -35,7 +35,7 @@ int32_t socketex(int32_t domain, int32_t type, int32_t protocol) {
           break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : { 
@@ -88,7 +88,7 @@ bool bindex(int32_t socketid,
             const struct sockaddr *addr, 
             uint32_t addrlength) {
   if (SOCKET_ERROR == bind(socketid, addr, addrlength)) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) 
     {
       case EADDRINUSE :
@@ -107,7 +107,7 @@ bool bindex(int32_t socketid,
           break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : { 
@@ -161,7 +161,7 @@ bool connectex(int32_t socketid,
                const struct sockaddr *addr, 
                uint32_t addrlength) {
   if (SOCKET_ERROR == connect(socketid, addr, addrlength)) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EALREADY: 
       case EINPROGRESS: 
@@ -177,7 +177,7 @@ bool connectex(int32_t socketid,
           break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED: {
@@ -261,7 +261,7 @@ bool connectex(int32_t socketid,
 
 bool listenex(int32_t socketid, uint32_t backlog) {
   if (SOCKET_ERROR == listen(socketid, backlog)) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EBADF : 
       case ENOTSOCK :
@@ -270,7 +270,7 @@ bool listenex(int32_t socketid, uint32_t backlog) {
           break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : {
@@ -328,13 +328,13 @@ int32_t acceptex(int32_t socketid,
                  struct sockaddr *addr, 
                  uint32_t *addrlength) {
   int32_t client = SOCKET_INVALID;
-#if __LINUX__
+#if OS_UNIX
   client = accept(socketid, addr, addrlength);
-#elif __WINDOWS__
+#elif OS_WIN
   client = static_cast<int32_t>(accept(socketid, addr, (int32_t *)addrlength));
 #endif
   if (SOCKET_INVALID == client) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EWOULDBLOCK : {
         strncpy(errormessage, "EWOULDBLOCK", sizeof(errormessage) - 1);
@@ -380,7 +380,7 @@ int32_t acceptex(int32_t socketid,
         break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : {
@@ -444,7 +444,7 @@ bool getsockopt_exb(int32_t socketid,
                     int32_t optname, 
                     void *optval, 
                     uint32_t *optlength) {
-#if __LINUX__
+#if OS_UNIX
   if (SOCKET_ERROR == getsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -461,7 +461,7 @@ bool getsockopt_exb(int32_t socketid,
     }
     return false;
   }
-#elif __WINDOWS__
+#elif OS_WIN
   if (SOCKET_ERROR == getsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -515,7 +515,7 @@ uint32_t getsockopt_exu(int32_t socketid,
                         void *optval, 
                         uint32_t *optlength) {
 uint32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   if (SOCKET_ERROR == getsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -543,7 +543,7 @@ uint32_t result = 0;
       }
     }
   }
-#elif __WINDOWS__
+#elif OS_WIN
   if (SOCKET_ERROR == getsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -595,7 +595,7 @@ bool setsockopt_ex(int32_t socketid,
                    const void *optval, 
                    uint32_t optlength) {
   bool result = true;
-#if __LINUX__
+#if OS_UNIX
   if (SOCKET_ERROR == setsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -612,7 +612,7 @@ bool setsockopt_ex(int32_t socketid,
     }
     result = false;
   }
-#elif __WINDOWS__
+#elif OS_WIN
   if (SOCKET_ERROR == setsockopt(socketid, 
                                  level, 
                                  optname, 
@@ -672,14 +672,14 @@ int32_t sendex(int32_t socketid,
                uint32_t length, 
                uint32_t flag) {
   int32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = send(socketid, buffer, length, flag);
-#elif __WINDOWS__
+#elif OS_WIN
   result = send(socketid, (const char *)buffer, length, flag);
 #endif
 
   if (SOCKET_ERROR == result) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EWOULDBLOCK: {
         result = SOCKET_ERROR_WOULD_BLOCK;
@@ -696,7 +696,7 @@ int32_t sendex(int32_t socketid,
         break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : { 
@@ -796,14 +796,14 @@ int32_t sendtoex(int32_t socketid,
                  const struct sockaddr* to, 
                  int32_t tolength) {
   int32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = sendto(socketid, buffer, length, flag, to, tolength);
-#elif __WINDOWS__
+#elif OS_WIN
   result = sendto(socketid, (const char *)buffer,length, flag, to, tolength);
 #endif
 
   if (SOCKET_ERROR == result) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EWOULDBLOCK : {
         result = 0;
@@ -820,7 +820,7 @@ int32_t sendtoex(int32_t socketid,
           break;
       }
     }  
-#elif __WINDOWS__
+#elif OS_WIN
     //do nothing
 #endif
   }
@@ -833,13 +833,13 @@ int32_t recvex(int32_t socketid,
                uint32_t flag) {
 
   int32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = recv(socketid, buffer, length, flag);
-#elif __WINDOWS__
+#elif OS_WIN
   result = recv(socketid, (char *)buffer, length, flag);
 #endif
   if (SOCKET_ERROR == result) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EWOULDBLOCK : {
         result = SOCKET_ERROR_WOULD_BLOCK;
@@ -857,7 +857,7 @@ int32_t recvex(int32_t socketid,
         break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : { 
@@ -945,15 +945,15 @@ int32_t recvfrom_ex(int32_t socketid,
                     struct sockaddr *from, 
                     uint32_t *fromlength) {
 int32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = recvfrom(socketid, buffer, length, flag, from, fromlength);
-#elif __WINDOWS__
+#elif OS_WIN
   result = 
     recvfrom(socketid, (char*)buffer, length, flag, from, (int32_t*)fromlength);
 #endif
 
   if (SOCKET_ERROR == result) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EWOULDBLOCK : 
         result = SOCKET_ERROR_WOULD_BLOCK;
@@ -968,7 +968,7 @@ int32_t result = 0;
         break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     //do nothing
 #endif
   }
@@ -977,9 +977,9 @@ int32_t result = 0;
 
 bool closeex(int32_t socketid) {
   bool result = true;
-#if __LINUX__
+#if OS_UNIX
   pf_file::api::closeex(socketid);
-#elif __WINDOWS__
+#elif OS_WIN
   if (SOCKET_ERROR == closesocket(socketid)) {
     error = WSAGetLastError();
     switch (error) {
@@ -1021,9 +1021,9 @@ bool closeex(int32_t socketid) {
 
 bool ioctlex(int32_t socketid, int64_t cmd, uint64_t *argp) {
   bool result = true;
-#if __LINUX__
+#if OS_UNIX
   //do nothing
-#elif __WINDOWS__
+#elif OS_WIN
   if (SOCKET_ERROR == ioctlsocket(socketid,(long)cmd,(u_long*)argp)) {
     error = WSAGetLastError();
       switch (error) {
@@ -1060,9 +1060,9 @@ bool ioctlex(int32_t socketid, int64_t cmd, uint64_t *argp) {
 
 bool get_nonblocking_ex(int32_t socketid) {
   bool result = true;
-#if __LINUX__
+#if OS_UNIX
   result = pf_file::api::get_nonblocking_ex(socketid);
-#elif __WINDOWS__
+#elif OS_WIN
   USE_PARAM(socketid);
   result = false;
 #endif
@@ -1071,9 +1071,9 @@ bool get_nonblocking_ex(int32_t socketid) {
 
 bool set_nonblocking_ex(int32_t socketid, bool on) {
   bool result = true;
-#if __LINUX__
+#if OS_UNIX
   pf_file::api::set_nonblocking_ex(socketid, on);
-#elif __WINDOWS__
+#elif OS_WIN
   uint64_t argp = true == on ? 1 : 0;
   result = ioctlex(socketid, FIONBIO, &argp);
 #endif
@@ -1082,9 +1082,9 @@ bool set_nonblocking_ex(int32_t socketid, bool on) {
 
 uint32_t availableex(int32_t socketid) {
   uint32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = pf_file::api::availableex(socketid);
-#elif __WINDOWS__
+#elif OS_WIN
   uint64_t argp = 0;
   ioctlex(socketid, FIONREAD, &argp);
   result = (uint32_t)argp;
@@ -1095,7 +1095,7 @@ uint32_t availableex(int32_t socketid) {
 bool shutdown_ex(int32_t socketid, int32_t how) {
   bool result = true;
   if (shutdown(socketid, how) < 0) {
-#if __LINUX__
+#if OS_UNIX
     switch (errno) {
       case EBADF : 
       case ENOTSOCK : 
@@ -1104,7 +1104,7 @@ bool shutdown_ex(int32_t socketid, int32_t how) {
           break;
       }
     }
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : {
@@ -1150,9 +1150,9 @@ int32_t selectex(int32_t maxfdp,
   int32_t result = 0;
   result = select(maxfdp, readset, writeset, exceptset, timeout);
   if(SOCKET_ERROR == result) {
-#if __LINUX__
+#if OS_UNIX
 
-#elif __WINDOWS__
+#elif OS_WIN
     error = WSAGetLastError();
     switch (error) {
       case WSANOTINITIALISED : {
@@ -1197,10 +1197,10 @@ int32_t getsockname_ex(int32_t socketid,
                        struct sockaddr *name, 
                        int32_t *namelength) {
   int32_t result = 0;
-#if __LINUX__
+#if OS_UNIX
   result = 
     getsockname(socketid, name, reinterpret_cast<socklen_t *>(namelength));
-#elif __WINDOWS__
+#elif OS_WIN
   result = 
     getsockname(socketid, name, namelength);
   error = WSAGetLastError();
@@ -1243,9 +1243,9 @@ int32_t getsockname_ex(int32_t socketid,
 }
 
 int32_t getlast_errorcode() {
-#if __LINUX__
+#if OS_UNIX
   return errno;
-#elif __WINDOWS__
+#elif OS_WIN
   return error;
 #endif
 }

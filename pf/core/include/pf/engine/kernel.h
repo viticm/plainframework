@@ -5,92 +5,89 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/06/30 15:43
+ * @date 2017/01/09 16:53
  * @uses the plian server engine kernel class
  */
 #ifndef PF_ENGINE_KERNEL_H_
 #define PF_ENGINE_KERNEL_H_
 
 #include "pf/engine/config.h"
-#include "pf/base/hashmap/template.h"
-#include "pf/db/manager.h"
-#include "pf/net/manager.h"
-#include "pf/engine/thread/db.h"
-#include "pf/engine/thread/net.h"
-#include "pf/engine/thread/performance.h"
-#include "pf/engine/thread/script.h"
+#include "pf/db/config.h"
+#include "pf/script/config.h"
+#include "pf/net/connection/manager/config.h"
+#include "pf/cache/manager.h"
 
 namespace pf_engine {
 
-class PF_API Kernel {
+class PF_API Kernel : public pf_basic::Singleton< Kernel > {
 
  public:
    Kernel();
-   ~Kernel();
+   virtual ~Kernel();
 
- public: //kernel sys functions
+ public:
+   static Kernel &getsingleton();
+   static Kernel *getsingleton_pointer();
+
+ public:
    virtual bool init();
    virtual void run();
    virtual void stop();
 
  public:
-   void registerconfig(int32_t key, int32_t value);
-   void registerconfig(int32_t key, bool value);
-   void registerconfig(int32_t key, const char *value);
-   bool setconfig(int32_t key, int32_t value);
-   bool setconfig(int32_t key, bool value);
-   bool setconfig(int32_t key, const char *value);
-   int32_t getconfig_int32value(int32_t key);
-   bool getconfig_boolvalue(int32_t key);
-   const char *getconfig_stringvalue(int32_t key);
+   virtual pf_net::connection::manager::Basic *get_net() {
+     return net_.get();
+   };
+   virtual pf_db::Manager *get_db() {
+     return db_.get();
+   };
+   virtual pf_cache::Manager *get_cache() {
+     return cache_.get();
+   };
+   virtual pf_script::Interface *get_script();
 
- public: //kernel for set_* functions
-   void set_base_logprint(bool flag);
-   void set_base_logactive(bool flag);
-   void set_net_stream_usepacket(bool flag);
+ public:
+   //Enqueue an envet function in main loop.
+   template<class F, class... Args>
+   auto enqueue(F&& f, Args&&... args) 
+   -> std::future<typename std::result_of<F(Args...)>::type>;
 
- protected:
-   pf_base::hashmap::Template<int32_t, const char *> config_string_;
-   pf_base::hashmap::Template<int32_t, int32_t> config_int32_;
-   pf_base::hashmap::Template<int32_t, bool> config_bool_;
-   pf_db::Manager *db_manager_;
-   pf_net::Manager *net_manager_;
-   thread::DB *db_thread_;
-   thread::Net *net_thread_;
-   thread::Performance *performance_thread_;
-   thread::Script *script_thread_;
-   bool isactive_;
-   float FPS_; //帧率
-
- protected:
-   //子类重载此方法以实现初始化不同类型的网络连接池，
-   //引擎默认连接的socket未初始化，只在接受新连接时才初始化，
-   //如需服务器启动就初始化可以重写此方法来实现（启动时需要足够的内存）。
-   virtual bool init_net_connectionpool();
-   virtual bool loop_handle(); //引擎循环处理的逻辑，受帧率控制
+ public:
+   template<class F, class... Args>
+   std::thread::id newthread(F&& f, Args&&... args);
 
  protected:
    virtual bool init_base();
-   virtual bool init_db();
    virtual bool init_net();
+   virtual bool init_db();
+   virtual bool init_cache();
    virtual bool init_script();
-   virtual bool init_performance();
-   virtual void run_base();
-   virtual void run_db();
-   virtual void run_net();
-   virtual void run_script();
-   virtual void run_performance();
-   virtual void stop_base();
-   virtual void stop_db();
-   virtual void stop_net();
-   virtual void stop_script();
-   virtual void stop_performance();
+
+ protected:
+   std::unique_ptr<pf_net::connection::manager::Basic> net_;
+   std::unique_ptr<pf_db::Manager> db_;
+   std::unique_ptr<pf_cache::Manager> cache_;
+   std::unique_ptr<pf_script::Factory> script_;
+   pf_script::eid_t script_eid_;
+   std::vector< std::thread > thread_workers_;
+   bool isinit_;
 
  private:
-   void calculate_FPS(); //计算帧率
+   void loop();
+
+ private:
+   std::queue< std::function<void()> > tasks_;
+   std::vector< std::function<void()> > thread_tasks_;
+   std::mutex queue_mutex_;
+   bool stop_;
 
 };
 
 }; //namespace pf_engine
+
+#include "pf/engine/kernel.tcc"
+
+PF_API extern std::unique_ptr< pf_engine::Kernel > g_engine;
+#define ENGINE_POINTER pf_engine::Kernel::getsingleton_pointer()
 
 #endif //PF_ENGINE_KERNEL_H_

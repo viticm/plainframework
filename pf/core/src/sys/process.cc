@@ -1,98 +1,91 @@
-#include "pf/base/util.h"
-#include "pf/sys/util.h"
-#include "pf/sys/process.h"
-#if __WINDOWS__
+#if OS_WIN
 #include <process.h>
 #include <psapi.h>
-#elif __LINUX__
+#elif OS_UNIX
 #include <unistd.h>
 #include <sys/stat.h>
 #endif
+#include "pf/basic/util.h"
+#include "pf/basic/io.tcc"
+#include "pf/sys/util.h"
+#include "pf/sys/process.h"
 
 namespace pf_sys {
 
 namespace process {
 
 int32_t getid() {
-  __ENTER_FUNCTION
-    int32_t id = ID_INVALID;
-#if __WINDOWS__
-    id = _getpid();
-#elif __LINUX__
-    id = getpid();
+  int32_t id = ID_INVALID;
+#if OS_WIN
+  id = _getpid();
+#elif OS_UNIX
+  id = getpid();
 #endif
-    return id;
-  __LEAVE_FUNCTION
-    return ID_INVALID;
+  return id;
+}
+
+void get_filename(char *filename, size_t size) {
+  using namespace pf_basic::util;
+  get_module_filename(filename, size);
+  auto havelength = strlen(filename);
+  auto _size = size - havelength;
+  if (_size > 0) snprintf(filename + havelength, _size, "%s", ".pid");
 }
 
 int32_t getid(const char *filename) {
-  __ENTER_FUNCTION
-    FILE *fp = fopen(filename, "r");
-    if (NULL == fp) return ID_INVALID;
-    int32_t id;
-    fscanf(fp, "%d", &id);
-    fclose(fp);
-    fp = NULL;
-    return id;
-  __LEAVE_FUNCTION
-    return ID_INVALID;
+  FILE *fp = fopen(filename, "r");
+  if (NULL == fp) return ID_INVALID;
+  int32_t id;
+  fscanf(fp, "%d", &id);
+  fclose(fp);
+  return id;
 }
 
 bool writeid(const char *filename) {
-  __ENTER_FUNCTION
-    int32_t id = getid();
-    FILE *fp = fopen(filename, "w");
-    if (NULL == fp) return false;
-    fprintf(fp, "%d", id);
-    fflush(fp);
-    fclose(fp);
-    fp = NULL;
-    return true;
-  __LEAVE_FUNCTION
-    return false;
+  int32_t id = getid();
+  FILE *fp = fopen(filename, "w");
+  if (nullptr == fp) return false;
+  fprintf(fp, "%d", id);
+  fflush(fp);
+  fclose(fp);
+  fp = nullptr;
+  return true;
 }
 
 bool waitexit(const char *filename) {
-  __ENTER_FUNCTION
-    if (NULL == filename || strlen(filename) < 0) {
-      ERRORPRINTF("[sys] (process::waitexit) error, can't find pid file");
-      return false;
-    }
-    int32_t id = getid(filename);
-    if (ID_INVALID == id) {
-      ERRORPRINTF("[sys] (process::waitexit) error, can't get id from file: %s",
-                  filename);
-      return false;
-    }
-#if __LINUX__
-    kill(id, 10);
-    pf_base::util::sleep(2000);
-    kill(id, 10);
-    int32_t result = kill(id, 0);
-    while (result >= 0) {
-      pf_base::util::sleep(1000);
-      result = kill(id, 0);
-    }
-    DEBUGPRINTF("[sys] (process::waitexit) success, pid(%d), result(%d)",
-                id,
-                result);
-#endif
-    return true;
-  __LEAVE_FUNCTION
+  using namespace pf_basic;
+  if (NULL == filename || strlen(filename) < 0) {
+    io_cerr("[sys] (process::waitexit) error, can't find pid file");
     return false;
+  }
+  int32_t id = getid(filename);
+  if (ID_INVALID == id) {
+    io_cerr("[sys] (process::waitexit) error, can't get id from file: %s",
+            filename);
+    return false;
+  }
+#if OS_UNIX
+  kill(id, 10);
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  kill(id, 10);
+  int32_t result = kill(id, 0);
+  while (result >= 0) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    result = kill(id, 0);
+  }
+  io_cerr("[sys] (process::waitexit) success, pid(%d), result(%d)", id, result);
+#endif
+  return true;
 }
 
 void getinfo(int32_t id, info_t &info) {
-  __ENTER_FUNCTION
-    info.id = id;
-    info.cpu_percent = get_cpu_usage(id);
-    info.VSZ = get_virtualmemory_usage(id);
-    info.RSS = get_physicalmemory_usage(id);
-  __LEAVE_FUNCTION
+  info.id = id;
+  info.cpu_percent = get_cpu_usage(id);
+  info.VSZ = get_virtualmemory_usage(id);
+  info.RSS = get_physicalmemory_usage(id);
 }
 
-#if __WINDOWS__
+#if OS_WIN
 static uint64_t file_time_2_utc(const FILETIME* ftime) {
   LARGE_INTEGER li;
   Assert(ftime);
@@ -110,9 +103,8 @@ static int32_t get_processor_number() {
 #endif 
 
 float get_cpu_usage(int32_t id) {
-  __ENTER_FUNCTION
   float cpu = -1.0f;
-#if __WINDOWS__ /* { */
+#if OS_WIN /* { */
   static int processor_count = -1;
   static int64_t last_time = 0;
   static int64_t last_system_time = 0;
@@ -152,7 +144,7 @@ float get_cpu_usage(int32_t id) {
     (system_time_delta * 100 + time_delta / 2) / time_delta);
   last_system_time = system_time;
   last_time = time;
-#elif __LINUX__ /* } { */
+#elif OS_UNIX /* } { */
   char temp[32] = {0};
   char command[128] = {0};
   snprintf(command, 
@@ -163,21 +155,18 @@ float get_cpu_usage(int32_t id) {
     cpu = atof(temp);
   }
 #endif /* } */
-    return cpu;
-  __LEAVE_FUNCTION
-    return -1.0f;
+  return cpu;
 }
 
 uint64_t get_virtualmemory_usage(int32_t id) {
-  __ENTER_FUNCTION
     uint64_t result = 0;
-#if __WINDOWS__ /* { */
+#if OS_WIN /* { */
     PROCESS_MEMORY_COUNTERS pmc;
     HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, id);
     if (::GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
       result = pmc.PagefileUsage;
     }
-#elif __LINUX__ /* }{ */
+#elif OS_UNIX /* }{ */
   char temp[128] = {0};
   char command[128] = {0};
   snprintf(command, 
@@ -191,20 +180,17 @@ uint64_t get_virtualmemory_usage(int32_t id) {
   }
 #endif /* } */
     return result;
-  __LEAVE_FUNCTION
-    return 0;
 }
 
 uint64_t get_physicalmemory_usage(int32_t id) {
-  __ENTER_FUNCTION
     uint64_t result = 0;
-#if __WINDOWS__ /* { */
+#if OS_WIN /* { */
     PROCESS_MEMORY_COUNTERS pmc;
     HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, id);
     if (::GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
       result = pmc.WorkingSetSize;
     }
-#elif __LINUX__ /* }{ */
+#elif OS_UNIX /* }{ */
   char temp[128] = {0};
   char command[128] = {0};
   snprintf(command, 
@@ -217,25 +203,22 @@ uint64_t get_physicalmemory_usage(int32_t id) {
     result *= 1024;
   }
 #endif /* } */
-    return result;
-  __LEAVE_FUNCTION
-    return 0;
+  return result;
 }
 
 bool daemon() {
-  __ENTER_FUNCTION
-#if __LINUX__
-    pid_t pid;
-    if ((pid = fork()) != 0) exit(0);
-    setsid();
-    signal(SIGHUP, SIG_IGN);
-    if ((pid = fork()) != 0) exit(0);
-    umask(0);
-    for (uint8_t i = 0; i < 3; i++) close(i);
-    return true;
+  bool result = false;
+#if OS_UNIX
+  pid_t pid;
+  if ((pid = fork()) != 0) exit(0);
+  setsid();
+  signal(SIGHUP, SIG_IGN);
+  if ((pid = fork()) != 0) exit(0);
+  umask(0);
+  for (uint8_t i = 0; i < 3; i++) close(i);
+  result = true;
 #endif
-  __LEAVE_FUNCTION
-    return false;
+  return result;
 }
 
 } //namespace process

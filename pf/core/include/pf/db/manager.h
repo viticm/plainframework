@@ -5,34 +5,45 @@
  * @copyright Copyright (c) 2014- viticm( viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm.ti@gmail.com>
- * @date 2014/06/30 19:51
+ * @date 2016/06/19 20:23
  * @uses the db manager class
  */
 #ifndef PF_DB_MANAGER_H_
 #define PF_DB_MANAGER_H_
 
 #include "pf/db/config.h"
+
+#ifdef PF_OPEN_ODBC
 #include "pf/db/odbc/system.h"
+#endif
 
 namespace pf_db {
 
 class PF_API Manager {
 
  public:
-   Manager(dbconnector_type_t connector_type = kDBConnectorTypeODBC);
+   Manager();
    ~Manager();
 
  public:
    bool init(const char *connection_or_dbname,
              const char *username,
              const char *password);
-   dbconnector_type_t get_connector_type() const;
+   int8_t get_connector_type() const { return connector_type_; };
+   void set_connector_type(int8_t type) {
+     if (isready_) return;
+     connector_type_ = type;
+   };
+   void select_db(const std::string &) {}
    db_query_t *get_internal_query();
    bool query();
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    int32_t get_affectcount() const;
    bool check_db_connect();
-   bool isready() const;
+   bool isready() const { return isready_; };
+   bool getresult() const;
+   int32_t get_columncount() const;
+   const char *get_columnname(int32_t column_index) const;
 
  public:
    float get_float(int32_t column_index, int32_t &error_code);
@@ -60,10 +71,14 @@ class PF_API Manager {
                                      char *buffer, 
                                      int32_t buffer_length, 
                                      int32_t &error_code);
+   const char *get_data(int32_t column_index, const char *_default) const;
+   int8_t gettype(int32_t column_index);
 
  protected:
-   dbconnector_type_t connector_type_;
+   int8_t connector_type_;
+#ifdef PF_OPEN_ODBC
    odbc::System *odbc_system_;
+#endif
    bool isready_;
 
 };
