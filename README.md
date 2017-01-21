@@ -6,9 +6,9 @@ Plain framework is base with c++ smart framework for net applications(socket gam
 - **Website:** [http://www.cnblogs.com/lianyue/](http://www.cnblogs.com/lianyue/)
 - **Version:** 2.0rc
 
-[![Build Status](https://travis-ci.org/viticm/plainframework1.svg)](https://travis-ci.org/viticm/plainframework1)
+[![Build Status](https://travis-ci.org/viticm/plainframework.svg)](https://travis-ci.org/viticm/plainframework)
 
-<img src="https://github.com/viticm/plainframework1/blob/master/documentation/examples/gateway.gif" />
+<img src="https://github.com/viticm/plainframework1/blob/master/documentation/examples/pf_simple.gif" />
 
 ### Build
 
