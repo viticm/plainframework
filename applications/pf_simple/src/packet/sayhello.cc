@@ -17,7 +17,7 @@ uint32_t SayHello::execute(pf_net::connection::Basic *connection) {
 
 uint32_t SayHelloHandler::execute(
     SayHello *packet, pf_net::connection::Basic *connection) {
-  pf_basic::io_cwarn("-----------------------------------------------------");
+  pf_basic::io_cwarn("------------------------net-------------------------");
   pf_basic::io_cdebug("SayHelloHandler recv: %s", packet->get_str());
   HelloWorld pkt;
   pkt.set_str("hello world!");

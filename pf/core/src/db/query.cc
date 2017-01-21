@@ -47,6 +47,11 @@ void Query::set_tablename(const char *tablename) {
 
 bool Query::execute() {
   if (!isready_ || is_null(manager_)) return false;
+  if (!is_null(db_query_)) {
+    auto db_query = manager_->get_internal_query();
+    pf_basic::string::safecopy(
+        db_query->sql_str_, db_query_->sql_str_, sizeof(db_query->sql_str_));
+  }
   bool result = manager_->query();
   return result;
 }
