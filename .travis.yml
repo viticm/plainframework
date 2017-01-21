@@ -1,8 +1,10 @@
 language: cpp
 sudo: required
 compiler:
-    - g++
+    - gcc
     # Change this to your needs
 before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get -qq install g++-4.8
     - sudo apt-get install gcc-multilib
 script: make
