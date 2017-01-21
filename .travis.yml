@@ -1,7 +1,7 @@
 language: cpp
 sudo: required
 compiler:
-    - gcc4.8
+    - gcc 4.8
     # Change this to your needs
 before_install:
     - sudo apt-get install gcc-multilib
