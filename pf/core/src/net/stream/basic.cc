@@ -25,9 +25,10 @@ Basic::~Basic() {
 
 void Basic::init() {
   if (isinit()) return;
-  streamdata_.buffer = new char[sizeof(char) * streamdata_.bufferlength];
+  auto buffersize = sizeof(char) * streamdata_.bufferlength;
+  streamdata_.buffer = new char[buffersize];
   Assert(streamdata_.buffer);
-  memset(streamdata_.buffer, 0, sizeof(char) * streamdata_.bufferlength);
+  memset(streamdata_.buffer, 0, buffersize);
   streamdata_.head = 0;
   streamdata_.tail = 0;
   encrypt_isenable_ = false;

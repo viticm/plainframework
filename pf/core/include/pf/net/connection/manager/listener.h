@@ -44,7 +44,7 @@ class PF_API Listener : public Basic {
    }
 
  private:
-   socket::Listener *listener_socket_;
+   std::unique_ptr<socket::Listener> listener_socket_;
    bool ready_;
 
 };

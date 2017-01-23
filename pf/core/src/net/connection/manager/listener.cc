@@ -16,7 +16,10 @@ Listener::~Listener() {
 }
 
 bool Listener::init(uint16_t max_size, uint16_t port, const std::string &ip) {
-  listener_socket_ = new pf_net::socket::Listener(port, ip);
+  std::unique_ptr<socket::Listener> 
+    pointer{new socket::Listener(port, ip)};
+  if (is_null(pointer)) return false;
+  listener_socket_ = std::move(pointer);
   listener_socket_->set_nonblocking();
   Assert(listener_socket_->get_id() != SOCKET_INVALID);
   return Basic::init(max_size);

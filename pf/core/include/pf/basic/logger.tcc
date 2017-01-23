@@ -30,21 +30,20 @@ void Logger::fast_savelog(const char *logname, const char *format, ...) {
   auto mutex = loglock_.get(logid);
   if (is_null(mutex)) return;
   uint32_t position = log_position_.get(logid);
-  char buffer[4096] = {0};
-  char temp[4096] = {0};
+  char buffer[4096]{0};
+  char temp[4096]{0};
   va_list argptr;
   try {
     va_start(argptr, format);
     vsnprintf(temp, sizeof(temp) - 1, format, argptr);
     va_end(argptr);
     if (GLOBALS["log.fast"] == false) { //disable fast log.
-    char log_filename[FILENAME_MAX] = {0};
+    char log_filename[FILENAME_MAX]{0};
     get_log_filename(logname, log_filename);
     slow_savelog<type>(log_filename, temp);
     return;
     }
-    char time_str[256] = {0};
-    memset(time_str, '\0', sizeof(time_str));
+    char time_str[256]{0};
     get_log_timestr(time_str, sizeof(time_str) - 1);
     snprintf(buffer, sizeof(buffer) - 1,"%s %s", time_str, temp);
   } catch(...) {
@@ -95,39 +94,37 @@ template <uint8_t type>
 void Logger::slow_savelog(const char *filename_prefix, 
     const char *format, ...) {
   std::unique_lock<std::mutex> autolock(g_log_mutex);
-  char buffer[4096] = {0};
-  char temp[4096] = {0};
+  char buffer[4096]{0};
+  char temp[4096]{0};
   va_list argptr;
   try {
     va_start(argptr, format);
     vsnprintf(temp, sizeof(temp) - 1, format, argptr);
     va_end(argptr);
-    char time_str[256];
-    memset(time_str, '\0', sizeof(time_str));
+    char time_str[256]{0};
     get_log_timestr(time_str, sizeof(time_str) - 1);
     snprintf(buffer, sizeof(buffer) - 1,"%s %s", time_str, temp);
 
-    if (GLOBALS["log.print"] != -1) {
-    switch (type) {
-      case 1:
-      io_cwarn(buffer);
-      break;
-      case 2:
-      io_cerr(buffer);
-      break;
-      case 3:
-      io_cdebug(buffer);
-      break;
-      case 9:
-      break;
-      default:
-      printf("%s" LF "", buffer);
-    }
+    if (GLOBALS["log.print"] == true) {
+      switch (type) {
+        case 1:
+        io_cwarn(buffer);
+        break;
+        case 2:
+        io_cerr(buffer);
+        break;
+        case 3:
+        io_cdebug(buffer);
+        break;
+        case 9:
+        break;
+        default:
+        printf("%s" LF "", buffer);
+      }
     }
     strncat(buffer, LF, sizeof(LF)); //add wrap
     if (GLOBALS["log.active"] == 0) return;
-    char log_filename[FILENAME_MAX];
-    memset(log_filename, '\0', sizeof(log_filename));
+    char log_filename[FILENAME_MAX]{0};
     get_log_filename(filename_prefix, log_filename, type);
     FILE* fp;
     fp = fopen(log_filename, "ab");

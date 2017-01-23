@@ -258,7 +258,7 @@ bool Basic::send(connection::Basic * connection, packet::Interface *packet) {
     packet->set_index(connection->packet_index());
     uint32_t before_writesize = ostream.reallength();
     uint16_t packetid = packet->get_id();
-    uint32_t packetcheck; //index and size(if diffrent then have error) 
+    uint32_t packetcheck{0}; //index and size(if diffrent then have error) 
     ostream.write(reinterpret_cast<const char *>(&packetid), sizeof(packetid));
     uint32_t packetsize = packet->size();
     uint32_t packetindex = packet->get_index();

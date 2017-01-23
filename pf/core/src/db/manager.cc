@@ -24,6 +24,7 @@ Manager::~Manager() {
 bool Manager::init(const char *connection_or_dbname,
                    const char *username,
                    const char *password) {
+  if (isready_) return true;
   bool result = false;
   switch (connector_type_) {
     case kDBConnectorTypeODBC: {

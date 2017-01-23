@@ -18,8 +18,9 @@ TimeManager &TimeManager::getsingleton() {
   return *singleton_;
 }
 
-TimeManager::TimeManager() {
-  current_time_ = 0;
+TimeManager::TimeManager() :
+  start_time_{0},
+  current_time_{0} {
 }
 
 TimeManager::~TimeManager() {
@@ -39,7 +40,6 @@ bool TimeManager::init() {
   g_file_name_fix = get_day_time();
   g_file_name_fix_last = get_tickcount();
   return true;
-  return false;
 }
 
 uint32_t TimeManager::get_tickcount() {

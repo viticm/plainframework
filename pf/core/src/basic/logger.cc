@@ -26,14 +26,14 @@ Logger::Logger() {
   logcache_.init(LOGTYPE_MAX);
   loglock_.init(LOGTYPE_MAX);
   cache_size_ = 0;
-  for (auto it = logcache_.begin(); it != logcache_.end(); ++it)
-    safe_delete_array(it->second);
-  for (auto it = loglock_.begin(); it != loglock_.end(); ++it)
-    safe_delete(it->second);
 }
 
 Logger::~Logger() {
   cache_size_ = 0;
+  for (auto it = logcache_.begin(); it != logcache_.end(); ++it)
+    safe_delete_array(it->second);
+  for (auto it = loglock_.begin(); it != loglock_.end(); ++it)
+    safe_delete(it->second);
 }   
    
 bool Logger::register_fastlog(const char *logname) {
@@ -43,8 +43,10 @@ bool Logger::register_fastlog(const char *logname) {
   uint8_t logid = count + 1;
   logids_.add(logname, logid);
   log_position_.add(logid, 0);
-  logcache_.add(logid, new char[kDefaultLogCacheSize]);
-  std::mutex *mutex = new std::mutex;
+  auto cache = new char[kDefaultLogCacheSize];
+  memset(cache, 0, kDefaultLogCacheSize);
+  logcache_.add(logid, cache);
+  auto mutex = new std::mutex;
   loglock_.add(logid, mutex);
   if (is_null(logcache_.get(logid))) return false;
   return true;
@@ -53,6 +55,7 @@ bool Logger::register_fastlog(const char *logname) {
 void Logger::get_log_timestr(char *time_str, int32_t length) {
   if (TIME_MANAGER_POINTER) {
       TIME_MANAGER_POINTER->reset_time();
+      auto runtime = TIME_MANAGER_POINTER->get_run_time();
       snprintf(
           time_str, 
           length, 
@@ -61,7 +64,7 @@ void Logger::get_log_timestr(char *time_str, int32_t length) {
           TIME_MANAGER_POINTER->get_minute(),
           TIME_MANAGER_POINTER->get_second(),
           pf_sys::thread::get_id(),
-          static_cast< float >(TIME_MANAGER_POINTER->get_run_time())/1000.0);
+          static_cast< float >(runtime) / 1000);
   } else {
     snprintf(time_str,
              length, 

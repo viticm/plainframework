@@ -26,7 +26,7 @@ class PF_API System : public Interface {
 
  public:
    System() : lua_state_{nullptr}, stack_size_{0} {};
-   virtual ~System() {};
+   virtual ~System() { release(); };
 
  public:
    typedef enum {

@@ -97,6 +97,7 @@ bool Kernel::init_base() {
   if (is_null(time_manager)) return false;
   std::unique_ptr< TimeManager > tpointer{time_manager};
   g_time_manager = std::move(tpointer);
+  if (!g_time_manager->init()) return false;
 
   //Logger.
   auto logger = new Logger();
