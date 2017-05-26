@@ -35,7 +35,7 @@ cd pf/core && cmake ./ && make
 
 ### Build windows
 
-Plain build on windows use visual studio, you can open the file pf_win.sln.
+Plain build on windows use visual studio(at least version vs2015), you can open the file pf_win.sln.
 
 Only repository: [https://github.com/viticm/pf_win/](https://github.com/viticm/pf_win/)
 
