@@ -6,9 +6,13 @@ Plain framework is base with c++ smart framework for net applications(socket gam
 - **Website:** [http://www.cnblogs.com/lianyue/](http://www.cnblogs.com/lianyue/)
 - **Version:** 2.1d
 
-[![Build Status](https://travis-ci.org/viticm/plainframework1.svg)](https://travis-ci.org/viticm/plainframework1)
+[![Build Status](https://travis-ci.org/viticm/plainframework.svg)](https://travis-ci.org/viticm/plainframework)
 
-<img src="https://github.com/viticm/plainframework1/blob/master/documentation/examples/gateway.gif" />
+## Simple on linux
+<img src="https://github.com/viticm/plainframework/blob/master/documentation/examples/pf_unix.gif" />
+
+## Simple on windows
+<img src="https://github.com/viticm/plainframework/blob/master/documentation/examples/pf_win.gif" />
 
 ## Develop environment
 
@@ -32,10 +36,12 @@ cd pf/core && cmake ./ && make
 ### Build windows
 
 Plain build on windows use visual studio, you can open the file pf_win.sln.
-- Only repository: [https://github.com/viticm/pf_win/](https://github.com/viticm/pf_win/)
 
+Only repository: [https://github.com/viticm/pf_win/](https://github.com/viticm/pf_win/)
 
 ## Documentation
+
+Current version for pf: 1.0
 
 The complete docs for Plain framework can be found at the docs in the `/documentation` directory.
 
