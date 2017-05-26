@@ -1,0 +1,3 @@
+[submodule "applications/client/thirdparty/cocos2d/projects/soul"]
+	path = applications/client/thirdparty/cocos2d/projects/soul
+	url = https://bitbucket.org/viticm/soul

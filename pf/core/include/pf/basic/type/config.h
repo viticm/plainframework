@@ -20,9 +20,26 @@ namespace type {
 struct variable_struct;
 
 //Commonly used definitions.
-typedef PF_API variable_struct variable_t;
-typedef PF_API std::vector< variable_t > variable_array_t;
-typedef PF_API std::map< std::string, variable_t > variable_set_t;
+using variable_t = variable_struct;
+using variable_array_t = std::vector< variable_t >;
+using variable_set_t = std::map< std::string, variable_t > ;
+
+typedef enum {
+  kVariableTypeInvalid = -1,
+  kVariableTypeBool,
+  kVariableTypeInt32,
+  kVariableTypeUint32,
+  kVariableTypeInt16,
+  kVariableTypeUint16,
+  kVariableTypeInt8,
+  kVariableTypeUint8,
+  kVariableTypeInt64,
+  kVariableTypeUint64,
+  kVariableTypeFloat,
+  kVariableTypeDouble,
+  kVariableTypeString,
+  kVariableTypeNumber,
+} var_t; //变量的类型
 
 }; //namespace type
 

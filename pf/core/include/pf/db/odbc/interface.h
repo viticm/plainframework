@@ -15,7 +15,7 @@
 #ifdef PF_OPEN_ODBC
 
 #include "pf/db/odbc/config.h"
-#include "pf/sys/memory/static_allocator.h"
+#include "pf/sys/memory/dynamic_allocator.h"
 #include "pf/util/compressor/mini.h"
 
 //include from odbc
@@ -69,9 +69,7 @@ class PF_API Interface {
      return static_cast<int32_t>(column_count_); 
    };
    bool fetch(int32_t orientation = SQL_FETCH_NEXT, int32_t offset = 0);
-   db_query_t *get_query() { return &query_; };
-   bool execute();
-   bool execute(const char *sql_str);
+   bool execute(const std::string &sql_str);
 
  public:
    float get_float(int32_t column_index, int32_t &error_code);
@@ -170,15 +168,12 @@ class PF_API Interface {
    SQLSMALLINT *column_nullable_;
    char **column_values_;
    SQLINTEGER *column_valuelengths_;
-   pf_sys::memory::StaticAllocator column_info_allocator_;
-   char column_info_buffer_[COLUMN_INFO_BUFFER_MAX];
-   pf_sys::memory::StaticAllocator column_value_allocator_;
-   char column_value_buffer_[COLUMN_VALUE_BUFFER_MAX];
+   pf_sys::memory::DynamicAllocator column_info_allocator_;
+   pf_sys::memory::DynamicAllocator column_value_allocator_;
    /* column about } */
 
    pf_util::compressor::Mini compressor_;
 
-   db_query_t query_;
    SQLINTEGER error_code_;
    SQLCHAR error_message_[ERROR_MESSAGE_LENGTH_MAX];
 

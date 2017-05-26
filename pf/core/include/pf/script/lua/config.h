@@ -28,6 +28,10 @@ class System;
 
 }; //namespace pf_script
 
+#ifndef check_lua_argc
+#define check_lua_argc(L,n) Assert(lua_gettop((L)) == (n))
+#endif
+
 #endif
 
 #endif //PF_SCRIPT_LUA_CONFIG_H_

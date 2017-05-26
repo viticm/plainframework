@@ -1,4 +1,4 @@
-# This file generate by plain framework admin tool, date: 2017-01-20 19:51:31
+# This file generate by plain framework admin tool, date: 2017-05-25 23:43:35
 SET(LIBRARY_OUTPUT_PATH ./../dll/)
 
 ADD_DEFINITIONS(-DPF_CORE)
@@ -11,6 +11,7 @@ SET(USE_32BITS 0)
 IF(CMAKE_SYSTEM MATCHES Linux)
   ADD_DEFINITIONS(-D_REENTRANT)
   ADD_DEFINITIONS(-DDONT_TD_VOID)
+  ADD_DEFINITIONS(-DLUA_USE_LINUX)
 ELSE(CMAKE_SYSTEM MATCHES Linux)
 ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
@@ -21,7 +22,7 @@ LINK_DIRECTORIES(
 
 INCLUDE_DIRECTORIES(
   "../include/"
-  "../../dependencies/lua/5.3.0/include/"
+  "../../dependencies/lua/5.3.4/include/"
   "../../dependencies/iconv/include/"
   "/usr/local/unixODBC/include/"
 )
@@ -39,8 +40,11 @@ SET (INCLUDE_PF_BASIC_LIST
   ../include/pf/basic/logger.h
   ../include/pf/basic/logger.tcc
   ../include/pf/basic/md5.h
+  ../include/pf/basic/monitor.h
   ../include/pf/basic/singleton.tcc
   ../include/pf/basic/string.h
+  ../include/pf/basic/stringstream.h
+  ../include/pf/basic/task_queue.tcc
   ../include/pf/basic/time_manager.h
   ../include/pf/basic/tinytimer.h
   ../include/pf/basic/util.h
@@ -63,6 +67,7 @@ SET (INCLUDE_PF_BASIC_MACROS_LIST
 SET (INCLUDE_PF_BASIC_TYPE_LIST
   ../include/pf/basic/type/config.h
   ../include/pf/basic/type/variable.h
+  ../include/pf/basic/type/variable.tcc
 )
 
 SET (INCLUDE_PF_CACHE_LIST
@@ -210,18 +215,14 @@ SET (SRC_BASIC_LIST
   ../src/basic/base64.cc
   ../src/basic/global.cc
   ../src/basic/logger.cc
+  ../src/basic/monitor.cc
   ../src/basic/string.cc
   ../src/basic/time_manager.cc
   ../src/basic/tinytimer.cc
   ../src/basic/util.cc
 )
 
-SET (SRC_BASIC_TYPE_LIST
-  ../src/basic/type/variable.cc
-)
-
 SET (SRC_CACHE_LIST
-  ../src/cache/db_define.cc
   ../src/cache/db_store.cc
   ../src/cache/manager.cc
   ../src/cache/repository.cc
@@ -331,7 +332,6 @@ SET (SRC_UTIL_COMPRESSOR_LIST
 
 ADD_LIBRARY(pf_core SHARED
   ${SRC_BASIC_LIST}
-  ${SRC_BASIC_TYPE_LIST}
   ${SRC_CACHE_LIST}
   ${SRC_CACHE_PACKET_LIST}
   ${SRC_DB_LIST}

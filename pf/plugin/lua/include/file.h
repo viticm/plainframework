@@ -10,5 +10,10 @@
 */
 #include "config.h"
 
-int32_t file_opentab(lua_State *L);
-int32_t file_openini(lua_State *L);
+#ifndef PF_PLUGIN_LUA_FILE_H_
+#define PF_PLUGIN_LUA_FILE_H_
+
+PF_PLUGIN_API int32_t file_opentab(lua_State *L);
+PF_PLUGIN_API int32_t file_openini(lua_State *L);
+
+#endif //PF_PLUGIN_LUA_FILE_H_

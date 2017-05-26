@@ -27,11 +27,15 @@ class PF_API DynamicAllocator {
    void *malloc(size_t size);
    void free();
    void *get();
-   size_t size() const;
+   void *calloc(size_t size, size_t count = 1);
+   void *realloc(void *data, size_t newsize);
+   void clear() { offset_ = 0; }
+   size_t size() const { return size_; };
  
  private:
    void *pointer_;
    size_t size_;
+   size_t offset_;
 
 }; 
 

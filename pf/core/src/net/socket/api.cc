@@ -1063,7 +1063,7 @@ bool get_nonblocking_ex(int32_t socketid) {
 #if OS_UNIX
   result = pf_file::api::get_nonblocking_ex(socketid);
 #elif OS_WIN
-  USE_PARAM(socketid);
+  UNUSED(socketid);
   result = false;
 #endif
   return result;

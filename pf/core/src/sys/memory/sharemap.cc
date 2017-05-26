@@ -35,7 +35,7 @@ bool MapPool::init(uint32_t key,
                    bool create) {
   if (ready_) return true;
   set_data_extend_size(datasize);
-  ref_obj_pointer_ = std::shared_ptr<share::Base>(new Base());
+  ref_obj_pointer_ = std::unique_ptr<share::Base>(new Base());
   Assert(ref_obj_pointer_);
   if (!ref_obj_pointer_) return false;
   bool result = true;
@@ -44,7 +44,7 @@ bool MapPool::init(uint32_t key,
   auto bucketsize = sizeof(map_bucket_t) * size;
   auto full_datasize = (sizeof(map_node_t) + data_extend_size_) * size;
   auto memorysize = headersize + bucketsize + full_datasize;
-  result = ref_obj_pointer_->attach(key, memorysize);
+  result = ref_obj_pointer_->attach(key, memorysize, false);
   if (create && !result) {
     result = ref_obj_pointer_->create(key, memorysize);
     needinit = true;
@@ -56,7 +56,7 @@ bool MapPool::init(uint32_t key,
   } else if (!result) {
     SLOW_ERRORLOG(
         "sharememory", 
-        "[sys][sharememory] (UnitPool::init) failed");
+        "[sys.memory.sharemap] (MapPool::init) failed");
     Assert(result);
     return result;
   }    
@@ -65,7 +65,8 @@ bool MapPool::init(uint32_t key,
   if (is_null(objs_)) return false;
   map_bucket_t *buckets = reinterpret_cast<map_bucket_t *>(getbuckets());
   for (decltype(size_) i = 0; i < size_; ++i) {
-    char *pointer = getdata(sizeof(map_node_t) + data_extend_size_, i);
+	auto nodesize = static_cast<uint32_t>(sizeof(map_node_t) + data_extend_size_);
+    char *pointer = getdata(nodesize, static_cast<uint32_t>(i));
     objs_[i] = reinterpret_cast<map_node_t *>(pointer);
     if (is_null(objs_[i])) {
       Assert(false);
@@ -85,51 +86,67 @@ bool MapPool::init(uint32_t key,
   return true;
 }
 
+map_node_t *MapPool::new_obj() {
+  Assert(ref_obj_pointer_);
+  auto header = ref_obj_pointer_->header();
+  if (header->pool_position >= size_) return nullptr;
+  auto obj = objs_[header->pool_position];
+  obj->set_pool_id(static_cast<int32_t>(header->pool_position));
+  ++(header->pool_position);
+  obj->set_key(key_);
+  return obj;
+}
+
 void MapPool::delete_obj(map_node_t *obj) {
   Assert(obj != nullptr && ref_obj_pointer_ != nullptr);
   header_t *header = ref_obj_pointer_->header();
-  Assert(header);
-  unique_lock<header_t> auto_lock(*header, kFlagMixedWrite);
-  Assert(header->pool_position > 0);
-  if (is_null(obj) || header->pool_position <= 0) {
+  Assert(header); Assert(header->pool_position > 0);
+  if (is_null(obj) || header->pool_position < 0) {
     return;
   }
-  uint32_t delete_index = obj->get_pool_id(); //this function 
-                                              //must define in T*
-  Assert(delete_index < header->pool_position);
-  if (delete_index >= header->pool_position) {
+  auto delete_index = obj->get_pool_id(); //this function 
+                                          //must define in T*
+  Assert(delete_index < static_cast<int32_t>(header->pool_position));
+  if (delete_index >= static_cast<int32_t>(header->pool_position)) {
     return;
   }
   --(header->pool_position);
+  map_bucket_t *buckets = reinterpret_cast<map_bucket_t *>(getbuckets());
+  if (delete_index == static_cast<int32_t>(header->pool_position)) return;
   map_node_t *node = objs_[delete_index];
 
   //Safe to swap list.
   map_node_t *swapnode = objs_[header->pool_position];
-  uint32_t datasize = sizeof(map_node_t) + data_extend_size_;
+  uint32_t datasize = static_cast<uint32_t>(sizeof(map_node_t) + data_extend_size_);
   char *pointer = reinterpret_cast<char *>(node);
   char *swappointer = reinterpret_cast<char *>(swapnode);
   memcpy(pointer, swappointer, datasize);
-  if (node) {
-    if (node->data.prev != ID_INVALID) {
-      map_node_t *prevnode = get_obj(node->data.prev);
-      unique_lock< map_node_t > auto_lock(*prevnode, kFlagMixedWrite);
-      prevnode->data.next = delete_index;
-    }
+  node->set_pool_id(delete_index);
+
+  //Safe to change the swap link list.
+  if (node->data.prev != ID_INVALID) { //Prev node
+    map_node_t *prevnode = get_obj(node->data.prev);
+    unique_lock< map_node_t > auto_lock(*prevnode, kFlagMixedWrite);
+    prevnode->data.next = delete_index;
+  }
+  if (node->data.next != INDEX_INVALID) { //Next node
+    map_node_t *nextnode = get_obj(node->data.next);
+    unique_lock< map_node_t > auto_lock(*nextnode, kFlagMixedWrite);
+    nextnode->data.prev = delete_index;
   }
 
   //Safe to swap bucket.
   uint32_t _bucketindex = bucketindex(objs_[delete_index]->data.hash);
-  char *_buckets = getbuckets();
-  map_bucket_t *buckets = reinterpret_cast<map_bucket_t *>(_buckets);
   if (buckets[_bucketindex].cur == 
       static_cast<int32_t>(header->pool_position)) {
     buckets[_bucketindex].cur = delete_index;
   }
+  swapnode->clear();
 }
+
 uint32_t MapPool::bucketindex(uint32_t hash) {
   uint32_t index = hash & (size() - 1);
   return index;
-  return 0;
 }
    
 uint32_t MapPool::hashkey(const char *str) {
@@ -144,9 +161,9 @@ char *MapPool::getdata(uint32_t size, uint32_t index) {
   char *result = nullptr;
   if (!ref_obj_pointer_) return result;
   char *data = ref_obj_pointer_->get();
-  uint32_t bucketsize = sizeof(map_bucket_t) * size_;
+  auto bucketsize = sizeof(map_bucket_t) * size_;
   char *realdata = data + bucketsize;
-  uint32_t data_fullsize = (sizeof(map_node_t) + data_extend_size_) * size_;
+  auto data_fullsize = (sizeof(map_node_t) + data_extend_size_) * size_;
   Assert(size > 0);
   Assert(size * index <= data_fullsize - size);
   result = (size <= 0 || size * index > data_fullsize - size) ? 
@@ -186,7 +203,7 @@ bool Map::init(uint32_t key,
   if (ready_) return true;
   pool_ = new MapPool;
   Assert(pool_);
-  uint32_t datasize = (keysize + 1) + (valuesize + 1);
+  auto datasize = (keysize + 1) + (valuesize + 1);
   bool result = pool_->init(key, size, datasize, create);
   if (!result) return result;
   buckets_ = reinterpret_cast<map_bucket_t *>(pool_->getbuckets());
@@ -205,10 +222,10 @@ void Map::clear() {
    
 const char *Map::get(const char *key) {
   const char *result = nullptr;
-  int32_t index = getref(key);
+  auto index = getref(key);
   if (index != INDEX_INVALID) {
     map_node_t *node = pool_->get_obj(index);
-    uint32_t valuepos = sizeof(map_node_t) + keysize_ + 2;
+    auto valuepos = sizeof(map_node_t) + keysize_ + 2;
     result = reinterpret_cast<char *>(node) + valuepos;
   }
   return result;
@@ -216,7 +233,7 @@ const char *Map::get(const char *key) {
    
 bool Map::set(const char *key, const char *value) {
   auto index = getref(key);
-  auto valuesize = static_cast<uint32_t>(strlen(value));
+  auto valuesize = strlen(value);
   map_node_t *node = nullptr;
   auto valuepos = sizeof(map_node_t) + keysize_ + 2;
   valuesize = valuesize > valuesize_ ? valuesize_ : valuesize;
@@ -229,6 +246,9 @@ bool Map::set(const char *key, const char *value) {
     memset(pointer, 0, valuesize_ + 1);
     memcpy(pointer, value, valuesize);
   } else {
+    auto header = pool_->get_header();
+    Assert(header);
+    unique_lock<header_t> auto_lock(*header, kFlagMixedWrite);
     node = newnode(key, value);
     if (is_null(node)) return false;
     addnode(node);
@@ -237,30 +257,35 @@ bool Map::set(const char *key, const char *value) {
 }
 
 void Map::remove(const char *key) {
-    map_node_t *node = nullptr;
-    int32_t index = getref(key);
-    map_bucket_t *buckets = reinterpret_cast<map_bucket_t *>(pool_->getbuckets());
-    header_t *header = pool_->get_header();
-    unique_lock<header_t> auto_lock(*header, kFlagSelfWrite);
-    uint32_t hash = 0;
-    if (index != INDEX_INVALID) {
-      node = pool_->get_obj(index);
-      hash = node->data.hash;
-      if (node->data.prev != INDEX_INVALID) {
-        map_node_t *prevnode = pool_->get_obj(node->data.prev);
-        unique_lock< map_node_t > auto_lock(*prevnode, kFlagMixedWrite);
-        if (prevnode) prevnode->data.next = node->data.next;
-      }
-      uint32_t _bucketindex = pool_->bucketindex(hash);
-      if (_bucketindex >= 0 && _bucketindex < pool_->size()) {
-        unique_lock< header_t > auto_lock(*header, kFlagMixedWrite);
-        map_bucket_t *bucket = &buckets[_bucketindex];
-        if (bucket->cur == static_cast<int32_t>(node->get_pool_id())) 
-          bucket->cur = node->data.next;
-      }
-      pool_->delete_obj(node);
-      //node->data.clear();
+  auto header = pool_->get_header();
+  auto index = getref(key);
+  unique_lock<header_t> auto_lock(*header, kFlagMixedWrite);
+  map_node_t *node = nullptr;
+  map_bucket_t *buckets = reinterpret_cast<map_bucket_t *>(pool_->getbuckets());
+  uint32_t hash = 0;
+  if (index != INDEX_INVALID) {
+    node = pool_->get_obj(index);
+    hash = node->data.hash;
+    //Swap hash list.
+    if (node->data.prev != INDEX_INVALID) { //Prev node
+      map_node_t *prevnode = pool_->get_obj(node->data.prev);
+      unique_lock< map_node_t > auto_lockp(*prevnode, kFlagMixedWrite);
+      prevnode->data.next = node->data.next;
     }
+    if (node->data.next != INDEX_INVALID) { //Next node
+      map_node_t *nextnode = pool_->get_obj(node->data.next);
+      unique_lock< map_node_t > auto_lockn(*nextnode, kFlagMixedWrite);
+      nextnode->data.prev = node->data.prev;
+    }
+
+    uint32_t _bucketindex = pool_->bucketindex(hash);
+    if (_bucketindex >= 0 && _bucketindex < pool_->size()) {
+      map_bucket_t *bucket = &buckets[_bucketindex];
+      if (bucket->cur == static_cast<int32_t>(node->get_pool_id())) 
+        bucket->cur = node->data.next;
+    }
+    pool_->delete_obj(node);
+  }
 }
    
 MapPool *Map::getpool() {
@@ -268,24 +293,28 @@ MapPool *Map::getpool() {
 }   
 
 map_node_t *Map::newnode(const char *key, const char *value) {
-    map_node_t *node = nullptr;
-    uint32_t keypos = sizeof(map_node_t);
-    uint32_t valuepos = keypos + keysize_ + 2;
-    node = pool_->new_obj();
-    if (is_null(node)) return node;
-    char *pointer = reinterpret_cast<char *>(node);
-    uint32_t keysize = static_cast<uint32_t>(strlen(key));
-    uint32_t valuesize = static_cast<uint32_t>(strlen(value));
-    uint32_t hash = pool_->hashkey(key);
-    keysize = keysize > keysize_ ? keysize_ : keysize;
-    valuesize = valuesize > valuesize_ ? valuesize_ : valuesize;
-    unique_lock< map_node_t > auto_lock(*node, kFlagMixedWrite);
-    node->data.hash = hash;
-    memset(pointer + keypos, 0, keysize_ + 1);
-    memcpy(pointer + keypos, key, keysize);
-    memset(pointer + valuepos, 0, valuesize + 1);
-    memcpy(pointer + valuepos, value, valuesize);
-    return node;
+  map_node_t *node = nullptr;
+  auto keypos = sizeof(map_node_t);
+  auto valuepos = keypos + keysize_ + 2;
+  node = pool_->new_obj();
+  auto pool_id = node->get_pool_id();
+  if (is_null(node)) return node;
+  node->clear();
+  char *pointer = reinterpret_cast<char *>(node);
+  auto keysize = strlen(key);
+  auto valuesize = strlen(value);
+  uint32_t hash = pool_->hashkey(key);
+  keysize = keysize > keysize_ ? keysize_ : keysize;
+  valuesize = valuesize > valuesize_ ? valuesize_ : valuesize;
+  node->data.clear();
+  unique_lock< map_node_t > auto_lock(*node, kFlagMixedWrite);
+  node->set_pool_id(pool_id);
+  node->data.hash = hash;
+  memset(pointer + keypos, 0, keysize_ + 1);
+  memcpy(pointer + keypos, key, keysize);
+  memset(pointer + valuepos, 0, valuesize + 1);
+  memcpy(pointer + valuepos, value, valuesize);
+  return node;
 }
    
 void Map::addnode(map_node_t *node) {
@@ -325,17 +354,35 @@ int32_t Map::getref(const char *key) {
 }
 
 void map_iterator::generate_data() {
-  if (is_null(map_)) return;
+  if (is_null(map_) || !map_->is_ready()) return;
+  if (current_ >= map_->getpool()->get_position()) {
+    first = second = nullptr;
+    return;
+  }
   map_node_t *node = map_->getpool()->get_obj(current_);
-  first = reinterpret_cast<char *>(node) + sizeof(map_node_t);
-  uint32_t valuepos = sizeof(map_node_t) + map_->key_size() + 2;
-  second = reinterpret_cast<char *>(node) + valuepos;
+  if (is_null(node)) {
+    first = second = nullptr;
+    return;
+  }
+  auto pointer = reinterpret_cast<char *>(node);
+  first = pointer + sizeof(map_node_t);
+  auto valuepos = sizeof(map_node_t) + map_->key_size() + 2;
+  second = pointer + valuepos;
 }
 
 void map_reverse_iterator::generate_data() {
-  if (is_null(map_)) return;
+  if (is_null(map_) || !map_->is_ready()) return;
+  if (current_ >= map_->getpool()->get_position()) {
+    first = second = nullptr;
+    return;
+  }
   map_node_t *node = map_->getpool()->get_obj(current_);
-  first = reinterpret_cast<char *>(node) + sizeof(map_node_t);
-  uint32_t valuepos = sizeof(map_node_t) + map_->key_size() + 2;
-  second = reinterpret_cast<char *>(node) + valuepos;
+  if (is_null(node)) {
+    first = second = nullptr;
+    return;
+  }
+  auto pointer = reinterpret_cast<char *>(node);
+  first = pointer + sizeof(map_node_t);
+  auto valuepos = sizeof(map_node_t) + map_->key_size() + 2;
+  second = pointer + valuepos;
 }

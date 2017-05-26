@@ -1,12 +1,32 @@
 /**
- * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework1 )
+ * PLAIN FRAMEWORK ( https://github.com/viticm/plainframework )
  * $Id sharemap.h
  * @link https://github.com/viticm/plainframework1 for the canonical source repository
  * @copyright Copyright (c) 2014- viticm( viticm@126.com/viticm.ti@gmail.com )
  * @license
  * @user viticm<viticm@126.com/viticm.ti@gmail.com>
- * @date 2016/05/29 16:16
+ * @date 2017/05/17 12:07
  * @uses share memory hash map
+ *       map implement:
+ *         memory struct: [header|buckets|nodes] -> in map pool
+ *                        * buckets is single linked list <share::map_bucket_t> 
+ *                        * nodes is double linked list <share::map_node_t>
+ *
+ *         new node doing: key->hash->bucketindex->add bucket linked list first
+ *                         * bucket linked list cur is the node in pool index.
+ *
+ *         find hash doing: key->hash->bucketindex-> find the node index
+ *                          * see function getref(the way from new node)
+ *         
+ *         remove hash doing: Get the pool index from find hash,
+ *                            * when index is invalid(not the INDEX_INVALID)
+ *                              then find node and delete it in node list.
+ *
+ *         all node doing phrase means:
+ *           key -> the map key(get/set first param)
+ *           hash -> is the only number from key string(see function hashkey)
+ *           bucketindex -> is the number from hash(see function bucketindex)
+ *
  */
 #ifndef PF_SYS_MEMORY_SHAREMAP_H_
 #define PF_SYS_MEMORY_SHAREMAP_H_
@@ -159,7 +179,7 @@ class PF_API map_reverse_iterator {
 
    map_reverse_iterator(Map *map, int32_t current) : 
      current_{current},
-     map_{nullptr} {
+     map_{map} {
      generate_data();
    }
 
@@ -238,7 +258,7 @@ class PF_API map_reverse_iterator {
 };
 
 inline bool operator == (const map_iterator &x, const map_iterator &y) {
-  return x.base() == y.base() and x.map() == y.map();
+  return x.base() == y.base() && x.map() == y.map();
 }
 
 inline bool operator != (const map_iterator &x, const map_iterator &y) {
@@ -247,7 +267,7 @@ inline bool operator != (const map_iterator &x, const map_iterator &y) {
 
 inline bool operator == 
   (const map_reverse_iterator &x, const map_reverse_iterator &y) {
-  return x.base() == y.base() and x.map() == y.map();
+  return x.base() == y.base() && x.map() == y.map();
 }
 
 inline bool operator != 
@@ -263,6 +283,9 @@ class PF_API MapPool : public UnitPool<map_node_t> {
 
  public:
    bool init(uint32_t key, size_t size, size_t datasize, bool create);
+
+ public:
+   map_node_t *new_obj();
    void delete_obj(map_node_t *obj);
    char *getbuckets();
    uint32_t bucketindex(uint32_t hash);
@@ -301,6 +324,9 @@ class PF_API Map {
    inline size_t size() const {
      return pool_->get_position();
    }
+   inline size_t full() const {
+     return pool_->full();
+   }
 
  public:
    size_t key_size() const { return keysize_; }
@@ -328,6 +354,19 @@ class PF_API Map {
      return map_iterator(this, 
                          ID_INVALID == index ? pool_->get_position() : index);
    }
+
+   void pop_front(std::string &key, std::string &var) {
+     auto it = begin();
+     key = it.first; var = it.second;
+     erase(it.first);
+   }
+   void pop_back(std::string &key, std::string &var) {
+     auto it = rbegin();
+     key = it.first; var = it.second;
+     erase(it.first);
+   }
+
+   inline bool is_ready() const { return ready_; }
 
  private:
    size_t keysize_;

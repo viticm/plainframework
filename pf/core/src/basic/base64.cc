@@ -106,7 +106,7 @@ int base64decode(char * buf, const char * base64code, int src_len) {
     src_len = static_cast<int>(strlen(base64code));
 
   for (ii = 0; ii < src_len - 4; ii += 4) {
-    unsigned long ulTmp = *(unsigned long*)psrc;
+    ulTmp = *(unsigned long*)psrc;
     
      b0 = (getb64index((char)B0(ulTmp)) << 2 | 
          getb64index((char)B1(ulTmp)) << 2 >> 6) & 0xFF;
@@ -129,20 +129,20 @@ int base64decode(char * buf, const char * base64code, int src_len) {
       *(((unsigned char*)&ulTmp) + jj) = *psrc++;
     }
     
-    int b0 = (getb64index((char)B0(ulTmp)) << 2 | 
+    b0 = (getb64index((char)B0(ulTmp)) << 2 | 
         getb64index((char)B1(ulTmp)) << 2 >> 6) & 0xFF;
     *pbuf++ = static_cast<char>(b0);
     len++;
 
     if ('=' != B1(ulTmp) && '=' != B2(ulTmp)) {
-       int b1 = (getb64index((char)B1(ulTmp)) << 4 | 
+       b1 = (getb64index((char)B1(ulTmp)) << 4 | 
            getb64index((char)B2(ulTmp)) << 2 >> 4) & 0xFF;
       *pbuf++ = static_cast<char>(b1);
       len  ++;
     }
     
     if ('=' != B2(ulTmp) && '=' != B3(ulTmp)) {
-       int b2 = (getb64index((char)B2(ulTmp)) << 6 | 
+       b2 = (getb64index((char)B2(ulTmp)) << 6 | 
            getb64index((char)B3(ulTmp)) << 2 >> 2) & 0xFF;
       *pbuf++ = static_cast<char>(b2);
       len++;

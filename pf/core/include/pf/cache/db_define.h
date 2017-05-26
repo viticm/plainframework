@@ -48,14 +48,12 @@
 #define CACHE_DBNODE_MAX 20
 #define CACHE_SHARE_POOLSIZE 1000
 #define CACHE_SHARE_KEYSIZE 30
-#define CACHE_DB_TABLE_COLUMN_NAMES_SIZE (1024)     //列名的总长度
-#define CACHE_DB_TABLE_COLUMN_TYPES_SIZE (64)       //列类型总长度
-#define CACHE_DB_TABLE_CONDITION_SIZE (512)         //条件长度（where后的语句）
-#define CACHE_DB_ITEM_LENGTHS_SIZE (256)            //数据大小总长度
-#define CACHE_SHARE_HASH_KEY_SIZE (128) 
-#define CACHE_SHARE_HASH_VALUE_SIZE (64)
-#define CACHE_SHARE_DEFAULT_MINUTES (10)            //默认缓存的分钟数
-#define CACHE_SHARE_NET_QUERY_PACKET_ID (0xF001)    //默认查询的网络包ID
+#define CACHE_DB_TABLE_COLUMNS_SIZE      (1024)     //列信息的总长度
+#define CACHE_DB_ITEM_LENGTHS_SIZE       (256)      //数据大小总长度
+#define CACHE_SHARE_HASH_KEY_SIZE        (128) 
+#define CACHE_SHARE_HASH_VALUE_SIZE      (64)
+#define CACHE_SHARE_DEFAULT_MINUTES      (10)       //默认缓存的分钟数
+#define CACHE_SHARE_NET_QUERY_PACKET_ID  (0xF001)   //默认查询的网络包ID
 #define CACHE_SHARE_NET_RESULT_PACKET_ID (0xF002)   //默认结果的网络包ID
 
 namespace pf_cache {
@@ -86,24 +84,20 @@ struct db_table_base_struct {
 
 struct db_table_info_struct {
 
-  //Database column names.
-  char column_names[CACHE_DB_TABLE_COLUMN_NAMES_SIZE];
-  
-  //Database column types.
-  char column_types[CACHE_DB_TABLE_COLUMN_TYPES_SIZE];
-  
-  //Save or query condition.
-  //char condition[CACHE_DB_TABLE_CONDITION_SIZE];
+  //Database column info(name,type|name1,type1...).
+  char columns[CACHE_DB_TABLE_COLUMNS_SIZE];
  
   db_table_info_struct() : 
-    column_names{0},
-    column_types{0} {}
+    columns{0} {}
 };
 
 struct db_item_struct {
 
   //The status of this item.
   int8_t status;
+
+  //The type of this item.
+  uint8_t type;
 
   //The item size.
   size_t size;
@@ -117,10 +111,29 @@ struct db_item_struct {
   //The param array.
   int32_t param[3];
 
+  //The share mutex.
+  pf_sys::memory::share::mutex_t mutex;
+
   char *get_data() {
     return reinterpret_cast<char *>(this) + sizeof(db_item_struct);
   }
+  void lock(int8_t flag) {
+    pf_sys::memory::share::lock(mutex, flag);
+  }
+  void unlock(int8_t flag) {
+    pf_sys::memory::share::unlock(mutex, flag);
+  }
 
+  void clear() {
+    mutex.exchange(pf_sys::memory::share::kFlagFree);
+    status = kQueryInvalid;
+    size = 0;
+    memset(only_key, 0, sizeof(only_key));
+    hook_time = 0;
+    memset(param, 0, sizeof(param));
+  }
+
+  /**
   //Like database fetch array, cache data to it.
   bool data_to_fetch_array(
       db_fetch_array_t &array, db_table_info_struct *info);
@@ -132,12 +145,14 @@ struct db_item_struct {
   //Check fetch array is valid to cache data.
   bool is_valid_fetch_array(
       const db_fetch_array_t &array, db_table_info_struct *info);
+  **/
 
   db_item_struct() :
     status{kQueryInvalid},
     size{0},
     only_key{0},
-    hook_time{0} {}
+    hook_time{0},
+    mutex{pf_sys::memory::share::kFlagFree} {}
 };
 
 //The share item config for one T(table).
@@ -149,21 +164,9 @@ struct db_share_config_struct {
  //No save.
  bool no_save;
 
- //Condition size. 如果此项不为0则条件可以动态设置。
- //此项不为0则读取共享内存中的语句，假如设置的语句为key = 333 and name != "xxxx"
- //那么直接将此语句加入到共享语句之后。
- //size_t condition_size;
-
  //表名
  std::string name;
 
- //Condition string. 如果此项不为空条件默认走此项，不再走设置的条件。
- //如果condition_size为0同时condition为空情况下，不再走存盘的流程。
- //(column1,column2...)那么查询语句的where为 column1 = val1 and column2 = val2;
- //(column1#>|column2#<...)表示查询的语句的where为column1 > val1 and column2 < val2;
- //默认暂时只支持上述两种配置，当然外部可以设置保存方法来自定义查询方式。
- //std::string condition;
- 
  //保存的列名
  std::vector< std::string > save_columns;
 
@@ -201,6 +204,12 @@ struct db_share_config_struct {
 
 };
 
+//The db table columns info.
+struct db_table_cinfo_struct {
+  std::vector<std::string> names;
+  std::vector<int8_t> types;
+};
+
 //Call back function for store.
 typedef void *(__stdcall *function_callback)();
 
@@ -213,12 +222,16 @@ using db_table_info_t = struct db_table_info_struct;
 //DB save item struct.
 using db_item_t = struct db_item_struct;
 
-//DB share data struct.
-using db_share_data_t = pf_sys::memory::share::data_template< db_item_t >;
-
 //DB share config struct.
 using db_share_config_t = struct db_share_config_struct;
 
+//DB table columns info.
+using db_table_cinfo_t = struct db_table_cinfo_struct;
+
 }; //namespace pf_cache
+
+//Some useful macros.
+#define cast_dcache(v)cast(db_item_t *, (v)) //dcache is db cache.
+#define dcache_key(n, k, r)(r) += (n);(r) += "#";(r) += (k);
 
 #endif //PF_CACHE_DEFINE_H_

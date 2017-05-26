@@ -1,4 +1,4 @@
-# This file generate by plain framework admin tool, date: 2017-01-20 00:28:32
+# This file generate by plain framework admin tool, date: 2017-05-21 13:01:07
 SET(LIBRARY_OUTPUT_PATH ./../../../dll/)
 
 ADD_DEFINITIONS(-DPF_PLUGIN_CORE)
@@ -9,6 +9,7 @@ SET(USE_32BITS 0)
 IF(CMAKE_SYSTEM MATCHES Linux)
   ADD_DEFINITIONS(-D_REENTRANT)
   ADD_DEFINITIONS(-DDONT_TD_VOID)
+  ADD_DEFINITIONS(-DLUA_USE_LINUX)
 ELSE(CMAKE_SYSTEM MATCHES Linux)
 ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
@@ -21,7 +22,7 @@ LINK_DIRECTORIES(
 INCLUDE_DIRECTORIES(
   "../include/"
   "../../../../pf/core/include/"
-  "../../../../pf/dependencies/lua/5.3.0/include/"
+  "../../../../pf/dependencies/lua/5.3.4/include/"
 )
 
 

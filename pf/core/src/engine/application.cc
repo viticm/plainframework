@@ -34,13 +34,13 @@ void signal_handler(int32_t signal) {
     if (currenttime - last_signaltime > 10 * 1000) {
       io_cdebug(
           "\r[%s] (signal_handler) got SIGINT[%d] engine will reload!", 
-          GLOBALS["app.name"].string(),
+          GLOBALS["app.name"].c_str(),
           signal);
       Application::getsingleton().parse_command("--reload");
     } else {
       io_cwarn(
           "\r[%s] (signal_handler) got SIGINT[%d] engine will stop!", 
-          GLOBALS["app.name"].string(),
+          GLOBALS["app.name"].c_str(),
           signal);
       Application::getsingleton().stop();
     }
@@ -49,7 +49,7 @@ void signal_handler(int32_t signal) {
   if (signal == SIGUSR1) {
     io_cwarn(
         "\r[%s] (signal_handler) got SIGUSR1[%d] engine will stop!", 
-        GLOBALS["app.name"].string(),
+        GLOBALS["app.name"].c_str(),
         signal);
     Application::getsingleton().stop();
   }
@@ -65,12 +65,12 @@ BOOL WINAPI signal_handler(DWORD event) {
       if (currenttime - last_signaltime > 10 * 1000) {
         io_cdebug(
             "[%s] (signal_handler) CTRL+C received, engine will reload!",
-            GLOBALS["app.name"].string());
+            GLOBALS["app.name"].c_str());
         Application::getsingleton().parse_command("--reload");
       } else {
         io_cwarn(
             "[%s] (signal_handler) CTRL+C received, engine will stop!",
-            GLOBALS["app.name"].string());
+            GLOBALS["app.name"].c_str());
         Application::getsingleton().stop();
       }
       break;
@@ -116,7 +116,7 @@ void Application::run() {
   char process_idpath[FILENAME_MAX] = {0};
   pf_sys::process::get_filename(process_idpath, sizeof(process_idpath));
 #if OS_WIN 
-  if (0 == APPLICATION_TYPE) {
+  if (GLOBALS["app.console"] == true) {
     _CrtSetDbgFlag(_CrtSetDbgFlag(0) | _CRTDBG_LEAK_CHECK_DF);
     system("color 02"); //color green
     system("mode con cols=120"); //cmd size
@@ -157,7 +157,7 @@ void Application::run() {
   if (!engine_->init()) return;
   if (!pf_sys::process::writeid(process_idpath)) { 
     io_cerr("[%s] process id file: %s write error", 
-            GLOBALS["app.name"].string(), 
+            GLOBALS["app.name"].c_str(), 
             process_idpath);
     return;
   }
@@ -165,10 +165,10 @@ void Application::run() {
   signal(SIGINT, signal_handler);
   signal(SIGUSR1, signal_handler);
 #elif OS_WIN 
-  pf_base::util::disable_windowclose();
+  pf_basic::util::disable_windowclose();
   if (SetConsoleCtrlHandler(
         (PHANDLER_ROUTINE)signal_handler, TRUE) != TRUE) {
-    io_cerr("[%s] can't install signal handler", APPLICATION_NAME);
+    io_cerr("[%s] can't install signal handler", GLOBALS["app.name"].c_str());
     return;
   }
 #endif
@@ -181,6 +181,8 @@ void Application::run(int32_t argc, char *argv[]) {
   } else {
     run();
   }
+  //Not wait the unhandle threads.
+  if (GLOBALS["app.forceexit"] == true) exit(0);
 }
 
 void Application::stop() {

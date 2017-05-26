@@ -83,61 +83,46 @@ bool System::check_db_connect() {
   return result;
 }
 
-db_query_t *System::get_internal_query() {
-  db_query_t *db_query = odbc_interface_->get_query();
-  return db_query;
-}
-
-bool System::load() {
-  if (!is_prepare()) return false;
-  if (!odbc_interface_) return false;
-  op_type_ = kDBOptionTypeLoad;
-  odbc_interface_->clear();
-  result_ = odbc_interface_->execute();
-  result_count_ = odbc_interface_->get_affect_row_count();
-  return result_;
-}
-
 bool System::getresult() const {
   return result_;
 }
 
-bool System::query() {
+bool System::query(const std::string &sql_str) {
   if (!is_prepare()) return false;
   if (!odbc_interface_) return false;
   odbc_interface_->clear();
   op_type_ = kDBOptionTypeQuery;
-  result_ = odbc_interface_->execute();
+  result_ = odbc_interface_->execute(sql_str);
   result_count_ = odbc_interface_->get_affect_row_count();
   return result_;
 }
 
-bool System::add_new() {
+bool System::add_new(const std::string &sql_str) {
   if (!is_prepare()) return false;
   if (!odbc_interface_) return false;
   op_type_ = kDBOptionTypeAddNew;
   odbc_interface_->clear();
-  result_ = odbc_interface_->execute();
+  result_ = odbc_interface_->execute(sql_str);
   result_count_ = odbc_interface_->get_affect_row_count();
   return result_;
 }
 
-bool System::_delete() {
+bool System::_delete(const std::string &sql_str) {
   if (!is_prepare()) return false;
   if (!odbc_interface_) return false;
   op_type_ = kDBOptionTypeDelete;
   odbc_interface_->clear();
-  result_ = odbc_interface_->execute();
+  result_ = odbc_interface_->execute(sql_str);
   result_count_ = odbc_interface_->get_affect_row_count();
   return result_;
 }
 
-bool System::save() {
+bool System::save(const std::string &sql_str) {
   if (!is_prepare()) return false;
   if (!odbc_interface_) return false;
   op_type_ = kDBOptionTypeSave;
   odbc_interface_->clear();
-  result_ = odbc_interface_->execute();
+  result_ = odbc_interface_->execute(sql_str);
   result_count_ = odbc_interface_->get_affect_row_count();
   return result_;
 }
@@ -160,9 +145,9 @@ int32_t System::get_columncount() const {
   return result;
 }
 
-int8_t System::gettype(int32_t column_index) {
-  int8_t type = kDBColumnTypeString;
-  int16_t typecode = odbc_interface_->get_type(column_index); 
+db_columntype_t System::gettype(int32_t column_index) {
+  auto type = kDBColumnTypeString;
+  auto typecode = odbc_interface_->get_type(column_index); 
   switch (typecode) {
     case SQL_CHAR:
       break;
@@ -182,10 +167,10 @@ int8_t System::gettype(int32_t column_index) {
       type = kDBColumnTypeNumber;
       break;
     case SQL_SMALLINT:
-      type = kDBColumnTypeNumber;
+      type = kDBColumnTypeInteger;
       break;
     case SQL_INTEGER:
-      type = kDBColumnTypeNumber;
+      type = kDBColumnTypeInteger;
       break;
     case SQL_REAL:
       type = kDBColumnTypeNumber;
@@ -197,13 +182,13 @@ int8_t System::gettype(int32_t column_index) {
       type = kDBColumnTypeNumber;
       break;
     case SQL_BIT:
-      type = kDBColumnTypeNumber;
+      type = kDBColumnTypeInteger;
       break;
     case SQL_TINYINT:
-      type = kDBColumnTypeNumber;
+      type = kDBColumnTypeInteger;
       break;
     case SQL_BIGINT:
-      type = kDBColumnTypeNumber;
+      type = kDBColumnTypeInteger;
       break;
     case SQL_TYPE_DATE:
       break;

@@ -68,8 +68,10 @@ class PF_API System : public Interface {
      lua_register(
          lua_state_, name.c_str(), reinterpret_cast< lua_CFunction >(pointer));
    };
-   virtual void setglobal(const std::string &name, const var_t &var);
-   virtual void getglobal(const std::string &name, var_t &var);
+   virtual void setglobal(const std::string &name,
+                          const pf_basic::type::variable_t &var);
+   virtual void getglobal(const std::string &name, 
+                          pf_basic::type::variable_t &var);
    virtual bool exists(const std::string &name) {
      lua_getglobal(lua_state_, name.c_str());
      return lua_isnil(lua_state_, 1) != 1;
@@ -77,8 +79,8 @@ class PF_API System : public Interface {
    //Call with string, example: "test\t1\tname" or "module.test\t1\tname".
    virtual bool call(const std::string &str);
    virtual bool call(const std::string &name, 
-                     const var_array_t &params, 
-                     var_array_t &results);
+                     const pf_basic::type::variable_array_t &params,
+                     pf_basic::type::variable_array_t &results);
 
  public: //For lua owner.
    lua_State *get_lua_state() {
@@ -98,8 +100,8 @@ class PF_API System : public Interface {
    void unregister_refs();
    void gccheck(int32_t freetime);
    void setfield(
-       const std::string &table, const std::string &field, const var_t &var);
-   void getfield(const std::string &table, const std::string &field, var_t &var);
+       const std::string &table, const std::string &field, const pf_basic::type::variable_t &var);
+   void getfield(const std::string &table, const std::string &field, pf_basic::type::variable_t &var);
    bool callstr(const std::string &str) {
      return 1 == luaL_dostring(lua_state_, str.c_str());
    };

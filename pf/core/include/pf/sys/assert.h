@@ -35,40 +35,44 @@ PF_API void __show__(const char *temp);
 }; //namespace pf_sys
 
 #if defined(NDEBUG)
-    #define Assert(expr) ((void)0)
-    #define AssertEx(expr,msg) ((void)0)
-    #define AssertSpecial(expr,msg) ((void)0)
-    #define MyMessageBox(msg) ((void)0)
+  #define Assert(expr) ((void)0)
+  #define AssertEx(expr,msg) ((void)0)
+  #define AssertSpecial(expr,msg) ((void)0)
+  #define MyMessageBox(msg) ((void)0)
+  #define check_exp(c,e)(e)
 #elif OS_UNIX
-    #define Assert(expr) { \
-    if (!(expr)) { \
-      pf_sys::__assert__(__FILE__,__LINE__,__PRETTY_FUNCTION__,#expr); \
-    }}
-    #define AssertEx(expr,msg) { \
-    if (!(expr)) { \
-      pf_sys::__assertex__(__FILE__,__LINE__,__PRETTY_FUNCTION__,#expr,msg); \
-    }}
-    #define AssertSpecial(expr,msg) { \
-    if (!(expr)) { \
-      pf_sys::__assertspecial__( \
-          __FILE__,__LINE__,__PRETTY_FUNCTION__,#expr,msg); \
-    }}
-    #define MyMessageBox(msg) ((void)0)
+  #define Assert(expr) { \
+  if (!(expr)) { \
+    pf_sys::__assert__(__FILE__,__LINE__,__PRETTY_FUNCTION__,#expr); \
+  }}
+  #define AssertEx(expr,msg) { \
+  if (!(expr)) { \
+    pf_sys::__assertex__(__FILE__,__LINE__,__PRETTY_FUNCTION__,#expr,msg); \
+  }}
+  #define AssertSpecial(expr,msg) { \
+  if (!(expr)) { \
+    pf_sys::__assertspecial__( \
+        __FILE__,__LINE__,__PRETTY_FUNCTION__,#expr,msg); \
+  }}
+  #define MyMessageBox(msg) ((void)0)
+  #define check_exp(c,e)(Assert((c)), (e))
 #elif defined(__WIN_CONSOLE__) || defined(__WIN32__) || OS_WIN
-    #define Assert(expr) ((void)( \
-    (expr) ? 0 : (pf_sys::__assert__(__FILE__,__LINE__,__FUNCTION__,#expr),0)))
-    #define AssertEx(expr,msg) ((void)( \
-    (expr) ? 0 : (pf_sys::__assertex__( \
-        __FILE__,__LINE__,__FUNCTION__,#expr,msg),0)))
-    #define AssertSpecial(expr,msg) ((void)( \
-    (expr) ? 0 : (pf_sys::__assertspecial__( \
-        __FILE__,__LINE__,__FUNCTION__,#expr,msg),0)))
-    #define MyMessageBox(msg) __messagebox__(msg)
+  #define Assert(expr) ((void)( \
+  (expr) ? 0 : (pf_sys::__assert__(__FILE__,__LINE__,__FUNCTION__,#expr),0)))
+  #define AssertEx(expr,msg) ((void)( \
+  (expr) ? 0 : (pf_sys::__assertex__( \
+      __FILE__,__LINE__,__FUNCTION__,#expr,msg),0)))
+  #define AssertSpecial(expr,msg) ((void)( \
+  (expr) ? 0 : (pf_sys::__assertspecial__( \
+      __FILE__,__LINE__,__FUNCTION__,#expr,msg),0)))
+  #define MyMessageBox(msg) __messagebox__(msg)
+  #define check_exp(c,e)(Assert(c), (e))
 #elif defined(__MFC__)
-    #define Assert(expr) ASSERT(expr)
-    #define AssertEx(expr,msg) ((void)0)
-    #define AssertSpecial(expr,msg) ((void)0)
-    #define MyMessageBox(msg) ((void)0)
+  #define Assert(expr) ASSERT(expr)
+  #define AssertEx(expr,msg) ((void)0)
+  #define AssertSpecial(expr,msg) ((void)0)
+  #define MyMessageBox(msg) ((void)0)
+  #define check_exp(c,e)(e)
 #endif
 
 #endif //PF_SYS_ASSERT_H_

@@ -17,7 +17,7 @@ enum {
   kCmdModelClearAll = 1,
   kCmdModelLoadDump = 2,
   kCmdModelRecover = 3,
-}; //命令行模式
+}; //Command model.
 
 #define SYS_MEMORY_SHARENODE_DETECT_IDLE 5000
 #define SYS_MEMORY_SHARENODE_SAVEINTERVAL 300000
@@ -41,6 +41,7 @@ enum {
   kFlagSelfWrite = 0x02,  //共享内存自己写
   kFlagMixedRead = 0x03,  //混合内存读取
   kFlagMixedWrite = 0x04, //混合内存写
+  kFlagMax = 0x04,        //内部标记最大值
 };
 
 enum {

@@ -65,4 +65,29 @@
 #define safe_delete(ptr) if (ptr) { delete ptr; ptr = nullptr; }
 #define safe_delete_array(ptr) if (ptr) { delete[] ptr; ptr = nullptr; }
 
+/* macro to avoid warnings about unused variables */
+#if !defined(UNUSED)
+#define UNUSED(x) ((void)(x))
+#endif
+
+/* Move a pointer to the std::unique_ptr value. */
+#ifndef unique_move
+#define unique_move(t,o,n) {std::unique_ptr< t > p{o}; n = std::move(p);}
+#endif
+
+/* C cast pointer function. */
+#ifndef cast
+#define cast(t, exp)((t)(exp))
+#endif
+
+/* C++ return the variable is the same type. */
+#ifndef is_type
+#define is_type(t,v) std::is_same<decltype((v)), (t)>::value
+#endif
+
+/* C++ stand useful macro. */
+#ifndef is_same
+#define is_same(t1,t2) (std::is_same<t1, t2>::value)
+#endif
+
 #endif //PF_BASIC_MACROS_FUNCTION_H_

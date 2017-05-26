@@ -12,6 +12,7 @@
 #define PF_SYS_THREAD_TCC_
 
 #include "pf/sys/thread.h"
+#include "pf/basic/type/variable.h"
 #include "pf/basic/io.tcc"
 
 namespace pf_sys {
@@ -72,46 +73,30 @@ inline ThreadPool::~ThreadPool() {
     worker.join();
 }
 
-inline ThreadCollect::ThreadCollect() {
-  ++GLOBALS["thread.collects"];
-}
-
-inline ThreadCollect::~ThreadCollect() {
-  --GLOBALS["thread.collects"];
-  if (GLOBALS["app.debug"] == true) {
-    pf_basic::io_cdebug(
-        "[%s] thread collect wait exit: %d", 
-        GLOBALS["app.name"].string(), 
-        ThreadCollect::count());
-  }
-}
-
-inline int32_t ThreadCollect::count() {
-  return GLOBALS["thread.collects"].int32();
-}
-
 namespace thread {
 
-inline uint64_t get_id() {
-  uint64_t id = 0;
-#if OS_UNIX
-  id = static_cast<uint64_t>(pthread_self());
-#elif OS_WIN
-  id = static_cast<uint64_t>(GetCurrentThreadId() * 1000);
-#endif
-  return id;
+inline const std::string get_id() {
+  std::stringstream ss;
+  ss << std::this_thread::get_id();
+  return std::string(ss.str());
+}
+
+inline const std::string get_id(const std::thread &thread) {
+  std::stringstream ss;
+  ss << thread.get_id();
+  return std::string(ss.str());
 }
 
 //用下面的方法的线程可以启动与停止
 inline const std::string status_key(std::thread &thread) {
   std::string _status_key{"thread.status."};
-  _status_key += std::to_string(thread.native_handle());
+  _status_key += get_id(thread);
   return _status_key;
 }
 
-inline const std::string status_key(uint64_t id) {
+inline const std::string status_key() {
   std::string _status_key{"thread.status."};
-  _status_key += std::to_string(id);
+  _status_key += get_id();
   return _status_key;
 }
 
@@ -130,12 +115,12 @@ inline void start(std::thread &thread) {
 }
 
 inline void start() {
-  const std::string _status_key = status_key(get_id());
+  const std::string _status_key = status_key();
   GLOBALS[_status_key] = kThreadStatusRun;
 }
 
 inline void stop() {
-  const std::string _status_key = status_key(get_id());
+  const std::string _status_key = status_key();
   GLOBALS[_status_key] = kThreadStatusStop;
 }
 
@@ -147,37 +132,50 @@ inline void stop(std::thread &thread) {
 
 inline uint8_t status(std::thread &thread) {
   const std::string _status_key = status_key(thread);
-  return GLOBALS[_status_key].uint8();
+  return GLOBALS[_status_key].get<uint8_t>();
 }
 
 inline bool is_running(std::thread &thread) {
   return kThreadStatusRun == status(thread);
 }
 
-inline bool is_running(uint64_t id) {
-  const std::string _status_key = status_key(id);
-  return kThreadStatusRun == GLOBALS[_status_key].uint8();
-}
-
-inline bool is_running() {
-  return is_running(get_id());
-}
-
 inline bool is_stopping(std::thread &thread) {
   return kThreadStatusStop == status(thread);
 }
 
-inline bool is_stopping(uint64_t id) {
-  const std::string _status_key = status_key(id);
-  return kThreadStatusStop == GLOBALS[_status_key].uint8();
+inline uint8_t status() {
+  const std::string _status_key = status_key();
+  return GLOBALS[_status_key].get<uint8_t>();
+}
+
+inline bool is_running() {
+  return kThreadStatusRun == status();
 }
 
 inline bool is_stopping() {
-  return is_stopping(get_id());
+  return kThreadStatusStop == status();
 }
 
 }; //namespace thread
 
+inline ThreadCollect::ThreadCollect() {
+  ++GLOBALS["thread.collects"];
+}
+
+inline ThreadCollect::~ThreadCollect() {
+  --GLOBALS["thread.collects"];
+  if (GLOBALS["app.debug"] == true) {
+    pf_basic::io_cdebug(
+        "[%s] thread(%s) collect wait exit: %d", 
+        GLOBALS["app.name"].c_str(), 
+        thread::get_id().c_str(),
+        ThreadCollect::count());
+  }
+}
+
+inline int32_t ThreadCollect::count() {
+  return GLOBALS["thread.collects"].get<int32_t>();
+}
 
 }; //namespace pf_sys
 

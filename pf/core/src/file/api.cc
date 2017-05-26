@@ -192,8 +192,8 @@ int32_t fcntlex(int32_t fd, int32_t cmd) {
   }
   return result;
 #elif OS_WIN
-  USE_PARAM(fd);
-  USE_PARAM(cmd);
+  UNUSED(fd);
+  UNUSED(cmd);
   return 0 ;
 #endif
 }
@@ -218,6 +218,7 @@ int32_t fcntlarg_ex(int32_t fd, int32_t cmd, int32_t arg) {
   }
   return result;
 #elif OS_WIN
+  UNUSED(fd); UNUSED(cmd); UNUSED(arg);
   return 0 ;
 #endif
 }
@@ -227,7 +228,7 @@ bool get_nonblocking_ex(int32_t fd) {
   int32_t flag = fcntlarg_ex(fd, F_GETFL, 0);
   return flag | O_NONBLOCK;
 #elif OS_WIN
-  USE_PARAM(fd);
+  UNUSED(fd);
   return false;
 #endif
 }
@@ -243,8 +244,8 @@ void set_nonblocking_ex(int32_t fd, bool on) {
     flag &= ~O_NONBLOCK;
   fcntlarg_ex(fd, F_SETFL, flag);
 #elif OS_WIN
-  USE_PARAM(fd);
-  USE_PARAM(on);
+  UNUSED(fd);
+  UNUSED(on);
   //do nothing
 #endif
 }
@@ -263,7 +264,7 @@ void ioctlex(int32_t fd, int32_t request, void *argp) {
     }
   }
 #elif OS_WIN
-  //do nothing
+  UNUSED(fd); UNUSED(request); UNUSED(argp);
 #endif
 }
 
@@ -274,8 +275,8 @@ void setnonblocking_ex(int32_t fd, bool on) {
   uint64_t arg = (true == on ? 1 : 0 );
   ioctlex(fd, FIONBIO, &arg);
 #elif OS_WIN
-  USE_PARAM(fd);
-  USE_PARAM(on);
+  UNUSED(fd);
+  UNUSED(on);
   //do nothing
 #endif
 }
@@ -287,7 +288,7 @@ uint32_t availableex(int32_t fd) {
   ioctlex(fd, FIONREAD, &arg);
   return arg;
 #elif OS_WIN
-  USE_PARAM(fd);
+  UNUSED(fd);
   return 0;
 #endif
 }

@@ -24,6 +24,7 @@
 #include "pf/basic/md5.h"
 #include "pf/basic/singleton.tcc"
 #include "pf/basic/string.h"
+#include "pf/basic/stringstream.h"
 #include "pf/basic/time_manager.h"
 #include "pf/basic/tinytimer.h"
 #include "pf/basic/util.h"

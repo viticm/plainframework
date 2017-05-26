@@ -40,6 +40,8 @@ local.properties
 *.suo
 *.user
 *.sln.docstates
+*.opendb
+*.VC.db
 
 # Build results
 
@@ -235,8 +237,11 @@ tags
 ## Run Bin
 #############
 */bin/gateway
+applications/client/thirdparty/
 ./pf/dependencies/iconv/lib/*
 ./pf/dependencies/lua/lib/*
+./pf/dependencies/lib/*
+./pf/plugin/lib/*
 
 #############
 ## backup dir
@@ -254,3 +259,13 @@ pf/plugin/bak/*
 #############
 *.dir
 *.so
+*.lib
+*.dll
+*.tlog
+
+#######################
+## rename source files
+#######################
+pf_*.cc
+pf_*.cc
+applications_*.cc

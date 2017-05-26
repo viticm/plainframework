@@ -1,4 +1,4 @@
-# This file generate by plain framework admin tool, date: 2015-05-11 19:17:14
+# This file generate by plain framework admin tool, date: 2017-05-21 12:54:17
 SET(LIBRARY_OUTPUT_PATH ./../../../dll/)
 
 ADD_DEFINITIONS(-DLUA_USE_MKSTEMP)
@@ -7,7 +7,7 @@ SET(USE_32BITS 0)
 IF(CMAKE_SYSTEM MATCHES Linux)
   ADD_DEFINITIONS(-D_REENTRANT)
   ADD_DEFINITIONS(-DDONT_TD_VOID)
-  ADD_DEFINITIONS(-D_PF_NET_EPOLL)
+  ADD_DEFINITIONS(-DLUA_USE_LINUX)
 ELSE(CMAKE_SYSTEM MATCHES Linux)
 ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
@@ -84,23 +84,15 @@ ADD_LIBRARY(lua SHARED
   ${SRC_LIST}
 )
 
-if(USE_32BITS)
-  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-else()
-  SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-  SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-endif(USE_32BITS)
-
 if (WIN32)
 TARGET_LINK_LIBRARIES(lua ws2_32.lib )
 else()
 TARGET_LINK_LIBRARIES(lua )
   if(USE_32BITS)
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=i386 -mtune=i686")
+    SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -ggdb -pipe -march=i386 -mtune=i686")
   else()
     SET(CMAKE_C_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
-    SET(CMAKE_CXX_FLAGS "-Wall -ggdb -pipe -march=x86-64 -mtune=i686")
+    SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -ggdb -pipe -march=x86-64 -mtune=i686")
   endif(USE_32BITS)
 endif(WIN32)

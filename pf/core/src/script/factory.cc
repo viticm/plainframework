@@ -37,6 +37,7 @@ eid_t Factory::newenv(Interface *env) {
 
 eid_t Factory::neweid() {
   eid_t eid = SCRIPT_EID_INVALID;
-  eid = SCRIPT_EID_INVALID == last_del_eid_ ? envs_.size() + 1 : last_del_eid_;
+  eid = SCRIPT_EID_INVALID == last_del_eid_ ?
+        static_cast<eid_t>(envs_.size() + 1) : last_del_eid_;
   return eid;
 }

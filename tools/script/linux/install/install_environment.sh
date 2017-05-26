@@ -56,7 +56,7 @@ function check_privileges() {
 #@return void
 function install_odbc() {
   cd $current_dir
-  local version="2.3.2"
+  local version="2.3.4"
   if [[ ! -f ./unixODBC-${version}.tar.gz ]] ; then
     wget -c ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-${version}.tar.gz
   fi

@@ -26,17 +26,11 @@
 
 #define DB_MODULENAME "db"
 
-struct PF_API db_query_t {
-  char sql_str_[SQL_LENGTH_MAX];
-  void clear();
-  void parse(const char *temp, ...);
-  void concat(const char *temp, ...);
-};
-
-enum {
+typedef enum {
   kDBColumnTypeString = 0,
   kDBColumnTypeNumber,
-}; //字段类型
+  kDBColumnTypeInteger,
+} db_columntype_t; //字段类型
 
 /* db fetch and cache { */
 typedef std::map<std::string, int8_t> db_keys_t;
@@ -62,9 +56,15 @@ struct db_fetch_array_struct {
   void clear();
 };
 
+//The connector type.
 typedef enum {
   kDBConnectorTypeODBC = 0, //方便以后扩展
 } dbconnector_type_t;
+
+//The db server type.
+typedef enum {
+  kDBTypeMysql = 0,
+} dbtype_t;
 
 namespace pf_db {
 

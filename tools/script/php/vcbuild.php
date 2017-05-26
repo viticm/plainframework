@@ -98,20 +98,10 @@ function format_systempath($path, $from_ostype = OS_LINUX) {
 
 //project visual studio script file dirs
 $g_scriptdirs = array(
-  "billing applications/billing/proj.win",
-  "share applications/share/proj.win",
-  "login applications/login/proj.win",
-  "center applications/center/proj.win",
   "pf_simple applications/pf_simple/proj.win",
   "pf_core pf/core/proj.win",
   "pf_cores pf/core/proj.win1",
-  "plugin_pak pf/plugin/pak/proj.win",
-  "plugin_scene pf/plugin/scene/server/proj.win",
-  "plugin_structure pf/plugin/structure/proj.win",
-  "database applications/database/proj.win",
-  "server applications/server/proj.win",
-  "client applications/client/proj.win",
-  "libclient applications/client/proj.win1",
+  "plugin_lua pf/plugin/lua/proj.win",
 ); //not use EOF, if you want it work not just use output
 
 $selfpath = str_replace('\\', '/', dirname(realpath(__FILE__)));
@@ -150,14 +140,15 @@ function get_model_configfile($modelname) {
   $result = PROJECTPATH;
   $isplugin = strpos($modelname, "plugin");
   if ("pf_core" === $modelname) {
-    $result .= "pf/core/include/pf/base/";
+    $result .= "pf/core/include/pf/basic/macros/";
   } elseif ($isplugin !== false) {
     $modelname = str_replace("plugin_", "", $modelname);
     $result .= "pf/plugin/".$modelname."/include/".$modelname."/";
   } else {
     $result .= "applications/".$modelname."/include/application/";
   }
-  $result .= "config.h";
+  $extension = "pf_core" === $modelname ? "other.h" : "config.h";
+  $result .= $extension;
   return $result;
 }
 

@@ -44,11 +44,6 @@ class DBResult : public pf_net::packet::Interface {
    uint16_t get_id() const { return id_; };
    virtual uint32_t size() const;
    virtual void set_id(uint16_t id) { id_ = id; };
-   db_fetch_array_t *get_data() { return &data_; };
-   void set_data(const db_fetch_array_t &data) {
-     data_ = data;
-     data_size_ = get_data_size();
-   };
    void set_operate(int8_t operate) { operate_ = operate; }
    int8_t get_operate() const { return operate_; }
    void set_key(const std::string &key) {
@@ -57,6 +52,8 @@ class DBResult : public pf_net::packet::Interface {
    const char *get_key() { return key_; }
    void set_result(int8_t result) { result_ = result; }
    int8_t get_result() const { return result_; }
+   void set_columns(const std::string &columns) { columns_ = columns; }
+   void set_rows(const std::string &rows) { rows_ = rows; }
 
  private:
    uint32_t get_data_size() const;
@@ -67,7 +64,8 @@ class DBResult : public pf_net::packet::Interface {
    int8_t operate_;
    int32_t data_size_;
    char key_[128];
-   db_fetch_array_t data_;
+   std::string columns_;
+   std::string rows_;
 
 };
 

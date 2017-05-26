@@ -36,6 +36,7 @@ end
 
 -- 脚本心跳
 function heartbeat()
+  testall()
   if g_logic_system then g_logic_system:heartbeat() end
   return 1
 end

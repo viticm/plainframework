@@ -16,7 +16,7 @@
 
 namespace pf_script {
 
-PF_API class Factory {
+class PF_API Factory {
 
  public:
    Factory() : last_del_eid_{SCRIPT_EID_INVALID} {};

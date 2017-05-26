@@ -25,11 +25,12 @@ class PF_API StaticAllocator {
 
  public:
    void init(char *buffer, size_t size);
-   void clear();
+   void clear() { offset_ = 0; };
    void *malloc(size_t size);
-   void *calloc(size_t count, size_t size);
+   void *calloc(size_t size, size_t count = 1);
    void *realloc(void *data, size_t newsize);
    void free(void *data);
+   size_t size() const { return size_; }
 
  private:
    char *buffer_;

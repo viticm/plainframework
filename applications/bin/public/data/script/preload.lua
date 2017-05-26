@@ -58,4 +58,9 @@ end
 -- 模块加载
 require_ex("config")
 require_ex("functions/timer")
+require_ex("logic/system")
+require_ex("logic/define")
+require_ex("logic/main")
 require_ex("main")
+require_ex("tests.dcache")
+require_ex("test")

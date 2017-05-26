@@ -35,8 +35,7 @@ class PF_API Manager {
      connector_type_ = type;
    };
    void select_db(const std::string &) {}
-   db_query_t *get_internal_query();
-   bool query();
+   bool query(const std::string &sql_str);
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    int32_t get_affectcount() const;
    bool check_db_connect();
@@ -72,7 +71,10 @@ class PF_API Manager {
                                      int32_t buffer_length, 
                                      int32_t &error_code);
    const char *get_data(int32_t column_index, const char *_default) const;
-   int8_t gettype(int32_t column_index);
+   db_columntype_t gettype(int32_t column_index);
+
+ public:
+   std::mutex *get_mutex() { return &mutex_; }
 
  protected:
    int8_t connector_type_;
@@ -80,9 +82,15 @@ class PF_API Manager {
    odbc::System *odbc_system_;
 #endif
    bool isready_;
+   std::mutex mutex_;
 
 };
 
 }; //namespace pf_db
+
+/* Lock db manager in mutli threads, p is manager pointer, n is lock name. */
+#ifndef db_lock
+#define db_lock(p,n) std::unique_lock<std::mutex> n(*(p)->get_mutex())
+#endif
 
 #endif //PF_DB_MANAGER_H_

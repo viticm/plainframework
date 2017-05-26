@@ -17,11 +17,9 @@ void __show__(const char *temp) {
 #endif
   SLOW_WRITELOG("assert", "%s", temp);
 #if OS_WIN
-  if (1 != g_command_assert) {
-    static std::mutex mutex;
-    std::unique_lock<std::mutex> autolock(mutex);
-    ::MessageBoxA(NULL, temp, "异常", MB_OK);
-  }
+  static std::mutex mutex;
+  std::unique_lock<std::mutex> autolock(mutex);
+  ::MessageBoxA(NULL, temp, "异常", MB_OK);
 #endif
 }
 

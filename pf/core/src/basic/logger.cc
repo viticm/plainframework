@@ -59,17 +59,17 @@ void Logger::get_log_timestr(char *time_str, int32_t length) {
       snprintf(
           time_str, 
           length, 
-          "%.2d:%.2d:%.2d (%" PRIu64 " %.4f)",
+          "%.2d:%.2d:%.2d (%s %.4f)",
           TIME_MANAGER_POINTER->get_hour(),
           TIME_MANAGER_POINTER->get_minute(),
           TIME_MANAGER_POINTER->get_second(),
-          pf_sys::thread::get_id(),
+          pf_sys::thread::get_id().c_str(),
           static_cast< float >(runtime) / 1000);
   } else {
     snprintf(time_str,
              length, 
-             "00:00:00 (%" PRIu64 " 0.0000)",
-             pf_sys::thread::get_id());
+             "00:00:00 (%s 0.0000)",
+             pf_sys::thread::get_id().c_str());
   }
 }
 
@@ -80,12 +80,12 @@ bool Logger::init(int32_t cache_size) {
     snprintf(command, 
              sizeof(command) - 1, 
              "rm -rf %s/*.log", 
-             GLOBALS["log.directory"].string());
+             GLOBALS["log.directory"].c_str());
 #elif OS_WIN
     snprintf(command, 
              sizeof(command) - 1, 
              "del %s/*.log", 
-             GLOBALS["log.directory"].string());
+             GLOBALS["log.directory"].c_str());
     util::path_towindows(command, static_cast<uint16_t>(strlen(command)));
 #endif
     system(command);
@@ -125,11 +125,11 @@ void Logger::get_log_filename(const char *filename_prefix,
     snprintf(savedir, 
              sizeof(savedir) - 1, 
              "%s/%.2d_%.2d_%.2d/%s", 
-             GLOBALS["log.directory"].string(),
+             GLOBALS["log.directory"].c_str(),
              TIME_MANAGER_POINTER->get_year(), 
              TIME_MANAGER_POINTER->get_month(),
              TIME_MANAGER_POINTER->get_day(),
-             GLOBALS["app.name"].string());
+             GLOBALS["app.name"].c_str());
     if (!pf_basic::util::makedir(savedir, 0755))
       io_cerr("save dir: %s make failed", savedir);
     snprintf(save,
@@ -142,7 +142,7 @@ void Logger::get_log_filename(const char *filename_prefix,
     snprintf(save,
              FILENAME_MAX - 1,
              "%s/%s%s%s.log",
-             GLOBALS["log.directory"].string(),
+             GLOBALS["log.directory"].c_str(),
              filename_prefix,
              strlen(typestr) > 0 ? "_" : "",
              typestr);

@@ -9,6 +9,7 @@
 #include <winbase.h>
 #endif
 #include "pf/sys/memory/share.h"
+#include "pf/basic/io.tcc"
 
 namespace pf_sys {
 
@@ -98,7 +99,7 @@ HANDLE create(uint32_t key, size_t size) {
     handle = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);
     if (HANDLE_INVALID == handle) {
       SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(),
+          GLOBALS["app.name"].c_str(),
           "[sys.memory.share] (api::create) handle = %d," 
           " key = %d, error: %d",
           handle, 
@@ -109,26 +110,26 @@ HANDLE create(uint32_t key, size_t size) {
     char buffer[65]{0,};
     snprintf(buffer, sizeof(buffer) - 1, "%d", key);
     handle = (CreateFileMapping(reinterpret_cast<HANDLE>(0xFFFFFFFFFFFFFFFF), 
-                                NULL, 
+                                nullptr, 
                                 PAGE_READWRITE, 
                                 0, 
-                                size, 
+                                (DWORD)size, 
                                 buffer));
 #endif
     return handle;
 }
 #if OS_UNIX
-int32_t open(uint32_t key, size_t size) {
+int32_t open(uint32_t key, size_t size, bool errorlog) {
   int32_t handle = 0;
 #elif OS_WIN
-HANDLE open(uint32_t key, size_t size) {
+HANDLE open(uint32_t key, size_t, bool) {
   HANDLE handle = nullptr;
 #endif
 #if OS_UNIX
     handle = shmget(key, size, 0);
-    if (HANDLE_INVALID == handle) {
+    if (HANDLE_INVALID == handle && errorlog) {
       SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(), 
+          GLOBALS["app.name"].c_str(), 
           "[sys.memory.share] (api::open) handle = %d,"
           " key = %d, error: %d", 
           handle, 
@@ -157,7 +158,6 @@ char *map(HANDLE handle) {
       static_cast<char *>(MapViewOfFile(handle, FILE_MAP_ALL_ACCESS, 0, 0, 0));
 #endif
     return result;
-    return NULL;
 }
 
 void unmap(char *pointer) {
@@ -200,7 +200,7 @@ bool Base::create(uint32_t key, size_t size) {
     handle_ = api::create(key, size);
     if (HANDLE_INVALID == handle_) {
       SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(), 
+          GLOBALS["app.name"].c_str(), 
           "[sys.memory.share] (Base::create)"
           " failed! handle = %d, key = %d",
           handle_, 
@@ -215,7 +215,7 @@ bool Base::create(uint32_t key, size_t size) {
       header()->size = size;
       size_ = size;
       SLOW_LOG(
-          GLOBALS["app.name"].string(), 
+          GLOBALS["app.name"].c_str(), 
           "[sys.memory.share] (Base::create)"
           " success! handle = %d, key = %d",
           handle_, 
@@ -223,7 +223,7 @@ bool Base::create(uint32_t key, size_t size) {
       return true;
     } else {
       SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(), 
+          GLOBALS["app.name"].c_str(), 
           "[sys.memory.share] (Base::create)"
           "map failed! handle = %d, key = %d", 
           handle_, 
@@ -236,34 +236,36 @@ bool Base::create(uint32_t key, size_t size) {
 void Base::release() {
     if (header_) {
       api::unmap(header_);
-      header_ = NULL;
+      header_ = nullptr;
     }
     if (handle_) {
       api::close(handle_);
 #if OS_UNIX
       handle_ = 0;
 #elif OS_WIN
-      handle_ = NULL;
+      handle_ = nullptr;
 #endif
     }
     size_ = 0;
 }
 
-bool Base::attach(uint32_t key, size_t size) {
-    handle_ = api::open(key, size);
+bool Base::attach(uint32_t key, size_t size, bool errorlog) {
+    handle_ = api::open(key, size, errorlog);
     if (GLOBALS["app.cmdmodel"] == kCmdModelClearAll) {
       release();
       SLOW_LOG(
-          GLOBALS["app.name"].string(),
+          GLOBALS["app.name"].c_str(),
           "[sys.memory.share] (Base::attach) close memory, key = %d", 
           key);
       return false;
     }
     if (HANDLE_INVALID == handle_) {
-      SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(), 
-          "[sys.memory.share] (Base::attach) failed, key = %d", 
-          key); 
+      if (errorlog) {
+        SLOW_ERRORLOG(
+            GLOBALS["app.name"].c_str(), 
+            "[sys.memory.share] (Base::attach) failed, key = %d", 
+            key); 
+      }
       return false;
     }
     header_ = api::map(handle_);
@@ -273,15 +275,17 @@ bool Base::attach(uint32_t key, size_t size) {
       Assert(header()->size == size);
         size_ = size;
       SLOW_LOG(
-          GLOBALS["app.name"].string(), 
+          GLOBALS["app.name"].c_str(), 
           "[sys.memory.share] (Base::attach) success, key = %d", 
           key); 
       return true;
     } else {
-      SLOW_ERRORLOG(
-          GLOBALS["app.name"].string(), 
-          "[sys.memory.share] (Base::attach) map failed, key = %d", 
-          key); 
+      if (errorlog) {
+        SLOW_ERRORLOG(
+            GLOBALS["app.name"].c_str(), 
+            "[sys.memory.share] (Base::attach) map failed, key = %d", 
+            key); 
+      }
       return false;
     }
     return true;
@@ -292,7 +296,7 @@ char *Base::get(uint32_t index, size_t size) {
     Assert(size * index < size_);
     char *result;
     result = 
-      (size <= 0 || size * index > size_) ? NULL : data_ + size * index;
+      (size <= 0 || size * index > size_) ? nullptr : data_ + size * index;
     return result;
 }
 
@@ -325,15 +329,17 @@ void lock(mutex_t &mutex, int8_t type) {
   if (GLOBALS["app.cmdmodel"] == kCmdModelRecover ||
       GLOBALS["app.status"] == kAppStatusStop) return;
   int32_t count = 0;
-  int8_t flag = 0;
-  while (!mutex.compare_exchange_weak(flag, kFlagFree)) {
+  int8_t flag{kFlagFree};
+  while (!mutex.compare_exchange_weak(flag, type)) {
     if (GLOBALS["app.status"] == kAppStatusStop) break;
-    ++count;
+    flag = kFlagFree; ++count;
     std::this_thread::sleep_for(std::chrono::milliseconds(0));
     if (count > 100) {
+#ifdef _DEBUG //Lock so many times, but normal in multi threads.
       char time_str[256] = {0};
       pf_basic::Logger::get_log_timestr(time_str, sizeof(time_str) - 1);
       pf_basic::io_cerr("%s[sys.memory] (share::lock) failed", time_str);
+#endif
       count = 0;
     }
   }
@@ -342,17 +348,19 @@ void lock(mutex_t &mutex, int8_t type) {
 void unlock(mutex_t &mutex, int8_t type) {
   if (GLOBALS["app.cmdmodel"] == kCmdModelRecover ||
       GLOBALS["app.status"] == kAppStatusStop) return;
-  int8_t flag = kFlagFree;
+  int8_t flag{type};
   int8_t count{0};
-  while (!mutex.compare_exchange_weak(flag, 0)) {
+  while (!mutex.compare_exchange_weak(flag, kFlagFree)) {
     if (GLOBALS["app.status"] == kAppStatusStop) break;
-    ++count;
+    auto cur = flag;
+    flag = type; ++count;
     std::this_thread::sleep_for(std::chrono::milliseconds(0));
     if (count > 100) {
-      mutex.exchange(kFlagFree);
+      pf_basic::io_cdebug("cur: %d, type: %d", cur, type);
+      mutex.exchange(type); //Not safe to unlock want.
       char time_str[256] = {0};
       pf_basic::Logger::get_log_timestr(time_str, sizeof(time_str) - 1);
-      pf_basic::io_cerr("%s[sys.memory] (share::lock) failed", time_str);
+      pf_basic::io_cerr("%s[sys.memory] (share::unlock) failed", time_str);
       count = 0;
     }
   }
@@ -360,13 +368,14 @@ void unlock(mutex_t &mutex, int8_t type) {
 
 GroupPool::GroupPool(uint32_t key, const std::vector<group_item_t> &group) :
   key_{key},
-  size_{0} {
+  size_{0},
+  ready_{false}{
   size_ += sizeof(group_header_t);
   for (size_t i = 0; i < group.size(); ++i) {
     const group_item_t &item = group[i];
     group_item_t temp;
     temp.index = item.index;
-    temp.position = size_;
+    temp.position = static_cast<uint32_t>(size_);
     temp.size = item.size;
     temp.header_size = item.header_size;
     temp.data_size = item.data_size;
@@ -394,7 +403,7 @@ bool GroupPool::init(bool create) {
   if (is_null(ref_obj_pointer_)) return false;
   bool result = true;
   bool need_init = false;
-  result = ref_obj_pointer_->attach(key_, size_);
+  result = ref_obj_pointer_->attach(key_, size_, false);
   if (create && !result) {
     result = ref_obj_pointer_->create(key_, size_);
     need_init = true;
@@ -414,12 +423,19 @@ bool GroupPool::init(bool create) {
   if (need_init) {
     char *data = ref_obj_pointer_->get();
     memset(data, 0, size_);
+    auto it = group_conf_.begin();
+    auto it_end = group_conf_.end();
+    for (;it != it_end; ++it) {
+      auto header = item_header(it->first);
+      header->clear();
+    }
   }
   ready_ = true;
   return true;
 }
 
 char *GroupPool::get_data(int16_t index) {
+  if (INDEX_INVALID == index || !is_valid_index(index)) return nullptr;
   const group_item_t &item = group_conf_[index];
   return ref_obj_pointer_->get() + sizeof(group_header_t) + item.position;
 }
@@ -429,6 +445,8 @@ group_header_t *GroupPool::header() {
 }
    
 char *GroupPool::item_data_header(int16_t index, int16_t data_index) {
+  if (INDEX_INVALID == index || INDEX_INVALID == data_index) return nullptr;
+  if (!is_valid_index(index)) return nullptr;
   char *data = get_data(index);
   const group_item_t &item = group_conf_[index];
   char *result = nullptr;
@@ -438,37 +456,51 @@ char *GroupPool::item_data_header(int16_t index, int16_t data_index) {
     result = data + header_size;
   } else {
     result = 
-      data + header_size + (item.header_size + data_index) * item.data_size;
+      data + header_size + (item.header_size + item.data_size) * data_index;
   }
   return result;
 }
-
+  
 group_item_header_t *GroupPool::item_header(int16_t index) {
   char *data = get_data(index);
   return reinterpret_cast<group_item_header_t *>(data);
 }
+
+int32_t GroupPool::item_data_postion(int16_t index, int16_t data_index) {
+  if (!is_valid_index(index)) return INDEX_INVALID;
+  int32_t position{INDEX_INVALID};
+  const group_item_t &item = group_conf_[index];
+  if (item.same_header) {
+    position = static_cast<int32_t>(item.header_size + data_index * item.data_size + 
+               sizeof(group_item_header_t));
+  } else {
+    position = static_cast<int32_t>(item.header_size + 
+               (item.header_size + item.data_size) * data_index +
+               sizeof(group_item_header_t));
+  }
+  return position;
+}
    
 char *GroupPool::item_data(int16_t index, int16_t data_index) {
+  if (INDEX_INVALID == index || INDEX_INVALID == data_index) return nullptr;
+  if (!is_valid_index(index)) return nullptr;
   char *data = get_data(index);
   const group_item_t &item = group_conf_[index];
   char *result = nullptr;
-  if (item.same_header) {
-    result = data + 
-             item.header_size + 
-             data_index * item.data_size + 
-             sizeof(group_item_header_t);
-  } else {
-    if (static_cast<size_t>(data_index) >= item.size) return nullptr;
-    result = data + 
-           (item.header_size + data_index) * item.data_size + 
-           sizeof(group_item_header_t);
+  auto position = item_data_postion(index, data_index);
+  auto size = item.data_size;
+  if (!item.same_header) size += item.header_size;
+  auto fullsize = item.position + position + size;
+  Assert(fullsize <= size_);
+  if (fullsize <= size_) {
+    result = data + position;
   }
   return result;
 }
 
 void GroupPool::free() {
   for (size_t i = 0; i < group_conf_.size(); ++i) {
-    const group_item_t &item = group_conf_[i];
+    const group_item_t &item = group_conf_[static_cast<int16_t>(i)];
     group_item_header_t *header = item_header(item.index);
     unique_lock< group_item_header_t > auto_lock(*header, kFlagMixedWrite);
     header->pool_position = 0;
@@ -482,21 +514,18 @@ char *GroupPool::alloc(int16_t index, int16_t &data_index) {
   char *data = get_data(index);
   const group_item_t &item = group_conf_[index];
   char *result = nullptr;
-  if (static_cast<size_t>(header->pool_position) >= item.size) return result;
+  if (static_cast<size_t>(header->pool_position) >= item.size) return nullptr;
   data_index = header->pool_position;
-  if (static_cast<size_t>(data_index) >= item.size) return nullptr;
-  if (item.same_header) {
-    result = data + 
-             item.header_size + 
-             data_index * item.data_size + 
-             sizeof(group_item_header_t);
-    memset(result, 0, item.data_size);
-  } else {
-    result = data + 
-           (item.header_size + item.data_size) * data_index + 
-           sizeof(group_item_header_t);
-    memset(result, 0, item.data_size + item.header_size);
+  auto position = item_data_postion(index, data_index);
+  auto size = item.data_size;
+  if (!item.same_header) size += item.header_size;
+  auto fullsize = item.position + position + size;
+  Assert(fullsize <= size_);
+  if (fullsize <= size_) {
+    result = data + position;
   }
+  if (is_null(result)) return nullptr;
+  memset(result, 0, size);
   header->pool_position += 1;
   return result;
 }
@@ -506,14 +535,16 @@ int16_t GroupPool::free(int16_t index, int16_t data_index) {
   Assert(header);
   unique_lock<group_item_header_t> auto_lock(*header, kFlagMixedWrite);
   const group_item_t &item = group_conf_[index];
-  if (data_index >= header->pool_position) return INDEX_INVALID;
   --(header->pool_position);
-  char *swap_data = item_data(index, header->pool_position);
-  size_t data_size = sizeof(group_item_header_t) + item.data_size;
+  if (data_index >= header->pool_position) return INDEX_INVALID;
+  size_t header_size{0};
   if (!item.same_header) {
-    data_size += item.header_size;
+    header_size = item.header_size;
   }
-  char *delete_data = item_data(index, data_index);
+  char *swap_data = item_data(index, header->pool_position) - header_size;
+  size_t data_size = header_size + item.data_size;
+  char *delete_data = item_data(index, data_index) - header_size;
+  memset(delete_data, 0, data_size);
   memcpy(delete_data, swap_data, data_size);
   return header->pool_position;
 }

@@ -16,6 +16,7 @@
 
 #define CACHE_SHARE_DEFAULT_MINUTES (10)            //默认缓存的分钟数
 #define CACHE_MODULENAME "cache"
+#define CACHE_WORKERS_DEFAULT (4)                   //Default workers.
 
 namespace pf_cache {
 
@@ -25,5 +26,11 @@ class DBStore;
 class Manager;
 
 };
+
+/* Set cache from get value(void *) */
+#define cache_set(c,v,n) { memset((c), 0, (n)); \
+  auto t = reinterpret_cast<const char *>((v)); \
+  memcpy((c), t, strlen(t)); \
+}
 
 #endif //PF_CACHE_CONFIG_H_

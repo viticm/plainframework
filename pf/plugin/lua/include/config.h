@@ -8,6 +8,9 @@
  * @date 2017/01/17 11:24
  * @uses The lua lib of PF.
 */
+#ifndef PF_PLUGIN_LUA_CONFIG_H_
+#define PF_PLUGIN_LUA_CONFIG_H_
+
 #include <lua.hpp>
 #include "pf/basic/config.h"
 #include "pf/basic/logger.h"
@@ -25,3 +28,5 @@
     return 0; \
   } \
 }
+
+#endif //PF_PLUGIN_LUA_CONFIG_H_

@@ -16,8 +16,8 @@ else
   package.path = "./?.lc"
 end
 SETTING_PATH = ROOTPATH.."/../setting"
-
-require("libpf_plugin_lua")
+local pf_plugin_lua = OS_WIN and "pf_plugin_lua" or "libpf_plugin_lua"
+require(pf_plugin_lua)
 
 -- 获得脚本文件
 function get_scriptfile(filename)

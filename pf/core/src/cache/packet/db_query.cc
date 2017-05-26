@@ -21,12 +21,12 @@ bool DBQuery::write(pf_net::stream::Output &ostream) {
 }
 
 uint32_t DBQuery::size() const {
-  uint32_t result = 0;
+  size_t result = 0;
   result += sizeof(type_);
   result += sizeof(operate_);
   result += strlen(key_);
   result += strlen(sql_str_);
-  return result;
+  return static_cast<uint32_t>(result);
 }
 
 uint32_t DBQuery::execute(pf_net::connection::Basic *connection) {
@@ -40,13 +40,15 @@ uint32_t DBQuery::execute(pf_net::connection::Basic *connection) {
   packet.set_result(DBResult::kResultFailed);
   pf_db::Query query;
   if (query.init(db_manager)) {
-    query.get_db_query()->parse(get_sql_str());
-    if (query.execute()) {
+    query.set_sql(get_sql_str());
+    if (query.query()) {
       packet.set_result(DBResult::kResultSuccess);
       if (kQuerySelect == get_type()) {
-        db_fetch_array_t db_fetch_array;
-        query.fetcharray(db_fetch_array);
-        packet.set_data(db_fetch_array);
+        char columns[CACHE_DB_TABLE_COLUMNS_SIZE]{0};
+        char rows[100 * 1024]{0};
+        query.fetch(columns, sizeof(columns), rows, sizeof(rows));
+        packet.set_columns(columns);
+        packet.set_rows(rows);
       }
     }
   }

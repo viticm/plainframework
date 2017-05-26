@@ -4,21 +4,36 @@ Plain framework is base with c++ smart framework for net applications(socket gam
 
 - **Author:** Viticm
 - **Website:** [http://www.cnblogs.com/lianyue/](http://www.cnblogs.com/lianyue/)
-- **Version:** 2.0rc
+- **Version:** 2.1d
 
-[![Build Status](https://travis-ci.org/viticm/plainframework.svg)](https://travis-ci.org/viticm/plainframework)
+[![Build Status](https://travis-ci.org/viticm/plainframework1.svg)](https://travis-ci.org/viticm/plainframework1)
 
-<img src="https://github.com/viticm/plainframework/blob/master/documentation/examples/pf_simple.gif" />
+<img src="https://github.com/viticm/plainframework1/blob/master/documentation/examples/gateway.gif" />
 
-### Build
+## Develop environment
 
-Plain build in windows can use visual studio or cmake, in linux just use cmake, you can run command `yum -y install cmake` installed.
+To install plain framework need depends with shell script(Only on linux or unix)
+
+```shell
+cd tools/script/linux/install/ && sh install_environment.sh
+```
+
+
+### Build linux
+
+Plain build on linux use cmake, you can run command `yum -y install cmake` installed.
 
 Your can build the plain framework with this command.
 
 ```shell
-make
+cd pf/core && cmake ./ && make
 ```
+
+### Build windows
+
+Plain build on windows use visual studio, you can open the file pf_win.sln.
+- Only repository: [https://github.com/viticm/pf_win/](https://github.com/viticm/pf_win/)
+
 
 ## Documentation
 
@@ -32,5 +47,13 @@ Plain framework is released under the MIT License. See the LICENSE file for deta
 
 ## Recent Changelog
 
-### 2.0rc
-NewAdd: Codes optimezed by c++11.
+### 2.0
+- NewAdd: All codes will with effective and c++11 in future.
+
+### 2.1
+- NewAdd: Cache module add(see the cache module[now just for database cache with share memory]).
+- NewAdd: The plugin lua add the dcache module.
+- NewAdd: Replace the base variable type implement from only struct to template, change the use memory in db query to heap dynamic from stack static.
+- Bugfix: Share map error in multi threads.
+- BugFix: Database query tool error in multi threads.
+- Bugfix: Share lock can't used in multi threads.

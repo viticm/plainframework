@@ -31,6 +31,8 @@
  *                  等，使用者负责内存中数据的改变，内存中数据发生改变时可能触发
  *                  服务者的一些行为（在同一进程中，服务者与使用者可以共存）
  *       2017/03/31 将考虑使用lua栈以及gc方式来优化该部分的代码（share memory）
+ *       2017/04/17 lua栈的实现方式放缓，考虑以当前模式下的效率是否能够满足，
+ *                  之后再优化
  *                  
  */
 #ifndef PF_CACHE_DB_STORE_H_
@@ -42,6 +44,7 @@
 #include "pf/net/connection/manager/config.h"
 #include "pf/sys/memory/sharemap.h"
 #include "pf/sys/memory/share.h"
+#include "pf/sys/config.h"
 #include "pf/cache/storeinterface.h"
 #include "pf/cache/db_define.h"
 
@@ -86,13 +89,6 @@ class SharePool : public pf_sys::memory::share::GroupPool {
      return data + sizeof(db_item_t);
    }
 
-   //Generate sql from share memory.
-   void generate_sql(
-       const std::vector< std::string > &save_columns, 
-       int16_t index, 
-       int16_t data_index, 
-       std::string &sql);
-
 };
 
 class PF_API DBStore : public StoreInterface {
@@ -120,7 +116,7 @@ class PF_API DBStore : public StoreInterface {
 
  public:
 
-   /* All key is tablename_key */
+   /* All key is tablename#key */
 
    //Retrieve an item from the cache by key.
    virtual void *get(const char *key);
@@ -150,9 +146,9 @@ class PF_API DBStore : public StoreInterface {
 
    //Hook one cache.
    virtual void hook(const char *key, int32_t minutes) {
-     auto cache = reinterpret_cast< db_share_data_t * >(get(key));
+     auto cache = getitem(key);
      if (!cache) return;
-     cache->data.hook_time = minutes * 60;
+     cache->hook_time = minutes * 60;
    };
 
    //Store an item can recycle when the cache is full.
@@ -169,13 +165,31 @@ class PF_API DBStore : public StoreInterface {
    void set_service(bool flag) { service_ = flag; };
 
    //Query sql from db.
-   bool query(const char *key);
+   bool query(const std::string &key);
+
+   //Wait query in query list.
+   bool waitquery(const char *key);
+
+   //Get the fetch array from cache.
+   bool get(const std::string &key, db_fetch_array_t &hash);
+
+   //Set cache from fetch array.
+   bool set(const std::string &key, const db_fetch_array_t &hash);
+
+   //Generate sql string of cache data.
+   bool generate_sql(const std::string &key, std::string &sql);
+
+   //Get the item value from cache.
+   db_item_t *getitem(const std::string &key);
+
+   //Forget all from the only key.
+   void forgetall(const std::string &only_key);
  
  public:
 
    //Get the db conection.
    using get_db_connection_func = 
-     std::function< pf_net::connection::Basic * (db_share_data_t &) >;
+     std::function< pf_net::connection::Basic * (db_item_t &) >;
 
  public:
 
@@ -197,8 +211,10 @@ class PF_API DBStore : public StoreInterface {
      query_net_ = false;
    };
 
-   //Db to cache.
-   void db_to_cache(const char *key, const db_fetch_array_t &data);
+   //Set db type.
+   void set_dbtype(dbtype_t dbtype) {
+     dbtype_ = dbtype;
+   }
 
  public: //For sharememory.
 
@@ -212,6 +228,21 @@ class PF_API DBStore : public StoreInterface {
 
    bool init();
 
+   //Get the cache by strings.
+   bool get(const std::string &key, char *&columns, char * &rows);
+
+   //Set the cache by strings.
+   bool set(const std::string &key, 
+            const std::string &columns, 
+            const std::string &rows);
+
+   //Free the recycle as you want size(0 mean free full as possible)
+   size_t recycle_free(int32_t key, size_t size = 0);
+
+   pf_sys::memory::share::Map *get_keymap() {
+     return &key_map_;
+   }
+
  private:
 
    //Cache key is valid.
@@ -219,6 +250,9 @@ class PF_API DBStore : public StoreInterface {
 
    //Cache key info.
    void cache_info(const char *key, cache_info_t &cache_info);
+
+   //Check the fetch array is valid for cache.
+   bool hash_is_valid(const db_fetch_array_t &hash, size_t size);
   
  private:
 
@@ -228,8 +262,10 @@ class PF_API DBStore : public StoreInterface {
    //Cache alive by key and only key without the name.
    bool recycle_push(int32_t key, const std::string &only_key);
 
-   //Remove all cache from recyle index.
-   void recycle_remove(int32_t key, const std::string &only_key);
+   //Remove all cache from recycle index.
+   void recycle_remove(int32_t key, 
+                       const std::string &only_key, 
+                       const std::string &except_key = "");
 
    //Drop a cache from recycle index.
    void recycle_drop(int32_t key, int32_t index);
@@ -315,8 +351,17 @@ class PF_API DBStore : public StoreInterface {
    //The get net connection function.
    get_db_connection_func get_db_connection_func_;
 
+   //The workers for tick.
+   std::unique_ptr<pf_sys::ThreadPool> workers_;
+
    //The cache last check time.
    uint32_t cache_last_check_time_;
+
+   //The forget list keys.
+   std::vector<std::string> forgetlist_;
+
+   //The db type for cache.
+   dbtype_t dbtype_;
 
 };
 

@@ -14,10 +14,6 @@
 #include "pf/net/packet/interface.h"
 #include "pf/net/stream/basic.h"
 
-//提供给write_*系列方法的最大缓存包大小，即写一个包最大的大小为10k
-//注意：write_*方法需要手动调用方法（add_tostream）加入到输出流中，
-//否则缓存数据不会被发送，出于性能考虑暂不使用此种方式
-
 namespace pf_net {
 
 namespace stream {

@@ -40,10 +40,13 @@ bool for_cache(pf_cache::Manager *cache) {
 bool for_script(pf_script::Interface *env) {
   using namespace pf_script;
   if (is_null(env)) return false;
+  env->task_queue()->work_one();
 #ifdef PF_OPEN_LUA
   auto lua_env = dynamic_cast< lua::System * >(env);
+  if (GLOBALS["default.script.heartbeat"] != "") 
+    lua_env->call(GLOBALS["default.script.heartbeat"].data);
   auto time = 
-    static_cast< int32_t >(1000 / GLOBALS["default.engine.frame"].int32());
+    static_cast<int32_t>(1000 / GLOBALS["default.engine.frame"].get<int32_t>());
   lua_env->gccheck(time);
 #endif //PF_OPEN_LUA
   return true;

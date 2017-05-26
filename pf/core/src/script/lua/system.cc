@@ -21,13 +21,19 @@ bool System::init() {
     on_scripterror(kErrorCodeCreate);
     return false;
   }
-  if (lua_checkstack(lua_state_, stack_size_) != 1) {
+  auto size = static_cast<int32_t>(stack_size_);
+  if (lua_checkstack(lua_state_, size) != 1) {
     on_scripterror(kErrorCodeResize);
     return false;
   }
   open_libs();
   setglobal("ROOTPATH", filebridge_.get_rootpath());
   setglobal("WORKPATH", filebridge_.get_rootpath());
+#if OS_UNIX
+  setglobal("OS_UNIX", true);
+#elif OS_WIN
+  setglobal("OS_WIN", true);
+#endif
   return true;
 }
 
@@ -105,16 +111,16 @@ bool System::load(const std::string &filename) {
   return true;
 }
 
-void System::setglobal(const std::string &name, const var_t &var) {
+void System::setglobal(const std::string &name, const pf_basic::type::variable_t &var) {
   using namespace pf_basic;
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, name.c_str());
   switch (var.type) {
     case type::kVariableTypeBool:
-      lua_pushboolean(lua_state_, var._bool());
+      lua_pushboolean(lua_state_, var.get<bool>());
       break;
     case type::kVariableTypeString:
-      lua_pushstring(lua_state_, var.string());
+      lua_pushstring(lua_state_, var.c_str());
       break;
     case type::kVariableTypeInt32:
     case type::kVariableTypeUint32:
@@ -122,11 +128,13 @@ void System::setglobal(const std::string &name, const var_t &var) {
     case type::kVariableTypeUint16:
     case type::kVariableTypeInt8:
     case type::kVariableTypeUint8:
+      lua_pushinteger(lua_state_, var.get<int32_t>());
+      break;
     case type::kVariableTypeInt64:
     case type::kVariableTypeUint64:
     case type::kVariableTypeFloat:
     case type::kVariableTypeDouble:
-      lua_pushnumber(lua_state_, var._double());
+      lua_pushnumber(lua_state_, var.get<double>());
       break;
     default:
       lua_pushnil(lua_state_);
@@ -135,7 +143,7 @@ void System::setglobal(const std::string &name, const var_t &var) {
   lua_setglobal(lua_state_, name.c_str());
 }
 
-void System::getglobal(const std::string &name, var_t &var) {
+void System::getglobal(const std::string &name, pf_basic::type::variable_t &var) {
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, name.c_str());
   if (1 == lua_isnumber(lua_state_, -1)) {
@@ -204,8 +212,8 @@ bool System::call(const std::string &str) {
 }
 
 bool System::call(const std::string &name, 
-                  const var_array_t &params, 
-                  var_array_t &results) {
+                  const pf_basic::type::variable_array_t &params,
+                  pf_basic::type::variable_array_t &results) {
   using namespace pf_basic;
   if (!lua_state_) {
     on_scripterror(kErrorCodeStateIsNil);
@@ -215,19 +223,27 @@ bool System::call(const std::string &name,
   uint32_t paramcount = static_cast<uint32_t>(params.size());
   uint32_t resultcount = static_cast<uint32_t>(results.size());
   for (uint32_t i = 0; i < paramcount; ++i) {
-    int8_t type = params[i].type;
+    type::var_t type = params[i].type;
     switch (type) {
       case type::kVariableTypeInvalid:
         lua_pushnil(lua_state_);
         break;
       case type::kVariableTypeString:
-        lua_pushstring(lua_state_, params[i].string());
+        lua_pushstring(lua_state_, params[i].c_str());
+        break;
+      case type::kVariableTypeInt32:
+      case type::kVariableTypeUint32:
+      case type::kVariableTypeInt16:
+      case type::kVariableTypeUint16:
+      case type::kVariableTypeInt8:
+      case type::kVariableTypeUint8:
+        lua_pushinteger(lua_state_, params[i].get<int32_t>());
         break;
       case type::kVariableTypeBool:
-        lua_pushboolean(lua_state_, params[i]._bool());
+        lua_pushboolean(lua_state_, params[i].get<bool>());
         break;
       default:
-        lua_pushnumber(lua_state_, params[i]._double());
+        lua_pushnumber(lua_state_, params[i].get<double>());
         break;
     }
   }
@@ -237,7 +253,7 @@ bool System::call(const std::string &name,
     return false;
   } else {
     for (uint32_t i = 0; i < resultcount; ++i) {
-      int8_t type = results[i].type;
+      type::var_t type = results[i].type;
       switch (type) {
         case type::kVariableTypeString:
           results[i] = lua_tostring(lua_state_, i - 1);
@@ -287,9 +303,9 @@ bool System::register_ref(const std::string &table, const std::string &field) {
   pf_basic::type::variable_t key = table;
   key += ".";
   key += field;
-  if (refs_.find(key.string()) != refs_.end()) return false;
+  if (refs_.find(key.c_str()) != refs_.end()) return false;
   int32_t index = luaL_ref(lua_state_, LUA_REGISTRYINDEX);
-  refs_[key.string()] = index;
+  refs_[key.c_str()] = index;
   lua_pop(lua_state_, 1);
   return true;
 }
@@ -298,8 +314,8 @@ bool System::get_ref(const std::string &table, const std::string &field) {
   pf_basic::type::variable_t key = table;
   key += ".";
   key += field;
-  if (refs_.find(key.string()) == refs_.end()) return false;
-  int32_t index = refs_[key.string()];
+  if (refs_.find(key.c_str()) == refs_.end()) return false;
+  int32_t index = refs_[key.c_str()];
   if (LUA_NOREF == index) return false;
   lua_rawgeti(lua_state_, LUA_REGISTRYINDEX, index);
   if (lua_isnil(lua_state_, -1 )) return false;
@@ -310,11 +326,11 @@ bool System::unregister_ref(const std::string &table, const std::string &field) 
   pf_basic::type::variable_t key = table;
   key += ".";
   key += field;
-  if (refs_.find(key.string()) == refs_.end()) return false;
-  int32_t index = refs_[key.string()];
+  if (refs_.find(key.c_str()) == refs_.end()) return false;
+  int32_t index = refs_[key.c_str()];
   if (LUA_NOREF == index) return false;
   luaL_unref(lua_state_, LUA_REGISTRYINDEX, index);
-  refs_.erase(refs_.find(key.string()));
+  refs_.erase(refs_.find(key.c_str()));
   return true;
 }
 
@@ -360,7 +376,7 @@ void System::gccheck(int32_t freetime) {
 }
 
 void System::setfield(
-    const std::string &table, const std::string &field, const var_t &var) {
+    const std::string &table, const std::string &field, const pf_basic::type::variable_t &var) {
   using namespace pf_basic;
   lua_getglobal(lua_state_, table.c_str());
   if (lua_isnil(lua_state_, -1)) lua_newtable(lua_state_);
@@ -368,10 +384,10 @@ void System::setfield(
   lua_pushstring(lua_state_, field.c_str());
   switch (var.type) {
     case type::kVariableTypeBool:
-      lua_pushboolean(lua_state_, var._bool());
+      lua_pushboolean(lua_state_, var.get<bool>());
       break;
     case type::kVariableTypeString:
-      lua_pushstring(lua_state_, var.string());
+      lua_pushstring(lua_state_, var.c_str());
       break;
     case type::kVariableTypeInt32:
     case type::kVariableTypeUint32:
@@ -383,7 +399,7 @@ void System::setfield(
     case type::kVariableTypeUint64:
     case type::kVariableTypeFloat:
     case type::kVariableTypeDouble:
-      lua_pushnumber(lua_state_, var._double());
+      lua_pushnumber(lua_state_, var.get<double>());
       break;
     default:
       lua_pushnil(lua_state_);
@@ -394,7 +410,7 @@ void System::setfield(
 }
 
 void System::getfield(
-    const std::string &table, const std::string &field, var_t &var) {
+    const std::string &table, const std::string &field, pf_basic::type::variable_t &var) {
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, table.c_str());
   if (lua_istable(lua_state_, -1) != 1) return;
@@ -404,7 +420,6 @@ void System::getfield(
   } else if (1 == lua_isstring(lua_state_, -1)) {
     var = lua_tostring(lua_state_, -1);
   }
-  lua_pop(lua_state_, 1);
   lua_pop(lua_state_, 1);
 }
 

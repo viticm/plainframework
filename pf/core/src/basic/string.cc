@@ -144,15 +144,15 @@ void encrypt(const char *in, char *out, int32_t out_length) {
   memset(src, 0, length);
   memset(temp, 0, length);
   int32_t i, j, index;
-  std::default_random_engine rand_engine(time(NULL));
+  std::default_random_engine rand_engine(static_cast<uint32_t>(time(NULL)));
   std::uniform_int_distribution<int> dis(0, 100);
   auto rand_gen = std::bind(dis, rand_engine);
   i = j = 0;
   for (; i < length; ++i) {
     index = rand_gen();
     if (i < 2 || (middle <= i && middle + 3 > i) || i == length - 1) {
-    src[i] = get_base64char(index);
-    continue;
+      src[i] = get_base64char(index);
+      continue;
     }
     src[i] = in[j++];
   }
@@ -166,23 +166,25 @@ void encrypt(const char *in, char *out, int32_t out_length) {
 void decrypt(const char *in, char *out, int32_t out_length) {
   int32_t insize = static_cast<int>(strlen(in));
   if (insize <= 0) return;
-  std::unique_ptr<char []> temp(new char[insize - insize / 3 + 10]); // enough buffer size
-  base64decode(temp.get(), in, insize);
-  int32_t length = static_cast<int32_t>(strlen(temp.get()));
+  char *temp = new char[insize - insize / 3 + 10]; //enough buffer size.
+  base64decode(temp, in, insize);
+  int32_t length = static_cast<int32_t>(strlen(temp));
   int32_t right_length = length - 2 - 3 - 1;
-  std::unique_ptr<char []> _temp(new char[right_length + 1]);
+  char *_temp = new char[right_length + 1];
   int32_t middle = //用正确的长度算出中间值
     0 == right_length % 2 ? right_length / 2 : (right_length + 1) / 2;
   int i, j;
   i = j = 0;
   for (; i < length; ++i) {
     if (i < 2 || (middle <= i && middle + 3 > i) || i == length - 1) {
-    continue;
+      continue;
     }
     _temp[j++] = temp[i];
   }
-  strncpy(out, temp.get(), out_length);
+  strncpy(out, temp, out_length);
   out[out_length - 1] = '\0';
+  safe_delete_array(temp);
+  safe_delete_array(_temp);
 }
 
 uint32_t crc(const char *str) {
@@ -241,34 +243,34 @@ int32_t charset_convert(const char *from,
   while (0 < insize) {
     auto res = iconv(cd, (const char **)&inptr, &insize, &outptr, &outsize);
     if (outptr != outbuf) {
-    std::unique_ptr<char []> _outbuf(new char[outsize + 1]);
-    memset(_outbuf.get(), 0, outsize + 1);
-    strncpy(_outbuf.get(), outbuf, outsize);
-    int32_t saved_errno = errno;
-    int32_t outsize = static_cast<int32_t>(outptr - outbuf);
-    strncpy(save + savesize, _outbuf.get(), outsize);
-    errno = saved_errno;
+      std::unique_ptr<char []> _outbuf(new char[outsize + 1]);
+      memset(_outbuf.get(), 0, outsize + 1);
+      strncpy(_outbuf.get(), outbuf, outsize);
+      int32_t saved_errno = errno;
+      outsize = static_cast<int32_t>(outptr - outbuf);
+      strncpy(save + savesize, _outbuf.get(), outsize);
+      errno = saved_errno;
     }
     if ((size_t)(-1) == res) {
-    if (EILSEQ == errno) {
-      int one = 1 ;
-      iconvctl(cd, ICONV_SET_DISCARD_ILSEQ, &one);
-      status = -3;
-    } else if (EINVAL == errno) {
-      if (0 == inbufsize) {
-      status = -4;
-      goto done;
-      } 
-      else {
-      break;
+      if (EILSEQ == errno) {
+        int one = 1 ;
+        iconvctl(cd, ICONV_SET_DISCARD_ILSEQ, &one);
+        status = -3;
+      } else if (EINVAL == errno) {
+        if (0 == inbufsize) {
+          status = -4;
+          goto done;
+        } 
+        else {
+          break;
+        }
+      } else if (E2BIG == errno) {
+        status = -5;
+        goto done;
+      } else {
+        status = -6;
+        goto done;
       }
-    } else if (E2BIG == errno) {
-      status = -5;
-      goto done;
-    } else {
-      status = -6;
-      goto done;
-    }
     }
   }
   status = static_cast<int32_t>(strlen(save));

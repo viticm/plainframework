@@ -91,11 +91,12 @@ class PF_API Input : public Basic {
      read_string(var, size);
      return *this;
    };
-   Input &operator >> (std::string &var) { //Not safe.
+   Input &operator >> (std::string &var) { //Need optimize
      uint32_t size = read_uint32();
-     char temp[2048]{0,};
+     auto temp = new char[size];
      read_string(temp, size);
      var = temp;
+     safe_delete(temp);
      return *this;
    };
 

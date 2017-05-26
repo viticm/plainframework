@@ -1,4 +1,4 @@
-# This file generate by plain framework admin tool, date: 2017-01-19 00:12:41
+# This file generate by plain framework admin tool, date: 2017-05-21 12:55:51
 SET(EXECUTABLE_OUTPUT_PATH ../../bin)
 
 ADD_DEFINITIONS(-DPF_BUILD_AS_DLL)
@@ -11,6 +11,7 @@ SET(USE_32BITS 0)
 IF(CMAKE_SYSTEM MATCHES Linux)
   ADD_DEFINITIONS(-D_REENTRANT)
   ADD_DEFINITIONS(-DDONT_TD_VOID)
+  ADD_DEFINITIONS(-DLUA_USE_LINUX)
 ELSE(CMAKE_SYSTEM MATCHES Linux)
 ENDIF(CMAKE_SYSTEM MATCHES Linux)
 
@@ -23,7 +24,7 @@ LINK_DIRECTORIES(
 INCLUDE_DIRECTORIES(
   "../../../pf/core/include/"
   "../include/"
-  "../../../pf/dependencies/lua/5.3.0/include/"
+  "../../../pf/dependencies/lua/5.3.4/include/"
   "/usr/local/unixODBC/include/"
 )
 
@@ -32,6 +33,7 @@ SET (INCLUDE_LIST
   ../include/_config.h
   ../include/main.h
   ../include/net.h
+  ../include/passgen.h
 )
 
 SET (INCLUDE_PACKET_LIST
@@ -43,6 +45,7 @@ SET (INCLUDE_PACKET_LIST
 SET (SRC_LIST
   ../src/main.cc
   ../src/net.cc
+  ../src/passgen.cc
 )
 
 SET (SRC_PACKET_LIST

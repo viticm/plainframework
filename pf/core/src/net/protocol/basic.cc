@@ -266,7 +266,7 @@ bool Basic::send(connection::Basic * connection, packet::Interface *packet) {
     NET_PACKET_SETLENGTH(packetcheck, packetsize);
     ostream.write(reinterpret_cast<const char *>(&packetcheck), 
                   sizeof(packetcheck));
-    bool result = packet->write(ostream);
+    result = packet->write(ostream);
     Assert(result);
     uint32_t after_writesize = ostream.reallength();
     if (packet->size() != 

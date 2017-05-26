@@ -52,4 +52,8 @@
 #endif
 #endif
 
+#ifndef SSTREAM_STRING_SIZE_MAX
+#define SSTREAM_STRING_SIZE_MAX (10240)
+#endif
+
 #endif //PF_BASIC_MACROS_LIMIT_H_

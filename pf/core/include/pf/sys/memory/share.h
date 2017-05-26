@@ -13,6 +13,7 @@
 #define PF_SYS_MEMORY_SHARE_H_
 
 #include "pf/sys/memory/config.h"
+#include "pf/basic/time_manager.h"
 #include "pf/basic/logger.h"
 
 namespace pf_sys {
@@ -31,12 +32,12 @@ namespace api {
 
 #if OS_UNIX
 PF_API int32_t create(uint32_t key, size_t size);
-PF_API int32_t open(uint32_t key, size_t size);
+PF_API int32_t open(uint32_t key, size_t size, bool errorlog = true);
 PF_API void close(int32_t handle);
 PF_API char *map(int32_t handle);
 #elif OS_WIN
 PF_API HANDLE create(uint32_t key, size_t size);
-PF_API HANDLE open(uint32_t key, size_t size);
+PF_API HANDLE open(uint32_t key, size_t size, bool errorlog = true);
 PF_API void close(HANDLE handle);
 PF_API char *map(HANDLE handle);
 #endif
@@ -53,7 +54,7 @@ class PF_API Base {
  public:
    bool create(uint32_t key, size_t size);
    void release();
-   bool attach(uint32_t key, size_t size);
+   bool attach(uint32_t key, size_t size, bool errorlog = true);
    char *get() { return data_; };
    char *get(uint32_t index, size_t size);
    header_t *header() { return reinterpret_cast<header_t *>(header_); };
@@ -171,7 +172,7 @@ class UnitPool {
    T *new_obj();
    T *get_obj(int32_t index);
    void delete_obj(T *obj);
-   uint32_t size() const { return size_; };
+   size_t size() const { return size_; };
    uint32_t key() const { return key_; };
    bool dump(const char *filename);
    bool merge(const char *filename);
@@ -188,7 +189,7 @@ class UnitPool {
 
  protected:
    T ** objs_;
-   std::shared_ptr<Base> ref_obj_pointer_;
+   std::unique_ptr<Base> ref_obj_pointer_;
    size_t size_;
    uint32_t key_;
    size_t data_extend_size_;    //Data extend size, unit real size: sizeof(T) + extend_size
@@ -260,8 +261,18 @@ struct group_item_header_struct {
     share::unlock(mutex, type);
   };
 
+  void clear() {
+    pool_position = 0;
+    mutex.exchange(kFlagFree);
+    version = 0;
+    status = 0;
+  }
+
   group_item_header_struct() :
-    pool_position{0} {}
+    pool_position{0},
+    mutex{kFlagFree},
+    version{0},
+    status{0} {}
 };
 
 using group_item_t = struct group_item_struct;
@@ -283,6 +294,7 @@ class GroupPool {
    group_item_header_t *item_header(int16_t index);
    char *item_data_header(int16_t index, int16_t data_index);
    char *item_data(int16_t index, int16_t data_index);
+   int32_t item_data_postion(int16_t index, int16_t data_index);
 
  public:
    //Free all.
@@ -291,6 +303,11 @@ class GroupPool {
  public:  //分配与归还内存块，根据每组数据实现
    char *alloc(int16_t index, int16_t &data_index);
    int16_t free(int16_t index, int16_t data_index); //return swap index.
+
+ private:
+   bool is_valid_index(int16_t index) {
+     return group_conf_.find(index) != group_conf_.end();
+   };
 
  private:
    std::map< int16_t, group_item_t > group_conf_;
@@ -353,5 +370,9 @@ class Node {
 }; //namespace pf_sys
 
 #include "pf/sys/memory/share.tcc"
+
+#ifndef share_lock
+#define share_lock(t,o,n,f) pf_sys::memory::share::unique_lock<t> n(o, f)
+#endif
 
 #endif //PF_SYS_MEMORY_SHARE_H_

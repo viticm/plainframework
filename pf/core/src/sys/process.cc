@@ -1,3 +1,4 @@
+#include "pf/basic/config.h"
 #if OS_WIN
 #include <process.h>
 #include <psapi.h>
@@ -8,6 +9,7 @@
 #include "pf/basic/util.h"
 #include "pf/basic/io.tcc"
 #include "pf/sys/util.h"
+#include "pf/sys/assert.h"
 #include "pf/sys/process.h"
 
 namespace pf_sys {

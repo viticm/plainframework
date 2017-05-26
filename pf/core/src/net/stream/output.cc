@@ -25,7 +25,7 @@ uint32_t Output::write(const char *buffer, uint32_t length) {
   if (length >= freecount && !resize(length - freecount + 1)) return 0;
   bufferlength = streamdata_.bufferlength;
   if (head <= tail) {
-    uint32_t freecount = bufferlength - tail - 1;
+    freecount = bufferlength - tail - 1;
     if (length <= freecount) {
       if (encrypt_isenable()) {
         encryptor_.encrypt(&(streamdata_.buffer[tail]), buffer, length);

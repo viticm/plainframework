@@ -5,18 +5,14 @@ namespace pf_sys {
 
 namespace memory {
 
-StaticAllocator::StaticAllocator() {
-  buffer_ = NULL;
-  size_ = 0;
-  offset_ = 0;
+StaticAllocator::StaticAllocator() :
+  buffer_{nullptr},
+  size_{0},
+  offset_{0} {
 }
 
 StaticAllocator::~StaticAllocator() {
   //do nothing
-}
-
-void StaticAllocator::clear() {
-  offset_ = 0;
 }
 
 void StaticAllocator::init(char *buffer, size_t size) {
@@ -39,16 +35,25 @@ void *StaticAllocator::malloc(size_t size) {
   return reinterpret_cast<void *>(pointer);
 }
 
-void *StaticAllocator::calloc(size_t count, size_t size) {
+void *StaticAllocator::calloc(size_t size, size_t count) {
   void *pointer = malloc(count * size);
   memset(pointer, 0, count * size);
   return reinterpret_cast<void *>(pointer);
 }
 
 void *StaticAllocator::realloc(void *data, size_t newsize) {
+  auto _data = static_cast<char *>(data);
+  auto buffer = static_cast<char *>(buffer_);
   Assert(data >= buffer_ && data < buffer_ + size_);
-  size_t size_ofdata = 
-    offset_ - static_cast<size_t>(reinterpret_cast<char *>(data) - buffer_);
+  auto data_offset = _data - buffer;
+  if (static_cast<size_t>(data_offset) != offset_) {
+   SLOW_ERRORLOG("error",
+                  "[sys.memory] (DynamicAllocator::realloc)"
+                  " the realloc pointer not on top");
+    Assert(false);
+    return nullptr;
+  }
+  size_t size_ofdata = offset_ - static_cast<size_t>(_data - buffer);
   size_t size = newsize - size_ofdata;
   if (offset_ + size > size_) {
     SLOW_ERRORLOG("error",
@@ -56,7 +61,7 @@ void *StaticAllocator::realloc(void *data, size_t newsize) {
                   " out of memory allocating %d bytes",
                   size);
     Assert(false);
-    return NULL;
+    return nullptr;
   } else {
     offset_ += size;
     return data;

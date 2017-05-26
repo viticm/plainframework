@@ -14,6 +14,7 @@
 #include "pf/sys/memory/config.h"
 #include "pf/basic/time_manager.h"
 #include "pf/sys/memory/share.h"
+#include "pf/sys/util.h"
 
 namespace pf_sys {
 
@@ -69,7 +70,8 @@ inline UnitPool<T>::~UnitPool() {
 template <typename T>
 bool UnitPool<T>::init(uint32_t key, size_t size, uint8_t type) {
   if (ready_) return true;
-  ref_obj_pointer_ = new Base();
+  std::unique_ptr<Base> p{new Base()};
+  ref_obj_pointer_ = std::move(p);
   Assert(ref_obj_pointer_);
   if (is_null(ref_obj_pointer_)) return false;
   bool result = true;
@@ -77,7 +79,7 @@ bool UnitPool<T>::init(uint32_t key, size_t size, uint8_t type) {
   auto full_size = sizeof(header_t) + 
                    header_extend_size_ + 
                    (sizeof(T) + data_extend_size_ ) * size;
-  result = ref_obj_pointer_->attach(key, full_size);
+  result = ref_obj_pointer_->attach(key, full_size, false);
   if (kSmptDefault == type && !result) {
     result = ref_obj_pointer_->create(key, full_size);
     need_init = true;
@@ -89,7 +91,7 @@ bool UnitPool<T>::init(uint32_t key, size_t size, uint8_t type) {
   } else if (!result) {
     SLOW_ERRORLOG(
         "sharememory",
-        "[sys][sharememory] (UnitPool::init) failed");
+        "[sys.memory.share] (UnitPool::init) failed");
     Assert(result);
     return false;
   }
@@ -98,7 +100,8 @@ bool UnitPool<T>::init(uint32_t key, size_t size, uint8_t type) {
   objs_ = new T * [size_];
   if (is_null(objs_)) return false;
   for (decltype(size_) i = 0; i < size_; ++i) {
-    char *data = ref_obj_pointer_->get(sizeof(T) + data_extend_size_, i);
+    auto objsize = static_cast<uint32_t>(sizeof(T) + data_extend_size_);
+    char *data = ref_obj_pointer_->get(objsize, i);
     if (data_extend_size_ > 0 && need_init) {
       memset(&data[sizeof(T)], 0, data_extend_size_);
     }
@@ -142,7 +145,7 @@ void UnitPool<T>::delete_obj(T *obj) {
   unique_lock<header_t> auto_lock(*header, kFlagMixedWrite);
   Assert(header->pool_position > 0);
   if (is_null(obj) || header->pool_position <= 0) return;
-  auto delete_index = obj->get_poolid();
+  auto delete_index = static_cast<uint32_t>(obj->get_pool_id());
   Assert(delete_index < header->pool_position);
   --(header->pool_position);
   if (0 == header->pool_position) return;
@@ -152,7 +155,7 @@ void UnitPool<T>::delete_obj(T *obj) {
   char *swappointer = reinterpret_cast<char *>(swap_obj);
   auto data_size = sizeof(T) + data_extend_size_;
   memcpy(pointer, swappointer, data_size);
-  objs_[header->pool_position]->set_poolid(ID_INVALID);
+  objs_[header->pool_position]->set_pool_id(ID_INVALID);
 }
 
 template <typename T>
@@ -172,7 +175,7 @@ template <typename T>
 inline void UnitPool<T>::set_position(int32_t position) { 
   if (is_null(ref_obj_pointer_)) return;
   header_t *header = ref_obj_pointer_->header();
-  unique_lock<header_t> auto_lock(*header, kFlagMixedRead);
+  unique_lock<header_t> auto_lock(*header, kFlagMixedWrite);
   header->pool_position = position;
 }
 
@@ -258,7 +261,7 @@ bool Node<T>::init_after() {
       if (kUseFreeEx == usestatus)
         object->set_usestatus(kUseReadyFree, write_flag_);
     }
-    SLOW_LOG(GLOBALS["app.name"].string(),
+    SLOW_LOG(GLOBALS["app.name"].c_str(),
               "[sys.memory.share] Node<T>::initafter recover"); 
     return true;
   }
@@ -353,6 +356,16 @@ void Node<T>::set_minutes(uint32_t index, uint32_t minutes) {
   if (!is_null(object)) {
     object->setminutes(minutes, write_flag_);
   }
+}
+
+inline void clear(int32_t key) {
+#if OS_UNIX
+  char cmd[256]{0}; char result[512]{0};
+  snprintf(cmd, sizeof(cmd) - 1, "ipcrm -M %u\n", key);
+  pf_sys::util::exec(cmd, result, sizeof(result) - 1);
+#else
+  UNUSED(key);
+#endif
 }
 
 }; //namespace share

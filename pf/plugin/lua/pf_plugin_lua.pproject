@@ -21,7 +21,7 @@
 	"IncludeDirectories": [
 		"../include",
 		"../../../../pf/core/include",
-		"../../../../pf/dependencies/lua/5.3.0/include"
+		"../../../../pf/dependencies/lua/5.3.4/include"
 	],
 	"ExtraSources": [
 	],

@@ -26,18 +26,38 @@
 #include "main.h"
 #include "net.h"
 #include "packet/sayhello.h"
+#include "passgen.h"
 
 //The script reload function.
 void reload() {
   if (is_null(ENGINE_POINTER)) return;
   auto env = ENGINE_POINTER->get_script();
   if (is_null(env)) return;
-  env->reload("preload.lua");
+  auto task_queue = env->task_queue();
+  task_queue->enqueue([env] { env->reload("preload.lua"); });
 }
 
 //The test engine main loop event 1.
 int32_t times = 0;
 void main_loop(pf_engine::Kernel &engine) {
+  using namespace pf_cache;
+  /**
+  auto cache = ENGINE_POINTER->get_cache();
+  if (cache) {
+    auto db = dynamic_cast<DBStore *>(cache->get_db_dirver()->store());
+    auto key_map = db->get_keymap();
+    for (size_t i = 0; i < 10; ++i) {
+      std::string key{"t_user#"};
+      key += i;
+      key_map->set(key.c_str(), "100000000");
+    }
+    for (size_t i = 0; i < 10; ++i) {
+      std::string key{"t_user#"};
+      key += i;
+      key_map->remove(key.c_str());
+    }
+  }
+  **/
   std::cout << "main_loop ..." << std::endl;
   ++times;
   if (times > 10)
@@ -63,7 +83,7 @@ void main_nconnect(pf_engine::Kernel &engine,
   mconnector.tick();
   if (is_null(connector)) {
     connector = mconnector.connect(
-        "127.0.0.1", GLOBALS["default.net.service_port"].uint16());
+        "127.0.0.1", GLOBALS["default.net.service_port"].get<uint16_t>());
   } else {
     static uint32_t last_time = 0;
     auto tickcount = TIME_MANAGER_POINTER->get_tickcount();
@@ -82,23 +102,23 @@ void db_test(pf_engine::Kernel &engine) {
   auto db = engine.get_db();
   if (is_null(db)) return;
   if (db->isready()) {
-    db_query_t db_query;
-    pf_db::Query query(&db_query);
+    pf_db::Query query;
     if (!query.init(db)) return;
     query.set_tablename("t_test");
     query.select("*");
     query.from();
     query.limit(1);
-    if (query.execute()) {
+    db_lock(db, db_auto_lock);
+    if (query.query()) {
       pf_basic::io_cwarn("------------------------db---------------------------");
       db_fetch_array_t fectch_array;
       query.fetcharray(fectch_array);
       pf_basic::io_cdebug("db_test keys: ");
       for (pf_basic::type::variable_t &key : fectch_array.keys)
-        std::cout << key.string() << std::endl;
+        std::cout << key.c_str() << std::endl;
       pf_basic::io_cdebug("db_test values: ");
       for (pf_basic::type::variable_t &val : fectch_array.values)
-        std::cout << val.string() << std::endl;
+        std::cout << val.c_str() << std::endl;
       pf_basic::io_cwarn("------------------------db---------------------------");
     }
   } else {
@@ -124,6 +144,16 @@ int32_t main(int32_t argc, char * argv[]) {
   
   //Script.
   GLOBALS["default.script.open"] = true;
+  GLOBALS["default.script.heartbeat"] = "heartbeat";
+
+  //Cache.
+  GLOBALS["default.cache.open"] = true;
+  GLOBALS["default.cache.key_map"] = 10001;
+  GLOBALS["default.cache.recycle_map"] = 10002;
+  GLOBALS["default.cache.query_map"] = 10003;
+  GLOBALS["default.cache.service"] = true;
+  GLOBALS["default.cache.conf"] = "config/cache.tab";
+  GLOBALS["default.cache.clear"] = true;
 
   /* engine. */
   pf_engine::Kernel engine;
@@ -144,6 +174,9 @@ int32_t main(int32_t argc, char * argv[]) {
   mconnector.init(1);
   engine.enqueue([&engine, &mconnector](){ main_nconnect(engine, mconnector); });
 
+  char pass[1024]{0};
+  SimplyDecryptPassword(pass, "_eHJKA_UKMEMeNvR__ZOCLQjYUQjWQPE");
+  pf_basic::io_cdebug("pass: %s", pass);
   /* run */
   app.run(argc, argv);
   return 0;

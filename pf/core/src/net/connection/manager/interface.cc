@@ -19,8 +19,7 @@ Interface::Interface() :
   send_bytes_{0},
   receive_bytes_{0},
   onestep_accept_{NET_ONESTEP_ACCEPT_DEFAULT},
-  pool_{nullptr},
-  thread_id_{0} {
+  pool_{nullptr} {
 }
 
 Interface::~Interface() {

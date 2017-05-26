@@ -43,8 +43,9 @@ struct config_struct {
 
 using config_t = config_struct;
 using eid_t = int16_t; //Environment.
-using var_array_t = pf_basic::type::variable_array_t;
-using var_t = pf_basic::type::variable_t;
+/* Can't use in windows. */
+//using var_array_t = pf_basic::type::variable_array_t;
+//using var_t = pf_basic::type::variable_t;
 
 };
 

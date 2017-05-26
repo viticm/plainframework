@@ -13,10 +13,11 @@
 
 #include "pf/script/config.h"
 #include "pf/basic/type/variable.h"
+#include "pf/basic/task_queue.tcc"
 
 namespace pf_script {
 
-PF_API class Interface {
+class PF_API Interface {
 
  public:
    Interface() {};
@@ -37,13 +38,22 @@ PF_API class Interface {
 
  public:
    virtual void register_function(const std::string &name, void *pointer) = 0;
-   virtual void setglobal(const std::string &name, const var_t &var) = 0;
-   virtual void getglobal(const std::string &name, var_t &var) = 0;
+   virtual void setglobal(const std::string &name, 
+                          const pf_basic::type::variable_t &var) = 0;
+   virtual void getglobal(const std::string &name, 
+                          pf_basic::type::variable_t &var) = 0;
    virtual bool exists(const std::string &name) = 0;
    virtual bool call(const std::string &str) = 0;
    virtual bool call(const std::string &name, 
-                     const var_array_t &params, 
-                     var_array_t &results) = 0;
+                     const pf_basic::type::variable_array_t &params,
+                     pf_basic::type::variable_array_t &results) = 0;
+
+ public:
+   pf_basic::TaskQueue *task_queue() { return &task_queue_; }
+
+ private:
+   //Task queue can safe call in diffrent thead for script.
+   pf_basic::TaskQueue task_queue_;
 
 };
 

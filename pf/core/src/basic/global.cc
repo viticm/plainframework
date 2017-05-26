@@ -3,6 +3,7 @@
 #include "pf/net/connection/config.h"
 #include "pf/script/config.h"
 #include "pf/db/config.h"
+#include "pf/cache/config.h"
 #include "pf/basic/util.h"
 
 /**
@@ -10,12 +11,15 @@
  * GLOBALS["app.name"] = string;                  //default "".
  * GLOBALS["app.status"] = number;                //default kAppStatusStop.
  * GLOBALS["app.cmdmodel"] = number;              //default 0.
+ * GLOBALS["app.forceexit"] = bool;               //default true.
+ * GLOBALS["app.console"] = bool;				  //default true.
  * GLOBALS["log.active"] = bool;                  //default true.
  * GLOBALS["log.directory"] = number;             //default the exe file path with "/log".
  * GLOBALS["log.singlefile"] = bool;              //default false.
  * GLOBALS["log.fast"] = bool;                    //default true.
  * GLOBALS["log.print"] = bool;                   //default true.
  * GLOBALS["log.clear"] = bool;                   //default false.
+ * GLOBALS["cache.gsinit"] = bool;                //default false.
  * GLOBALS["thread.collects"] = number;           //default 0.
  * GLOBALS["default.engine.frame"] = number;      //default 100.
  * GLOBALS["default.net.open"] = bool;            //default false.
@@ -28,12 +32,16 @@
  * GLOBALS["default.script.workpath"] = string;   //default SCRIPT_WORK_PATH.
  * GLOBALS["default.script.bootstrap"] = string;  //default "bootstrap.lua".
  * GLOBALS["default.script.type"] = number;       //default pf_script::kTypeLua.
+ * GLOBALS["default.script.heartbeat"] = string;  //default "".
+ * GLOBALS["default.script.enter"] = string;      //default "main".
  * GLOBALS["default.cache.open"] = bool;          //default fasle.
  * GLOBALS["default.cache.service"] = bool;       //default fasle.
  * GLOBALS["default.cache.conf"] = string;        //default "".
  * GLOBALS["default.cache.key_map"] = number;     //default ID_INVALID.
  * GLOBALS["default.cache.recycle_map"] = number; //default ID_INVALID.
  * GLOBALS["default.cache.query_map"] = number;   //default ID_INVALID.
+ * GLOBALS["default.cache.clear"] = bool;         //default false.
+ * GLOBALS["default.cache.workers"] = number;     //default CACHE_WORKERS_DEFAULT.
  * GLOBALS["default.db.open"] = bool;             //default fasle.
  * GLOBALS["default.db.type"] = number;           //default kDBConnectorTypeODBC.
  * GLOBALS["default.db.server"] = string;         //default "".
@@ -61,9 +69,12 @@ void set_default_globals(type::variable_set_t &g) {
   if (g["globals"] == true) return;
 
   set_base_path(g);
+
   g["app.name"] = "";
   g["app.status"] = kAppStatusStop;
   g["app.cmdmodel"] = 0;
+  g["app.forceexit"] = true;
+  g["app.console"] = true;
 
   g["log.active"] = true;
   g["log.directory"] = g["app.basepath"];
@@ -72,6 +83,8 @@ void set_default_globals(type::variable_set_t &g) {
   g["log.fast"] = true;
   g["log.print"] = true;
   g["log.clear"] = false;
+
+  g["cache.gsinit"] = false;
 
   g["thread.collects"] = 0;
 
@@ -92,6 +105,8 @@ void set_default_globals(type::variable_set_t &g) {
   g["default.cache.key_map"] = ID_INVALID;
   g["default.cache.recycle_map"] = ID_INVALID;
   g["default.cache.query_map"] = ID_INVALID;
+  g["default.cache.clear"] = false;
+  g["default.cache.workers"] = CACHE_WORKERS_DEFAULT;
   g["default.db.open"] = false;
   g["default.db.type"] = kDBConnectorTypeODBC;
   g["default.db.server"] = "";

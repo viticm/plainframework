@@ -53,19 +53,17 @@ class PF_API System {
    uint32_t get_result_count();
    int get_error_code();
    const char *get_error_message();
-   virtual bool load();
-   virtual bool add_new();
-   virtual bool _delete();
-   virtual bool save();
+   virtual bool add_new(const std::string &sql_str);
+   virtual bool _delete(const std::string &sql_str);
+   virtual bool save(const std::string &sql_str);
    int32_t get_columncount() const;
-   db_query_t *get_internal_query();
    bool getresult() const;
-   virtual bool query();
+   virtual bool query(const std::string &sql_str);
    bool fetch(int32_t orientation = 1, int32_t offset = 0);
    bool check_db_connect(); //check the connect if work, 
                             //and repeat 5 times when fails
    Interface *getinterface();
-   int8_t gettype(int32_t column_index);
+   db_columntype_t gettype(int32_t column_index);
 
 
  protected:

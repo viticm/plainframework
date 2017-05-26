@@ -29,18 +29,14 @@ Interface::Interface()
   column_nullable_{nullptr},
   column_values_{nullptr},
   column_valuelengths_{nullptr},
-  column_info_buffer_{0},
-  column_value_buffer_{0},
   error_code_{0},
   error_message_{0} {
-  query_.clear();
-  column_info_allocator_.init(column_info_buffer_, 
-                              sizeof(column_info_buffer_));
-  column_value_allocator_.init(column_value_buffer_, 
-                               sizeof(column_value_buffer_));
+  column_info_allocator_.malloc(COLUMN_INFO_BUFFER_MAX);
+  column_value_allocator_.malloc(COLUMN_VALUE_BUFFER_MAX);
 }
 
 Interface::~Interface() {
+  close();
   if (sql_hstmt_) SQLFreeHandle(SQL_HANDLE_STMT, sql_hstmt_);
   if (sql_hdbc_) SQLDisconnect(sql_hdbc_);
   if (sql_hdbc_) SQLFreeHandle(SQL_HANDLE_DBC, sql_hdbc_);
@@ -198,7 +194,7 @@ bool Interface::collect_resultinfo() {
   column_nullable_ = reinterpret_cast<SQLSMALLINT *>(
       column_info_allocator_.calloc(sizeof(SQLSMALLINT), column_count_ + 1));
   for (SQLUSMALLINT column = 0; column < column_count_; ++column) {
-    SQLCHAR name[DB_ODBC_COLUMN_NAME_LENGTH_MAX] = {0};
+    SQLCHAR name[DB_ODBC_COLUMN_NAME_LENGTH_MAX]{0};
     SQLSMALLINT namelength = 0;
     if (failed(SQLDescribeCol(sql_hstmt_, 
                               column + 1, 
@@ -213,7 +209,7 @@ bool Interface::collect_resultinfo() {
     }
     name[namelength] = '\0';
     column_names_[column] = reinterpret_cast<char *>(
-        column_info_allocator_.malloc(namelength + 1));
+        column_info_allocator_.calloc(namelength + 1));
     string::safecopy(column_names_[column], 
                      reinterpret_cast<const char *>(name), 
                      namelength + 1);
@@ -221,12 +217,11 @@ bool Interface::collect_resultinfo() {
   return true;
 }
 
-bool Interface::execute() {
-  if (strlen(query_.sql_str_) <= 0) return false;
+bool Interface::execute(const std::string &sql_str) {
   try {
     //int column_index;
     result_ = SQLExecDirect(sql_hstmt_, 
-                            reinterpret_cast<SQLCHAR*>(query_.sql_str_), 
+                            cast(SQLCHAR *, sql_str.c_str()), 
                             SQL_NTS);
     if ((result_ != SQL_SUCCESS) && 
         (result_ != SQL_SUCCESS_WITH_INFO) &&
@@ -237,17 +232,12 @@ bool Interface::execute() {
     result_ = static_cast<SQLRETURN>(collect_resultinfo());
     return 0 == result_ ? false : true;
   } catch(...) {
-    char temp[8092] = {0};
-    snprintf(temp, sizeof(temp) - 1, "Huge Error occur: %s", query_.sql_str_);
+    char temp[1024] = {0};
+    snprintf(temp, sizeof(temp) - 1, "Huge Error occur: %s", sql_str.c_str());
     save_error_log(temp);
     return false;
   }
-}
-
-bool Interface::execute(const char *sql_str) {
-  memset(query_.sql_str_, '\0', sizeof(query_.sql_str_));
-  strncpy(query_.sql_str_, sql_str, sizeof(query_.sql_str_) - 1);
-  return execute();
+  return false;
 }
 
 void Interface::clear_no_commit() {
@@ -259,7 +249,6 @@ void Interface::clear_column_data() {
   if (column_count_ > 0) {
     for (int32_t column = 0; column < column_count_; ++column) {
       if (column_values_[column] != nullptr) {
-        column_value_allocator_.free(column_values_[column]);
         column_values_[column] = nullptr;
       }
     }
@@ -321,7 +310,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
         }
       }
       column_values_[column] = reinterpret_cast<char *>(
-          column_value_allocator_.malloc(data_length + 1));
+          column_value_allocator_.calloc(data_length + 1));
       memcpy(column_values_[column], work_data, data_length);
       column_values_[column][data_length] = '\0';
       column_valuelengths_[column] = static_cast<SQLINTEGER>(data_length);
@@ -361,7 +350,7 @@ bool Interface::fetch(int32_t orientation, int32_t offset) {
     } else {
       column_valuelengths_[column] = static_cast<SQLINTEGER>(data_length);
       column_values_[column] = reinterpret_cast<char *>(
-          column_value_allocator_.malloc(data_length + 1));
+          column_value_allocator_.calloc(data_length + 1));
       memcpy(column_values_[column], work_data, data_length);
       column_values_[column][data_length] = '\0';
     }
@@ -656,14 +645,12 @@ void Interface::diag_state() {
       close();
     }
   }
-  char error_buffer[512];
-  memset(error_buffer, '\0', sizeof(error_buffer));
+  char error_buffer[2048]{0};
   snprintf(error_buffer,
            sizeof(error_buffer) - 1,
-           "error code: %d, error msg: %s,error sql: %s", 
+           "error code: %d, error msg: %s", 
            static_cast<int32_t>(error_code_), 
-           error_message_,
-           query_.sql_str_);
+           error_message_);
   save_error_log(error_buffer);
 }
 
