@@ -18,7 +18,7 @@ deps:
 	cd $(CUR_DIR)
 	cd $(DEPS_DIR)iconv/proj.linux && cmake -Wno-dev ./ && make
 	cd $(CUR_DIR)
-	cd $(DEPS_DIR)lua/5.3.0/proj.linux && cmake -Wno-dev ./ && make
+	cd $(DEPS_DIR)lua/5.3.4/proj.linux && cmake -Wno-dev ./ && make
 
 plugins:
 	cd $(CUR_DIR)
