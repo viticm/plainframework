@@ -11,7 +11,7 @@ using namespace pf_script::lua;
 bool System::init() {
   if (0 == stack_size_) {
 #if LUA_VERSION_NUM >= 502
-    stack_size_ = 1024 * 1;
+    stack_size_ = 1024 * 100;
 #else
     stack_size_ = 1024 * 4;
 #endif
