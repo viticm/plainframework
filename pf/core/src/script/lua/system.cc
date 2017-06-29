@@ -11,7 +11,7 @@ using namespace pf_script::lua;
 bool System::init() {
   if (0 == stack_size_) {
 #if LUA_VERSION_NUM >= 502
-    stack_size_ = 1024 * 100;
+    stack_size_ = 1024 * 1;
 #else
     stack_size_ = 1024 * 4;
 #endif
@@ -111,7 +111,8 @@ bool System::load(const std::string &filename) {
   return true;
 }
 
-void System::setglobal(const std::string &name, const pf_basic::type::variable_t &var) {
+void System::setglobal(const std::string &name, 
+                       const pf_basic::type::variable_t &var) {
   using namespace pf_basic;
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, name.c_str());
@@ -143,7 +144,8 @@ void System::setglobal(const std::string &name, const pf_basic::type::variable_t
   lua_setglobal(lua_state_, name.c_str());
 }
 
-void System::getglobal(const std::string &name, pf_basic::type::variable_t &var) {
+void System::getglobal(const std::string &name, 
+                       pf_basic::type::variable_t &var) {
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, name.c_str());
   if (1 == lua_isnumber(lua_state_, -1)) {
@@ -156,7 +158,6 @@ void System::getglobal(const std::string &name, pf_basic::type::variable_t &var)
 
 bool System::call(const std::string &str) {
   using namespace pf_basic;
-  int32_t result = 1;
   if (!lua_state_) {
     on_scripterror(kErrorCodeStateIsNil);
     return false;
@@ -203,9 +204,9 @@ bool System::call(const std::string &str) {
     }
   }
   int32_t call_result = 
-    lua_pcall(lua_state_, (int32_t)array.size() - 1, result, 0);
+    lua_pcall(lua_state_, (int32_t)array.size() - 1, 0, 0);
   if (call_result != 0) {
-    on_scripterror(kErrorCodeExecute, result);
+    on_scripterror(kErrorCodeExecute);
     return false;
   }
   return true;
@@ -375,8 +376,9 @@ void System::gccheck(int32_t freetime) {
   }
 }
 
-void System::setfield(
-    const std::string &table, const std::string &field, const pf_basic::type::variable_t &var) {
+void System::setfield(const std::string &table, 
+                      const std::string &field, 
+                      const pf_basic::type::variable_t &var) {
   using namespace pf_basic;
   lua_getglobal(lua_state_, table.c_str());
   if (lua_isnil(lua_state_, -1)) lua_newtable(lua_state_);
@@ -409,8 +411,9 @@ void System::setfield(
   lua_setglobal(lua_state_, table.c_str());
 }
 
-void System::getfield(
-    const std::string &table, const std::string &field, pf_basic::type::variable_t &var) {
+void System::getfield(const std::string &table, 
+                      const std::string &field, 
+                      pf_basic::type::variable_t &var) {
   if (is_null(lua_state_)) return;
   lua_getglobal(lua_state_, table.c_str());
   if (lua_istable(lua_state_, -1) != 1) return;

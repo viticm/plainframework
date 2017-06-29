@@ -78,6 +78,7 @@ class PF_API System : public Interface {
    };
    //Call with string, example: "test\t1\tname" or "module.test\t1\tname".
    virtual bool call(const std::string &str);
+   //Call by function name with parameters and results.
    virtual bool call(const std::string &name, 
                      const pf_basic::type::variable_array_t &params,
                      pf_basic::type::variable_array_t &results);
@@ -99,9 +100,12 @@ class PF_API System : public Interface {
    bool unregister_ref(const std::string &table, const std::string &field);
    void unregister_refs();
    void gccheck(int32_t freetime);
-   void setfield(
-       const std::string &table, const std::string &field, const pf_basic::type::variable_t &var);
-   void getfield(const std::string &table, const std::string &field, pf_basic::type::variable_t &var);
+   void setfield(const std::string &table, 
+                 const std::string &field, 
+                 const pf_basic::type::variable_t &var);
+   void getfield(const std::string &table, 
+                 const std::string &field, 
+                 pf_basic::type::variable_t &var);
    bool callstr(const std::string &str) {
      return 1 == luaL_dostring(lua_state_, str.c_str());
    };
