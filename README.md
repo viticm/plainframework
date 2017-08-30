@@ -58,7 +58,7 @@ Plain framework is released under the MIT License. See the LICENSE file for deta
 ## Recent Changelog
 
 ### 2.0
-- NewAdd: All codes will with effective and c++11 in future.
+- NewAdd: All codes rewrite with effective use c++11.
 
 ### 2.1
 - NewAdd: Cache module add(see the cache module[now just for database cache with share memory]).
