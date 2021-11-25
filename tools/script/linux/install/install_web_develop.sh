@@ -29,11 +29,11 @@ cDate_TimeZone="Asia/Shanghai"
 cDisplay_Errors=On
 cError_Reporting="E_ALL & ~E_NOTICE"
 cAllow_Call_Time_Pass_Reference=On
-cPHPDefaultVersion="5.4.32"
+cPHPDefaultVersion="8.0.13"
 ###### PHP ########
 
 #### PHP-FPM CONFIGS ####
-pm_max_children=64 
+pm_max_children=64
 pm_start_servers=20
 pm_min_spare_servers=5
 pm_max_spare_servers=35
@@ -41,6 +41,9 @@ pm_max_requests=1024
 pm_user=${cWebUser}
 pm_group=${cWebUser}
 #### PHP-FPM CONFIGS ####
+
+### Tengine
+cTengineDefalutVersion="2.3.3"
 
 usage()
 {
@@ -63,7 +66,7 @@ if ! egrep -q "$SUPPORTED_OS" /etc/issue && ! egrep -q "$SUPPORTED_OS" /etc/redh
 cat <<EOF
 
 Unable to install: Your distribution is not suitable for installation using
-Zend's DEB/RPM repositories. 
+Zend's DEB/RPM repositories.
 
 EOF
   exit 1
@@ -105,7 +108,7 @@ function InstallBasePackage()
 {
   echo
   echo "************************************************************************"
-  echo "* Start install Base package( vim git wget base for mysql php nginx ). *" 
+  echo "* Start install Base package( vim git wget base for mysql php nginx ). *"
   echo "************************************************************************"
 #clean iptables
 #  echo -e "\e[0;36;1mfirst will clean iptables,please wait.\e[0m"
@@ -118,7 +121,7 @@ function InstallBasePackage()
     #it will download from network .
     echo -e "\e[0;33;1mnow will test your network if worked,please wait some time.\e[0m"
     ping -c 5 ${cTestDomain}
-    if [[ $? -ne 0 ]] ; then 
+    if [[ $? -ne 0 ]] ; then
       echo -e "\e[0;31;1myour network not worked,please check it.\e[0m"
       exit 1
     else
@@ -156,12 +159,12 @@ function InstallBasePackage()
   chkconfig ntpd on
   ntpdate cn.pool.ntp.org
   hwclock --systohc
-#config ulimit configs 
+#config ulimit configs
   echo now will config limit allow handles.
   echo "* soft nofile 2048" >> /etc/security/limits.conf
   echo "* hard nofile 32768" >> /etc/security/limits.conf
   echo "config limits is ok, remember reboot your server."
-  if [[ $? -ne 0 ]] ; then 
+  if [[ $? -ne 0 ]] ; then
     echo -e "\e[0;31;1minstall base is failed.\e[0m"
     exit 1
   fi
@@ -180,7 +183,7 @@ function InstallMysql()
   echo "**********************************************"
   local cMysqlPackage="Percona-Server-5.6.10-alpha60.2.tar.gz"
   local cMysqlPackageDir="Percona-Server-5.6.10-alpha60.2"
-  if [[ ${cBase} == "no" ]] ; then    
+  if [[ ${cBase} == "no" ]] ; then
     yum -y install make
     yum -y install cmake
     yum -y install libtermcap-devel
@@ -188,7 +191,7 @@ function InstallMysql()
     yum -y install perl
     yum -y install bison
   fi
-  
+
   if [[ ${cDownload} == "off" ]] ; then
     cd ${cInstallFile}
   fi
@@ -216,13 +219,13 @@ function InstallMysql()
   cd ${cMysqlPackageDir}
   if [[ "" != `ps -A | grep mysqld` ]]; then
     PRINTWARNING "mysql is install and run now will uninstall it, or Ctrl+C to abort now."
-    read answer 
+    read answer
     service mysql stop
 #   make clean
 #   make uninstall
     rm -rf ${cMysqlInstallPath}
   fi
-  
+
   CC=gcc CFLAGS="-DBIG_JOINS=1 -DHAVE_DLOPEN=1 -O3" CXX=g++ CXXFLAGS="-DBIG_JOINS=1 -DHAVE_DLOPEN=1 -felide-constructors -fno-rtti -O3"
   cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
   -DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
@@ -236,12 +239,12 @@ function InstallMysql()
   -DMYSQL_DATADIR=/var/mysql/data
   sleep 3
   make -j4 && make  install
-  
+
   groupadd mysql
   useradd -g mysql mysql
   cd ${cMysqlInstallPath} && chown -R mysql . && chgrp -R mysql .
   echo "make install is ok"
-  
+
   sleep 3
   mkdir -p /var/mysql/data && chown mysql:mysql /var/mysql/ -R
   if [[ -f ${cMysqlConfUploadFile} ]] ; then
@@ -250,7 +253,7 @@ function InstallMysql()
   cp ${cMysqlInstallPath}support-files/my-default.cnf /etc/my.cnf
   #sed "s/skip-locking/external-locking/g" -i /etc/my.cnf
   #sed "s/#innodb_/innodb_/g" -i /etc/my.cnf
-  #sed -i '32 i\default-storage-engine=InnoDB' -i /etc/my.cnf   
+  #sed -i '32 i\default-storage-engine=InnoDB' -i /etc/my.cnf
   fi
   ${cMysqlInstallPath}/scripts/mysql_install_db --basedir=${cMysqlInstallPath}/ --user=mysql --datadir=/var/mysql/data
   ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18
@@ -267,7 +270,7 @@ function InstallMysql()
   #for system include
   mkdir -p /usr/local/include/mysql/
   ln -s ${cMysqlInstallPath}/include/* /usr/local/include/
-  
+
   echo "Change your password after 10 seconds"
   sleep 10
   cd ${cMysqlInstallPath} && ./bin/mysqladmin -uroot password ${cMysqlDefaultPasswd}
@@ -282,7 +285,7 @@ function InstallMysql()
   fi
   echo
   echo "**********************************************************"
-  echo "* Install Mysql is completed.( Use Percona-Server-5.6 ). *" 
+  echo "* Install Mysql is completed.( Use Percona-Server-5.6 ). *"
   echo "**********************************************************"
 
 }
@@ -291,11 +294,11 @@ function InstallMysql()
 function InstallNginx()
 {
   cd ${cInstallFile}
-  local cNginxPackage=tengine-2.0.0.tar.gz
-  local cNginxPackageDir=tengine-2.0.0
+  local cNginxPackage=tengine-"${cTengineDefalutVersion}".tar.gz
+  local cNginxPackageDir=tengine-"${cTengineDefalutVersion}"
   echo
   echo "***************************************"
-  echo "* Start install Nginx( Use tengine ). *" 
+  echo "* Start install Nginx( Use tengine ). *"
   echo "***************************************"
 #if [[ "" != `ps -A | grep nginx` ]]; then
 #    PRINTWARNING "mysql is install and run now will uninstall it, or Ctrl+C to abort now."
@@ -334,11 +337,11 @@ function InstallNginx()
 #      wget http://nchc.dl.sourceforge.net/project/pcre/pcre/8.30/pcre-8.30.tar.gz
 #    fi
     bExit=`echo $?`
-    if [[ ${bExit} != 0 ]] ; then 
+    if [[ ${bExit} != 0 ]] ; then
       echo -e "\e[0;31;1mdownload package is failed,Please check your network.\e[0m"
       exit
     fi
-   fi   
+   fi
 #install pcre
 #  tar -zxvf pcre-8.30.tar.gz && cd pcre-8.30/ && ./configure
 #  make -s -j4 && make install
@@ -349,10 +352,10 @@ function InstallNginx()
   else
     tar zxvf openssl-1.0.1c.tar.gz #&& cd openssl-1.0.1c
   fi
-    
+
 #  ./config --prefix=/usr/local/ --openssldir=/usr/local/openssl-1.0.1c shared zlib-dynamic enable-camellia enable-tlsext -fPIC
 #  make && make install && cd ../
-#install nginx   
+#install nginx
   if [[ -d ${cNginxPackageDir} ]] ; then
     PRINTUSEDIR ${cNginxPackageDir}
   else
@@ -398,7 +401,7 @@ function InstallNginx()
   service iptables restart
   echo
   echo "***********************************************"
-  echo "* Install Nginx is completed.( Use tengine ). *" 
+  echo "* Install Nginx is completed.( Use tengine ). *"
   echo "***********************************************"
 
 }
@@ -410,7 +413,7 @@ function InstallPHP()
   cd ${cInstallFile}
   echo
   echo "**********************************************"
-  echo "* Start install PHP.( Default version ${cPHPDefaultVersion} ). *" 
+  echo "* Start install PHP.( Default version ${cPHPDefaultVersion} ). *"
   echo "**********************************************"
 
   local cPhpVersion=${1}
@@ -463,7 +466,7 @@ function InstallPHP()
       echo now will download libiconv-1.14.tar.gz from network.
       wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
     fi
-      
+
     if [[ -f ${cInstallFile}memcache-3.0.6.tgz ]] ; then
       echo memcache-3.0.6.tgz is found.
     else
@@ -503,7 +506,7 @@ cat > libiconv-glibc-2.16.patch <<EOF
 + _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
 +#endif
  #endif
- 
+
 
 EOF
     fi
@@ -570,7 +573,7 @@ EOF
   echo install plugin for php is completed.
   echo now will install php, version is ${cPhpVersion}
 #64 OR 32 SYSTEM LIB MUST BE DIFFERENT
-  if [[ ${iSystemType} == 64 ]] ; then    
+  if [[ ${iSystemType} == 64 ]] ; then
     cp -frp /usr/lib64/libldap* /usr/lib
   fi
 #6
@@ -578,7 +581,7 @@ EOF
   if [[ -d ${cPhpPackageDir} ]] ; then
     PRINTUSEDIR ${cPhpPackageDir}
   else
-    tar -xjvf ${cPhpPackage} 
+    tar -xjvf ${cPhpPackage}
     cd ${cPhpPackageDir}
   fi
   ./configure --prefix=${cInstallPhpPath} \
@@ -666,7 +669,7 @@ EOF
   fi
 #start php-fpm and set start on boot
   cp ${cInstallFile}${cPhpPackageDir}/sapi/fpm/init.d.php-fpm /etc/rc.d/init.d/php-fpm
-  chmod +x /etc/rc.d/init.d/php-fpm 
+  chmod +x /etc/rc.d/init.d/php-fpm
   echo service php-fpm start >> /etc/rc.d/rc.local
   service php-fpm stop #stop it first? why not use restart
   service php-fpm start
@@ -717,7 +720,7 @@ function InsertStrAboveLastLine()
     for item in $1
     do
     iInsertLine=`awk 'END{print NR}' $2`
-    cNewItem=`echo ${item} | sed '/^$/d'`  
+    cNewItem=`echo ${item} | sed '/^$/d'`
     if [[ ${cNewItem} != "" ]] ; then
 #echo this is null
     #else
@@ -739,7 +742,7 @@ function SetIptables()
   PrintArrList "${Arr_OpenPortList}"
   for port in ${Arr_OpenPortList}
   do
-    iptables -I INPUT -i eth0 -p tcp --dport ${port} -j ACCEPT 
+    iptables -I INPUT -i eth0 -p tcp --dport ${port} -j ACCEPT
     iptables -I OUTPUT -o eth0 -p tcp --sport ${port} -j ACCEPT
   done
   service iptables save
@@ -795,7 +798,7 @@ if [[ $cCommand != -base ]] ; then
     exit
   else
     cd ${cInstallFile}
-  fi  
+  fi
 fi
 
 ###################main##################

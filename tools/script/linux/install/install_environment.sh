@@ -47,7 +47,7 @@ function success_message() {
 
 function check_privileges() {
   if [[ $current_user != "root" ]] ; then
-    error_message "run this script need root privileges"  
+    error_message "run this script need root privileges"
   fi
 }
 
@@ -56,7 +56,7 @@ function check_privileges() {
 #@return void
 function install_odbc() {
   cd $current_dir
-  local version="2.3.4"
+  local version="2.3.9"
   if [[ ! -f ./unixODBC-${version}.tar.gz ]] ; then
     wget -c ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-${version}.tar.gz
   fi
@@ -81,7 +81,7 @@ function install_mysql_driver() {
   local driver_so="libmyodbc5a.so"
   local odbc_ini="odbc.ini"
   local driver_dir="/usr/local/lib/mysqlodbc/"
-  [[ ! -f ./${driver_so} ]] && 
+  [[ ! -f ./${driver_so} ]] &&
     error_message "mysql driver[$driver_so] not found"
   [[ ! -f ./${odbc_ini} ]] && warning_message "${odbc_ini} not found"
   [[ ! -d $driver_dir ]] && $sudo_str mkdir -p $driver_dir
