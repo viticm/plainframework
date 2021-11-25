@@ -55,6 +55,8 @@ function check_privileges() {
 #@param void
 #@return void
 function install_odbc() {
+  # build 32
+  # CC="gcc -m32" ./configure --target="i386-linux" --prefix=/usr/local/unixODBC32 --sysconfdir=/etc
   cd $current_dir
   local version="2.3.9"
   if [[ ! -f ./unixODBC-${version}.tar.gz ]] ; then
